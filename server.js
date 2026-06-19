@@ -4633,12 +4633,13 @@ app.get('/admin/coupon-usage', verifyAdmin, (req, res) => {
 // ══ END ADMIN COUPON / REWARD MANAGEMENT ════════════════════════════════════
 
 // ── Start server ──────────────────────────────────────────────────────────────
-httpServer.listen(3000, () => {
+const PORT = process.env.PORT || 3000;
+httpServer.listen(PORT, () => {
   console.log('');
   console.log('════════════════════════════════════════');
   console.log('  🚀 LongLoy Server Started');
   console.log('════════════════════════════════════════');
-  console.log('  📍 URL: http://localhost:3000');
+  console.log(`  📍 URL: http://localhost:${PORT}`);
   console.log('  🌐 CORS Enabled');
   console.log('  📦 Static folder: /uploads');
   console.log('  🔴 Socket.io Ready');
