@@ -1,0 +1,206 @@
+/* ============================================
+   GLOBAL RESPONSIVE — mobile-first utilities
+   ============================================ */
+
+/* --- Nav icon buttons (cart / profile) --- */
+.nb-icon-btn:hover { border-color: rgba(141,77,17,0.25) !important; background: #fff8f0 !important; color: #8d4d11 !important; }
+
+/* --- Nav label (visible by default) --- */
+.rsp-nav-label { /* visible by default */ }
+
+/* --- Desktop-only nav (hidden on mobile) --- */
+.rsp-desktop-nav { /* visible by default */ }
+
+/* --- Bottom nav (mobile only, hidden by default) --- */
+.rsp-bottom-nav { display: none !important; }
+
+/* --- Header inner container --- */
+.rsp-header-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+/* --- Main page wrapper --- */
+.rsp-main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 36px 24px 80px;
+}
+
+/* --- Grid utilities --- */
+.rsp-grid-2  { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.rsp-grid-3  { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.rsp-grid-auto { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+
+/* --- Flex helpers --- */
+.rsp-flex-row { display: flex; gap: 12px; flex-wrap: wrap; }
+
+/* --- Tab bar --- */
+.rsp-tabs { display: flex; gap: 4px; }
+
+/* ============================================
+   640 px — phones (portrait)
+   ============================================ */
+@media (max-width: 640px) {
+  /* Nav — icon-only, larger & better spaced */
+  .rsp-nav-label      { display: none !important; }
+  .rsp-desktop-nav    { gap: 4px !important; }
+  .rsp-desktop-nav button { padding: 10px 13px !important; border-radius: 10px !important; }
+  .rsp-desktop-nav button svg { width: 22px !important; height: 22px !important; }
+  .rsp-header-inner   { padding: 0 12px !important; height: 62px !important; gap: 8px !important; }
+  .rsp-logo           { height: 40px !important; }
+  /* Right-side icon buttons (cart / profile) */
+  .rsp-header-inner > div > button { width: 44px !important; height: 44px !important; border-radius: 12px !important; }
+
+  /* Layout */
+  .rsp-main           { padding: 16px 12px 80px !important; }
+  .rsp-hero-pad       { padding: 36px 16px 0 !important; }
+  .rsp-card-pad       { padding: 14px !important; }
+
+  /* Grids */
+  .rsp-grid-2         { grid-template-columns: 1fr !important; }
+  .rsp-grid-3         { grid-template-columns: repeat(2, 1fr) !important; }
+  .rsp-grid-auto      { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px !important; }
+
+  /* Flex */
+  .rsp-stack          { flex-direction: column !important; }
+  .rsp-full           { width: 100% !important; }
+
+  /* Text */
+  .rsp-text-sm        { font-size: 13px !important; }
+  .rsp-heading        { font-size: 22px !important; }
+
+  /* Tabs */
+  .rsp-tabs           { overflow-x: auto; padding-bottom: 4px; flex-wrap: nowrap !important; -webkit-overflow-scrolling: touch; }
+  .rsp-tabs > *       { flex-shrink: 0; font-size: 12px !important; padding: 7px 14px !important; white-space: nowrap; }
+
+  /* Helpers */
+  .rsp-hide-mobile    { display: none !important; }
+  .rsp-show-mobile    { display: block !important; }
+
+  /* Forms */
+  .rsp-form-row       { flex-direction: column !important; }
+  .rsp-input          { width: 100% !important; font-size: 16px !important; /* prevent iOS zoom */ }
+
+  /* Stats row */
+  .rsp-stats-row      { flex-direction: column !important; gap: 12px !important; }
+
+  /* Hero text */
+  .rsp-hero-title     { font-size: 26px !important; }
+  .rsp-hero-sub       { font-size: 14px !important; }
+
+  /* Product / market card image */
+  .rsp-card-img       { height: 140px !important; }
+
+  /* Sidebar */
+  .rsp-sidebar        { display: none !important; }
+
+  /* Dashboard header row */
+  .rsp-dash-header    { flex-direction: column !important; align-items: flex-start !important; gap: 10px !important; }
+}
+
+/* ============================================
+   768 px — phone landscape / small tablet
+   ============================================ */
+@media (max-width: 768px) {
+  .rsp-grid-2   { grid-template-columns: 1fr !important; }
+  .rsp-sidebar  { display: none !important; }
+}
+
+/* ============================================
+   Text truncation utilities
+   ============================================ */
+.rsp-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rsp-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.rsp-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.rsp-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ============================================
+   Market card image
+   ============================================ */
+.market-img {
+  height: 220px;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+}
+.market-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ============================================
+   Admin user management table
+   ============================================ */
+.admin-user-table-head { /* visible on desktop */ }
+.admin-user-row        { /* row hook */ }
+.admin-user-col-badges { display: flex; flex-direction: column; gap: 3px; }
+
+/* ============================================
+   Product / shop cards
+   ============================================ */
+.product-img {
+  height: 220px;
+  overflow: hidden;
+  position: relative;
+}
+.product-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (max-width: 640px) {
+  /* Market card */
+  .market-img  { height: 150px !important; }
+  .market-desc { display: none !important; }
+  .market-loc  { display: none !important; }
+
+  /* Market page grid — single full-width column */
+  .mkt-grid { grid-template-columns: 1fr !important; }
+  .mkt-grid .market-img { height: 190px !important; }
+
+  /* Admin table → stacked cards */
+  .admin-user-table-head { display: none !important; }
+  .admin-user-row {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    padding: 14px 16px !important;
+  }
+  .admin-user-col-badges {
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  /* Product card */
+  .product-img { height: 160px !important; }
+}

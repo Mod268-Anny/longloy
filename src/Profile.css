@@ -1,0 +1,191 @@
+/* Modern Profile Page Styles */
+.profile-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 48px 24px;
+  background: linear-gradient(135deg, #faf8f3 0%, #f5f1e8 100%);
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Roboto, sans-serif;
+}
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 48px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid #e8ddd0;
+}
+
+.profile-header h1 {
+  font-size: 36px;
+  font-weight: 700;
+  color: #2d1b14;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.logout-btn {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #6b3a0d 0%, #5c2c08 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Roboto, sans-serif;
+  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.2);
+}
+
+.logout-btn:hover {
+  background: linear-gradient(135deg, #5c2c08 0%, #5c2c08 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(217, 119, 6, 0.3);
+}
+
+.logout-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(217, 119, 6, 0.2);
+}
+
+/* Modern Card Style */
+.card {
+  background: white;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 32px;
+  border: 1px solid #e8ddd0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
+  border-color: #8d4d11;
+}
+
+.card h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #2d1b14;
+  letter-spacing: -0.02em;
+}
+
+/* Info Grid Layout */
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-label {
+  color: #666;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.info-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.entrepreneur-card {
+  border-left: 4px solid #ffc107;
+}
+
+.status-approved {
+  color: #4b8ff4;
+}
+
+.status-pending {
+  color: #ffc107;
+}
+
+.status-pending-box {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 6px;
+  color: #856404;
+}
+
+.manage-btn, .register-btn {
+  width: 100%;
+  padding: 12px;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 20px;
+  transition: all 0.2s ease;
+}
+
+.manage-btn {
+  background-color: #007bff;
+}
+
+.manage-btn:hover {
+  background-color: #0056b3;
+}
+
+.register-btn {
+  background-color: #4b8ff4;
+  width: auto;
+  padding: 12px 30px;
+}
+
+.register-btn:hover {
+  background-color: #218838;
+}
+
+.no-shop-card {
+  background-color: #f0f0f0;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.no-shop-card i {
+  font-size: 48px;
+  color: #999;
+  margin-bottom: 15px;
+  display: block;
+}
+
+.no-shop-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.no-shop-card p {
+  color: #666;
+  margin-bottom: 20px;
+}

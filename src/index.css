@@ -1,0 +1,330 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Modern Enhanced Colors - Warm Brown & Gold Theme */
+  --text: #5a4a42;
+  --text-h: #2d1b14;
+  --bg: #faf8f3;
+  --border: #e8ddd0;
+  --code-bg: #f3ebe0;
+  --accent: #6b3a0d;
+  --accent-bg: rgba(217, 119, 6, 0.08);
+  --accent-border: rgba(217, 119, 6, 0.3);
+  --social-bg: rgba(245, 158, 11, 0.05);
+  --shadow: rgba(0, 0, 0, 0.08) 0 4px 12px;
+  --shadow-lg: rgba(0, 0, 0, 0.12) 0 8px 24px;
+  --shadow-md: rgba(0, 0, 0, 0.1) 0 2px 8px;
+
+  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Roboto, sans-serif;
+  --heading: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Roboto, sans-serif;
+  --mono: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+
+  font: 16px/1.6 var(--sans);
+  letter-spacing: 0.3px;
+  color-scheme: light;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @media (max-width: 1024px) {
+    font-size: 15px;
+  }
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  min-width: 100vw;
+  background: linear-gradient(135deg, #faf8f3 0%, #f5f1e8 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#root {
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--heading);
+  font-weight: 700;
+  color: var(--text-h);
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: 48px;
+  line-height: 1.2;
+  margin: 32px 0;
+  @media (max-width: 1024px) {
+    font-size: 36px;
+    margin: 24px 0;
+  }
+}
+
+h2 {
+  font-size: 28px;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  margin: 24px 0 12px;
+  @media (max-width: 1024px) {
+    font-size: 24px;
+    margin: 16px 0 8px;
+  }
+}
+
+h3 {
+  font-size: 22px;
+  line-height: 1.4;
+  margin: 16px 0 8px;
+  @media (max-width: 1024px) {
+    font-size: 20px;
+  }
+}
+
+p {
+  margin: 0 0 16px 0;
+  line-height: 1.7;
+  color: var(--text);
+  font-weight: 400;
+}
+
+code,
+.counter {
+  font-family: var(--mono);
+  display: inline-flex;
+  border-radius: 6px;
+  color: var(--text-h);
+}
+
+code {
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 6px 10px;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+}
+
+/* Button base reset */
+button {
+  cursor: pointer;
+  outline: none;
+  border: none;
+  font-family: inherit;
+}
+
+button:focus-visible {
+  outline: 3px solid #4b8ff4;
+  outline-offset: 2px;
+}
+
+
+strong, b {
+  color: #2d1b14;
+  font-weight: 700;
+}
+
+/* Modern Input Styles */
+input, textarea, select {
+  font-size: 16px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 2px solid var(--border);
+  background: white;
+  color: #1f1f1f;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+input:hover, textarea:hover, select:hover {
+  border-color: #6b3a0d;
+  background: #fafaf9;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: #6b3a0d;
+  box-shadow: 0 0 0 4px rgba(217, 119, 6, 0.15);
+  background: white;
+}
+
+/* Modern Card Styles with Bold Hover */
+.card, [class*='card'] {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid var(--border);
+}
+
+.card:hover {
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  transform: translateY(-6px);
+  border-color: #6b3a0d;
+}
+
+/* Carousel Animations */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutLeft {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Scroll and Page Load Animations */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Card and Section Animations */
+@keyframes cardHoverGlow {
+  0% {
+    box-shadow: 0 12px 32px rgba(6, 182, 212, 0.15);
+  }
+  50% {
+    box-shadow: 0 12px 40px rgba(6, 182, 212, 0.3);
+  }
+  100% {
+    box-shadow: 0 12px 32px rgba(6, 182, 212, 0.15);
+  }
+}
+
+/* Section spacing with better visual hierarchy */
+section {
+  position: relative;
+  overflow: hidden;
+}
+
+section > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Smooth transitions for all interactive elements */
+button, a, input, textarea, select {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced focus states */
+:focus-visible {
+  outline-offset: 4px;
+  outline-width: 3px;
+}
+
+/* Image lazy loading effect */
+img {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+img:not([src]) {
+  opacity: 0.5;
+}

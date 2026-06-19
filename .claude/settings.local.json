@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node --check /Users/moddd/Desktop/thesis_project/LongLoy/server.js)",
+      "Bash(find /Users/moddd/Downloads -name \"*.sql\" 2>/dev/null | head -10)",
+      "Read(//Users/moddd/Downloads/**)",
+      "Bash(find /Users/moddd/Desktop -name \"*.sql\" 2>/dev/null | head -10)",
+      "Read(//Users/moddd/Desktop/**)",
+      "Bash(node --input-type=module --eval \"import\\('./src/EntrepreneurDashboard.jsx'\\)\")",
+      "Bash(node -e \"require\\('./server.js'\\)\")",
+      "Bash(node -e ' *)",
+      "Bash(curl -s http://localhost:3000/shops/by-market/102)"
+    ]
+  }
+}
