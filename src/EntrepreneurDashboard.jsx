@@ -408,7 +408,7 @@ export default function EntrepreneurDashboard() {
                 ⚡ {urgentCnt} ออเดอร์รอดำเนินการ
               </div>
             )}
-            <button onClick={() => navigate('/addshop')} className="rsp-hide-mobile" style={{ padding:'8px 16px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#4b8ff4,#2d6fd4)', color:'#fff', fontSize:13, fontWeight:700, cursor:'pointer' }}>
+            <button onClick={() => navigate('/addshop')} style={{ padding:'8px 16px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#4b8ff4,#2d6fd4)', color:'#fff', fontSize:13, fontWeight:700, cursor:'pointer' }}>
               + เพิ่มร้านค้า
             </button>
             <button onClick={() => { fetchOrders(); fetchProducts(); }} style={{ padding:'8px 14px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#4b8ff4,#4b8ff4)', color:'#fff', fontSize:13, fontWeight:700, cursor:'pointer' }}>

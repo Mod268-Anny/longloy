@@ -26,7 +26,13 @@ app.use((req, res, next) => {
   }
   next();
 });
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'https://longloy.vercel.app',
+  ],
+  credentials: true
+}));
 app.use(express.json({ limit: '50mb' }));
 app.use('/uploads', express.static('uploads'));
 
@@ -4567,7 +4573,7 @@ app.get('/admin/verified-entrepreneurs', verifyAdmin, (req, res) => {
 app.get('/admin/rewards', verifyAdmin, (req, res) => {
   const sql = `
     SELECT r.reward_id, r.name, r.description, r.points_required, r.coupon_code,
-           r.is_active, r.max_redemptions, r.expiration_date,
+           r.is_active, r.max_redemptions, r.expiration_date, r.discount_amount,
            COUNT(rh.redeem_id) AS total_redeemed
     FROM tbl_rewards r
     LEFT JOIN tbl_redemption_history rh ON rh.reward_id = r.reward_id
