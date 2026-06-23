@@ -27,10 +27,17 @@ app.use((req, res, next) => {
   next();
 });
 app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'https://longloy.vercel.app',
-  ],
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (
+      origin === 'http://localhost:5173' ||
+      /^https:\/\/longloy[a-z0-9\-]*\.vercel\.app$/.test(origin)
+    ) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 app.use(express.json({ limit: '50mb' }));
