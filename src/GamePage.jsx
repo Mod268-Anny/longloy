@@ -1,3 +1,15 @@
+// ============================================================
+// GamePage.jsx — หน้ารวมเกมและภารกิจ
+//
+// หน้าที่: แสดงเกม 3 ประเภทที่เลือกได้ผ่าน query ?game=
+//
+// เกมที่มี (โหลดเป็น component แยก):
+//   - GameStepCounter  (?game=stepCounter) — เดินสะสมก้าว → แลกคะแนน
+//   - GameBuyProduct   (?game=buyProduct)  — ซื้อสินค้าร้านใหม่ → รับคะแนน
+//   - GameQuiz         (?game=quiz)        — ตอบคำถามรายวัน → รับคะแนน
+//
+// หน้าหลักแสดงการ์ดเกมทั้ง 3 ให้เลือก เมื่อกดจะสลับแสดง component
+// ============================================================
 import React, { useState } from 'react';
 import API_URL, { secureLocalFetch } from './config';
 import { useNavigate, useLocation } from 'react-router-dom';

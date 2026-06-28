@@ -1,3 +1,13 @@
+// ============================================================
+// AddShopForm.jsx — ฟอร์มเพิ่มร้านค้าใหม่
+//
+// หน้าที่: ให้ผู้ประกอบการกรอกข้อมูลร้านค้าและส่งขออนุมัติ
+//
+// ฟิลด์: ชื่อร้าน, ประเภท, ตลาดที่สังกัด, เวลาเปิดปิด, เบอร์โทร, รูป
+// หลังส่ง: POST /add-entrepreneur → admin รออนุมัติ → สถานะ Pending
+//
+// เส้นทาง: /addshop (ต้องล็อกอิน)
+// ============================================================
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FaBasketShopping } from 'react-icons/fa6';

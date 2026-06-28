@@ -1,3 +1,18 @@
+// ============================================================
+// AdminDashboard.jsx — หน้าแดชบอร์ดสำหรับแอดมิน
+//
+// หน้าที่: ศูนย์รวมการจัดการระบบทั้งหมด (เฉพาะ role=admin)
+//
+// แท็บที่มี:
+//   - dashboard        → สถิติรวม (DashboardStats + RealtimeStatsChart)
+//   - users            → จัดการผู้ใช้ (UserManagement)
+//   - entrepreneurs    → อนุมัติผู้ประกอบการ (EntrepreneurApprovals)
+//   - all-entrepreneurs→ รายชื่อผู้ประกอบการทั้งหมด
+//   - game-content     → จัดการเนื้อหาเกม (GameContent: quests/rewards/quiz)
+//   - coupons          → จัดการคูปองส่วนลด (CouponManagement)
+//
+// ป้องกัน: redirect ถ้า localStorage user.role ไม่ใช่ "admin"
+// ============================================================
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Footer from './Footer';

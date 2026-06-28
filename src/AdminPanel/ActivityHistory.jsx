@@ -1,3 +1,12 @@
+// ============================================================
+// AdminPanel/ActivityHistory.jsx — ประวัติกิจกรรมผู้ใช้ (Modal)
+//
+// หน้าที่: แสดงประวัติ activity ของผู้ใช้คนหนึ่งในรูปแบบ Modal
+//
+// เปิดจาก: UserManagement.jsx เมื่อกดปุ่ม "ดูประวัติ"
+// ข้อมูล: GET /admin/users/:userId/activity
+//         แสดงรายการ: ล็อกอิน, สั่งซื้อ, แลกคะแนน, ทำภารกิจ ฯลฯ
+// ============================================================
 import React, { useState, useEffect } from 'react';
 import { Button, Modal, Form, Alert, Spinner, Table, Badge } from 'react-bootstrap';
 import API_URL, { secureLocalFetch } from '../config';

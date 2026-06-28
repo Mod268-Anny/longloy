@@ -1,3 +1,17 @@
+// ============================================================
+// ProductDetail.jsx — หน้ารายละเอียดสินค้า
+//
+// หน้าที่: แสดงรูป ราคา ขนาด คำอธิบาย รีวิว และสินค้าแนะนำ
+//
+// ส่วนที่มี:
+//   - รูปสินค้า (หลายรูปได้)
+//   - เลือกขนาด (sizes) + ปรับราคาอัตโนมัติ
+//   - แท็บ: คำอธิบาย / รีวิวลูกค้า
+//   - ปุ่มเพิ่มลงตะกร้า (เขียนลง localStorage + ยิง event "cart-updated")
+//   - สินค้าแนะนำจากร้านเดียวกัน (related products)
+//
+// API: GET /product-detail/:product_id, GET /products/by-shop/:shop_id
+// ============================================================
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import API_URL, { secureLocalFetch, resolveImg } from './config';

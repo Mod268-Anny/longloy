@@ -1,3 +1,16 @@
+// ============================================================
+// AdminPanel/UserManagement.jsx — จัดการผู้ใช้งานระบบ
+//
+// หน้าที่: แสดงรายชื่อผู้ใช้ทั้งหมด + ค้นหา + แก้ไขสิทธิ์ + แบน
+//
+// ฟีเจอร์:
+//   - ค้นหาผู้ใช้ตามชื่อ / อีเมล / บทบาท
+//   - เปลี่ยน role (Tourist / Entrepreneur / Admin)
+//   - แบน / ปลดแบนผู้ใช้
+//   - ดูประวัติ activity ของผู้ใช้ (ActivityHistory modal)
+//
+// API: GET /admin/users, PUT /admin/users/:id/ban, PUT /admin/users/:id/role
+// ============================================================
 import React, { useState, useEffect } from 'react';
 import API_URL, { secureLocalFetch } from '../config';
 import ActivityHistory from './ActivityHistory';

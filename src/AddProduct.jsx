@@ -1,3 +1,14 @@
+// ============================================================
+// AddProduct.jsx — ฟอร์มเพิ่มสินค้าใหม่ (standalone page)
+//
+// หน้าที่: ให้ผู้ประกอบการกรอกข้อมูลสินค้าใหม่และบันทึก
+//
+// หมายเหตุ: ฟีเจอร์นี้มีในแท็บ "สินค้า" ของ EntrepreneurDashboard.jsx แล้ว
+//           ไฟล์นี้เป็น standalone page กรณีต้องการเปิดหน้าแยก
+//
+// ฟิลด์: ชื่อ, ราคา, หน่วย, คำอธิบาย, รูปภาพ, ขนาด, สถานะ
+// API: POST /products/add
+// ============================================================
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FaBasketShopping } from 'react-icons/fa6';

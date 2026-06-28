@@ -1,3 +1,18 @@
+// ============================================================
+// games/GameBuyProduct.jsx — เกมซื้อสินค้าสะสมภารกิจ
+//
+// หน้าที่: แสดงภารกิจการซื้อ (Quests) และติดตามความคืบหน้า
+//
+// รูปแบบภารกิจ:
+//   - buy_count     → สั่งซื้อสินค้า X ครั้ง
+//   - buy_amount    → ใช้จ่ายรวม X บาท
+//   - visit_shops   → เยี่ยมชม X ร้านค้า
+//   - buy_in_market → ซื้อจากตลาดนั้น X ครั้ง
+//   - visit_markets → เยี่ยมชม X ตลาด
+//
+// เมื่อทำภารกิจสำเร็จ: POST /quests/:id/claim → รับคะแนน
+// API: GET /quests, POST /quests/:id/claim
+// ============================================================
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API_URL, { secureLocalFetch } from '../config';

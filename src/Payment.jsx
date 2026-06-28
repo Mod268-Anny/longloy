@@ -1,3 +1,17 @@
+// ============================================================
+// Payment.jsx — หน้าชำระเงินด้วยบัตรเครดิต (Omise)
+//
+// หน้าที่: รับข้อมูลบัตรเครดิต → tokenize ด้วย Omise.js → ส่งชาร์จ
+//
+// Flow:
+//   1. รับ state จาก Cart: { order_id, amount, email, publicKey }
+//   2. โหลด Omise.js script จาก cdn.omise.co
+//   3. ผู้ใช้กรอกข้อมูลบัตร → Omise.createToken() → ได้ card token
+//   4. เรียก createCharge() → POST /payments/create-charge
+//   5. ถ้าสำเร็จ → navigate("/order-confirmation")
+//
+// หมายเหตุ: ไม่เก็บข้อมูลบัตรในระบบ — ส่งตรงไป Omise เท่านั้น
+// ============================================================
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { MdHome, MdStorefront, MdOutlineSportsEsports, MdHelpOutline } from 'react-icons/md';

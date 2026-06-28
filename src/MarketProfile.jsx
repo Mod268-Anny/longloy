@@ -1,3 +1,16 @@
+// ============================================================
+// MarketProfile.jsx — หน้ารายละเอียดตลาดน้ำ (Market Review Page)
+//
+// หน้าที่: แสดงข้อมูลตลาด + รายการร้านค้าในตลาด + รีวิวตลาด
+//
+// ส่วนที่มี:
+//   - รูป / ชื่อ / ที่ตั้ง / เวลาเปิดปิดของตลาด
+//   - รายการร้านค้า (cards) → กดเข้าดูร้าน
+//   - ฟอร์มเขียนรีวิวตลาด + ดูรีวิวทั้งหมด
+//
+// API: GET /floating-markets/:id, GET /shops/by-market/:id, GET/POST /market-reviews
+// เส้นทาง: /market-review/:market_id
+// ============================================================
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { FaBasketShopping, FaStar, FaChevronLeft } from 'react-icons/fa6';

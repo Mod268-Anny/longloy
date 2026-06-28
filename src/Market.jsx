@@ -1,3 +1,13 @@
+// ============================================================
+// Market.jsx — หน้าแสดงตลาดน้ำทั้งหมด
+//
+// หน้าที่: แสดงการ์ดตลาดน้ำทุกแห่ง + ค้นหา + กดเข้าดูรายละเอียด
+//
+// ส่วนที่มี:
+//   - ค้นหาตลาด (GET /floating-markets/search?q=)
+//   - การ์ดตลาด: รูป, ชื่อ, ที่ตั้ง, rating เฉลี่ย
+//   - กดการ์ด → navigate("/market-review/:market_id")
+// ============================================================
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {

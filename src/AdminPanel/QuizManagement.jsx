@@ -1,3 +1,12 @@
+// ============================================================
+// AdminPanel/QuizManagement.jsx — จัดการคำถามแบบทดสอบรายวัน
+//
+// หน้าที่: สร้าง / แก้ไข / ลบ คำถาม Quiz ที่ใช้ในเกม GameQuiz
+//
+// ฟิลด์คำถาม: question, option_a/b/c/d, correct_answer (0-3), points
+// API: GET/POST/PUT/DELETE /admin/quiz-questions
+// ใช้ใน: AdminPanel/GameContent.jsx แท็บ Quiz
+// ============================================================
 import React, { useState, useEffect } from 'react';
 import API_URL, { secureLocalFetch } from '../config';
 

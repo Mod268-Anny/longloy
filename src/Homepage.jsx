@@ -1,3 +1,18 @@
+// ============================================================
+// Homepage.jsx — หน้าแรกของแอป (หน้า Landing หลัก)
+//
+// ส่วนประกอบ:
+//   1. Navbar        — แถบด้านบน (built-in ไม่ใช้ component แยก)
+//   2. Hero Section  — สไลด์รูปตลาดน้ำ + ปุ่ม CTA
+//   3. Products      — แสดงสินค้าทุกร้าน กรองตามตลาด + ค้นหา + paginate
+//   4. Gamification  — การ์ดแนะนำเกม 3 ประเภท
+//   5. Cart Sidebar  — ตะกร้าแบบ slide-in (overlay)
+//   6. FloatingCart  — ไอคอนตะกร้าลอยตัว (mobile-friendly)
+//
+// Data flow:
+//   markets → shops/by-market → products/by-shop (cascade fetch)
+//   ตะกร้า sync กับ localStorage + ยิง custom event "cart-updated"
+// ============================================================
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {

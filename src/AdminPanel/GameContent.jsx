@@ -1,3 +1,16 @@
+// ============================================================
+// AdminPanel/GameContent.jsx — จัดการเนื้อหาเกม (Quests / Rewards / Quiz)
+//
+// หน้าที่: แอดมินจัดการภารกิจ รางวัล และคำถามแบบทดสอบ
+//
+// แท็บภายใน:
+//   - Quests   → สร้าง/แก้ไขภารกิจ (tbl_quests): ชื่อ, คะแนน, เงื่อนไข
+//   - Rewards  → สร้าง/แก้ไขรางวัล (tbl_rewards): แลกคะแนน → รับของ
+//   - Quiz     → จัดการคำถามรายวัน (tbl_quiz_questions)
+//
+// API: GET/POST/PUT /admin/quests, /admin/rewards, /admin/quiz-questions
+// ใช้ใน: AdminDashboard.jsx tab "game-content"
+// ============================================================
 import React, { useState, useEffect, useMemo } from 'react';
 import API_URL, { secureLocalFetch } from '../config';
 

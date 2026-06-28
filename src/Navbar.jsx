@@ -1,3 +1,11 @@
+// ============================================================
+// Navbar.jsx — แถบนำทางด้านบน (Sticky Header)
+//
+// หน้าที่: แสดง Logo, เมนูหลัก 4 รายการ, ปุ่มตะกร้า (พร้อม badge), ปุ่มโปรไฟล์
+//
+// ใช้ใน: หน้าต่างๆ ที่ต้องการ Navbar แบบ standalone (ไม่ใช่หน้าที่มี Navbar built-in)
+// หมายเหตุ: บางหน้าเช่น Homepage.jsx มี Navbar ฝังอยู่ในตัว ไม่ได้ใช้ component นี้
+// ============================================================
 import { useNavigate, useLocation } from 'react-router-dom';
 import { MdHome, MdStorefront, MdOutlineSportsEsports, MdHelpOutline } from 'react-icons/md';
 import useCartCount from './useCartCount';

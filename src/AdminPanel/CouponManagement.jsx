@@ -1,3 +1,16 @@
+// ============================================================
+// AdminPanel/CouponManagement.jsx — จัดการคูปองส่วนลด
+//
+// หน้าที่: สร้าง / แก้ไข / เปิดปิด คูปองที่ผู้ใช้แลกด้วยคะแนน
+//
+// ฟิลด์คูปอง:
+//   - name, description, coupon_code (รหัสคูปอง)
+//   - points_required (คะแนนที่ต้องใช้แลก)
+//   - discount_amount (ส่วนลดเป็นบาท), max_redemptions, expiration_date
+//
+// API: GET /admin/coupons, POST /admin/coupons, PUT /admin/coupons/:id
+// ใช้ใน: AdminDashboard.jsx tab "coupons"
+// ============================================================
 import React, { useState, useEffect } from 'react';
 import API_URL, { secureLocalFetch } from '../config';
 

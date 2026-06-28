@@ -1,3 +1,16 @@
+// ============================================================
+// MarketLanding.jsx — หน้า Landing ของตลาดน้ำ (แบบมีตะกร้า)
+//
+// หน้าที่: แสดงตลาดน้ำ + ร้านค้า + สินค้า พร้อมเพิ่มลงตะกร้าได้เลย
+//
+// ส่วนที่มี:
+//   - Hero / Banner ตลาดน้ำ
+//   - ร้านค้าในตลาด + สินค้า (grid)
+//   - Cart sidebar + FloatingCart
+//   - ค้นหาสินค้าและร้านค้า
+//
+// เส้นทาง: /market-landing (ถ้ามีใช้งาน) หรือเรียกจาก Market.jsx
+// ============================================================
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FaBasketShopping, FaXmark, FaTrashCan, FaCartPlus, FaLocationDot, FaMagnifyingGlass, FaChevronRight, FaStar } from "react-icons/fa6";

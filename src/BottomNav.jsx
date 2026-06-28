@@ -1,3 +1,11 @@
+// ============================================================
+// BottomNav.jsx — แถบนำทางด้านล่าง (Mobile Bottom Navigation)
+//
+// หน้าที่: แสดงเมนูหลัก 4 ปุ่มที่ด้านล่างหน้าจอบนมือถือ
+//         ไฮไลต์ปุ่มที่ active ตาม pathname ปัจจุบัน
+//
+// ใช้ใน: หน้าต่างๆ ผ่าน responsive.css ซ่อนบน desktop แสดงบน mobile
+// ============================================================
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { MdHome, MdStorefront, MdOutlineSportsEsports, MdHelpOutline } from 'react-icons/md';

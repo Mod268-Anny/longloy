@@ -1,3 +1,14 @@
+// ============================================================
+// EditProduct.jsx — ฟอร์มแก้ไขสินค้า (หน้าแยก)
+//
+// หน้าที่: โหลดข้อมูลสินค้าจาก :product_id และให้แก้ไข
+//
+// หมายเหตุ: ฟีเจอร์แก้ไขสินค้าส่วนใหญ่ทำใน EntrepreneurDashboard.jsx แล้ว
+//           ไฟล์นี้เป็น standalone page กรณีที่ต้องการเปิดหน้าแยก
+//
+// API: GET /product-detail/:id, PUT /products/update/:id
+// เส้นทาง: /editproduct/:product_id
+// ============================================================
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { FaBasketShopping } from 'react-icons/fa6';

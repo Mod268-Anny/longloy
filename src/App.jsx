@@ -1,3 +1,15 @@
+// ============================================================
+// App.jsx — Router หลักของแอป + หน้า Login/Register
+//
+// โครงสร้างภายในไฟล์นี้:
+//   1. ProtectedRoute  — กั้นหน้าที่ต้อง login ก่อนเข้า
+//   2. LoginPage       — ฟอร์ม login
+//   3. RegisterPage    — ฟอร์มสมัครสมาชิก
+//   4. App (default)   — ประกาศ Route ทั้งหมดของแอป
+//
+// การเพิ่ม route ใหม่ → ทำใน <Routes> ที่อยู่ใน function App()
+// ============================================================
+
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import API_URL, { secureLocalFetch } from './config';
@@ -28,8 +40,9 @@ import EditProduct from './EditProduct';
 import EntrepreneurDashboard from './EntrepreneurDashboard';
 
 
-
-// ✅ Protected Route Component - redirect ไป /login ถ้ายังไม่ login
+// ── ProtectedRoute ────────────────────────────────────────────
+// ห่อหน้าที่ต้อง login — ถ้าไม่มี token ใน localStorage จะ redirect ไป /login
+// และจำ path เดิมไว้ใน "redirectTo" เพื่อกลับมาหลัง login สำเร็จ
 function ProtectedRoute({ element }) {
   const token = localStorage.getItem('token');
   const location = useLocation();
@@ -42,6 +55,7 @@ function ProtectedRoute({ element }) {
   return element;
 }
 
+// ── CSS สำหรับ input ฟอร์ม Login/Register ────────────────────
 const AUTH_CSS = `
   .auth-input {
     width:100%; padding:12px 14px; border:1.5px solid #e2e8f0;
@@ -54,6 +68,7 @@ const AUTH_CSS = `
   .auth-input.err:focus { border-color:#8d4d11 !important; }
 `;
 
+// ── ปุ่ม Social Login (Google / Facebook / Apple) ─────────────
 function SocialBtn({ icon, color }) {
   return (
     <button type="button" style={{
@@ -67,12 +82,17 @@ function SocialBtn({ icon, color }) {
   );
 }
 
+// ── ข้อความ error ใต้ field ──────────────────────────────────
 const FieldErr = ({ msg }) => msg ? (
   <p style={{ margin: '4px 0 0', fontSize: 12, color: '#6b3a0d', display: 'flex', alignItems: 'center', gap: 4 }}>
     <i className="fas fa-circle-exclamation" style={{ fontSize: 11 }} /> {msg}
   </p>
 ) : null;
 
+// ── หน้า Login ───────────────────────────────────────────────
+// - validate email/password ก่อน submit
+// - POST /login → รับ token + user → เก็บใน localStorage
+// - Admin → redirect /admin, User → redirect ตาม redirectTo
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -88,7 +108,7 @@ function LoginPage() {
   const passwordErr = touched.password && !password.trim() ? 'กรุณากรอกรหัสผ่าน' : '';
 
   const handleLogin = async () => {
-    setTouched({ email: true, password: true });  // เฉพาะตอน submit
+    setTouched({ email: true, password: true });
     setLoginError('');
     if (!email.trim()) { emailRef.current?.focus(); return; }
     if (!password.trim()) { passwordRef.current?.focus(); return; }
@@ -207,6 +227,9 @@ function LoginPage() {
   );
 }
 
+// ── หน้า Register ─────────────────────────────────────────────
+// - validate ทุก field + password pattern (ต้องขึ้นต้นตัวใหญ่ + มีอักขระพิเศษ)
+// - POST /register → หลังสำเร็จ redirect ไป /login
 function RegisterPage() {
   const [name,           setName]           = useState('');
   const [lastname,       setLastname]       = useState('');
@@ -279,7 +302,6 @@ function RegisterPage() {
         </div>
 
         <form onSubmit={ev => { ev.preventDefault(); handleRegister(); }}>
-          {/* Name row */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 0 }}>
             <div style={{ marginBottom: 14 }}>
               <label style={{ display: 'block', marginBottom: 5, fontWeight: 600, color: '#334155', fontSize: 13 }}>ชื่อ *</label>
@@ -309,7 +331,6 @@ function RegisterPage() {
             <FieldErr msg={e_('email')} />
           </div>
 
-          {/* Password */}
           <div style={{ marginBottom: 14 }}>
             <label style={{ display: 'block', marginBottom: 5, fontWeight: 600, color: '#334155', fontSize: 13 }}>Password *</label>
             <div style={{ position: 'relative' }}>
@@ -324,7 +345,6 @@ function RegisterPage() {
             <FieldErr msg={e_('password')} />
           </div>
 
-          {/* Confirm password */}
           <div style={{ marginBottom: 14 }}>
             <label style={{ display: 'block', marginBottom: 5, fontWeight: 600, color: '#334155', fontSize: 13 }}>ยืนยัน Password *</label>
             <div style={{ position: 'relative' }}>
@@ -376,44 +396,42 @@ function RegisterPage() {
   );
 }
 
+// ── App — ประกาศ Route ทั้งหมด ─────────────────────────────────
 function App() {
   return (
     <Router>
       <Routes>
-        {/* ── สาธารณะ — เข้าชมได้โดยไม่ต้อง login ── */}
+        {/* ── หน้าสาธารณะ — เข้าได้โดยไม่ต้อง login ── */}
         <Route path="/" element={<Homepage />} />
         <Route path="/homepage" element={<Homepage />} />
-    
-        {/* <Route path="/homepage" element={<Navigate to="/" replace />} /> */}
-
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/market" element={<Market />} />
-        <Route path="/market-review/:market_id" element={<MarketProfile />} />
-        <Route path="/shop-profile/:shop_id" element={<ShopProfile />} />
-        <Route path="/shop-product/:shop_id" element={<ShopProductPage />} />
-        <Route path="/product/:product_id" element={<ProductDetail />} />
-        <Route path="/help" element={<Help />} />
+        <Route path="/market" element={<Market />} />                                   {/* รายการตลาดน้ำ */}
+        <Route path="/market-review/:market_id" element={<MarketProfile />} />          {/* โปรไฟล์ตลาด + รีวิว */}
+        <Route path="/shop-profile/:shop_id" element={<ShopProfile />} />               {/* โปรไฟล์ร้านค้า */}
+        <Route path="/shop-product/:shop_id" element={<ShopProductPage />} />           {/* สินค้าในร้าน (ลูกค้า) */}
+        <Route path="/product/:product_id" element={<ProductDetail />} />               {/* รายละเอียดสินค้า */}
+        <Route path="/help" element={<Help />} />                                       {/* คำถามที่พบบ่อย */}
 
-        {/* ── ต้อง login ── */}
-        <Route path="/game" element={<ProtectedRoute element={<GamePage />} />} />
-        <Route path="/cart" element={<ProtectedRoute element={<Cart />} />} />
-        <Route path="/payment" element={<ProtectedRoute element={<Payment />} />} />
-        <Route path="/order-confirmation" element={<ProtectedRoute element={<OrderConfirmation />} />} />
-        <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} />
-        <Route path="/user-orders" element={<ProtectedRoute element={<UserOrders />} />} />
-        <Route path="/order-detail/:order_id" element={<ProtectedRoute element={<OrderDetail />} />} />
-        <Route path="/shops/:market_id" element={<ProtectedRoute element={<ShopPage />} />} />
-        <Route path="/my-shops" element={<ProtectedRoute element={<ShopPage />} />} />
-        <Route path="/shop-orders/:shop_id" element={<ProtectedRoute element={<ShopOrders />} />} />
-        <Route path="/addshop" element={<ProtectedRoute element={<AddShopForm />} />} />
-        <Route path="/addshop-to-market" element={<ProtectedRoute element={<AddShopToMarketForm />} />} />
-        <Route path="/editshop" element={<ProtectedRoute element={<EditShop />} />} />
-        <Route path="/entrepreneur-dashboard" element={<ProtectedRoute element={<EntrepreneurDashboard />} />} />
-        <Route path="/admin" element={<ProtectedRoute element={<AdminDashboard />} />} />
-        <Route path="/add-product" element={<ProtectedRoute element={<AddProduct />} />} />
-        <Route path="/shop-products" element={<ProtectedRoute element={<ShopProducts />} />} />
-        <Route path="/edit-product/:product_id" element={<ProtectedRoute element={<EditProduct />} />} />
+        {/* ── หน้าที่ต้อง login — ห่อด้วย ProtectedRoute ── */}
+        <Route path="/game" element={<ProtectedRoute element={<GamePage />} />} />                                    {/* เมนูเกม */}
+        <Route path="/cart" element={<ProtectedRoute element={<Cart />} />} />                                        {/* ตะกร้าสินค้า */}
+        <Route path="/payment" element={<ProtectedRoute element={<Payment />} />} />                                  {/* ชำระเงิน */}
+        <Route path="/order-confirmation" element={<ProtectedRoute element={<OrderConfirmation />} />} />             {/* ยืนยันออเดอร์ */}
+        <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} />                                  {/* โปรไฟล์ผู้ใช้ */}
+        <Route path="/user-orders" element={<ProtectedRoute element={<UserOrders />} />} />                           {/* ประวัติการสั่งซื้อ */}
+        <Route path="/order-detail/:order_id" element={<ProtectedRoute element={<OrderDetail />} />} />               {/* รายละเอียดออเดอร์ */}
+        <Route path="/shops/:market_id" element={<ProtectedRoute element={<ShopPage />} />} />                        {/* ร้านในตลาด */}
+        <Route path="/my-shops" element={<ProtectedRoute element={<ShopPage />} />} />                                {/* ร้านของฉัน */}
+        <Route path="/shop-orders/:shop_id" element={<ProtectedRoute element={<ShopOrders />} />} />                  {/* จัดการออเดอร์ (เจ้าของร้าน) */}
+        <Route path="/addshop" element={<ProtectedRoute element={<AddShopForm />} />} />                              {/* สมัครเป็นผู้ประกอบการ */}
+        <Route path="/addshop-to-market" element={<ProtectedRoute element={<AddShopToMarketForm />} />} />            {/* เพิ่มร้านเข้าตลาด */}
+        <Route path="/editshop" element={<ProtectedRoute element={<EditShop />} />} />                                {/* แก้ไขข้อมูลร้าน */}
+        <Route path="/entrepreneur-dashboard" element={<ProtectedRoute element={<EntrepreneurDashboard />} />} />     {/* Dashboard ผู้ประกอบการ */}
+        <Route path="/admin" element={<ProtectedRoute element={<AdminDashboard />} />} />                             {/* Admin Panel */}
+        <Route path="/add-product" element={<ProtectedRoute element={<AddProduct />} />} />                           {/* เพิ่มสินค้า */}
+        <Route path="/shop-products" element={<ProtectedRoute element={<ShopProducts />} />} />                       {/* จัดการสินค้า */}
+        <Route path="/edit-product/:product_id" element={<ProtectedRoute element={<EditProduct />} />} />             {/* แก้ไขสินค้า */}
       </Routes>
     </Router>
   );

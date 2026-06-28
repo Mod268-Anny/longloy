@@ -1,3 +1,16 @@
+// ============================================================
+// Profile.jsx — หน้าโปรไฟล์ผู้ใช้
+//
+// หน้าที่: แสดงข้อมูลบัญชี คะแนนสะสม ลิงก์ไปหน้าต่างๆ
+//
+// ส่วนที่แสดง:
+//   - ชื่อ / อีเมล / เบอร์โทร / บทบาท (user / entrepreneur / admin)
+//   - คะแนนสะสม (current_points) + ลิงก์ไปหน้าเกม
+//   - ถ้าเป็น entrepreneur: แสดงสถานะ + ลิงก์ไป Dashboard
+//   - ปุ่ม: ประวัติคำสั่งซื้อ, ออกจากระบบ
+//
+// API: GET /profile (ต้องมี JWT token)
+// ============================================================
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import {

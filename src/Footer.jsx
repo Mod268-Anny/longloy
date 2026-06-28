@@ -1,3 +1,14 @@
+// ============================================================
+// Footer.jsx — ส่วนท้ายของทุกหน้า (Footer Component)
+//
+// หน้าที่: แสดงข้อมูล LongLoy, ลิงก์ Social Media, ลิงก์ด่วน
+//
+// ส่วนที่มี:
+//   - โลโก้ + คำอธิบายแอป
+//   - ลิงก์ Social: Facebook, Instagram, Line
+//   - ลิงก์ด่วน: หน้าแรก, ตลาดน้ำ, เกม, ช่วยเหลือ
+//   - Copyright footer
+// ============================================================
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaFacebook, FaInstagram, FaLine } from 'react-icons/fa6';

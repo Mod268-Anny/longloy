@@ -1,3 +1,15 @@
+// ============================================================
+// AdminPanel/EntrepreneurApprovals.jsx — อนุมัติผู้ประกอบการ
+//
+// หน้าที่: แสดงรายการคำขอเป็นผู้ประกอบการที่รอการอนุมัติ
+//
+// ฟีเจอร์:
+//   - ดูข้อมูลร้านค้าที่ขอสมัคร
+//   - อนุมัติ (PUT /entrepreneur/approve/:id) หรือ ปฏิเสธ (PUT /entrepreneur/reject/:id)
+//   - แสดงผู้ประกอบการทั้งหมดที่ผ่านการอนุมัติแล้ว
+//
+// ใช้ใน: AdminDashboard.jsx tab "entrepreneurs"
+// ============================================================
 import React, { useState, useEffect, useRef } from 'react';
 import API_URL, { secureLocalFetch } from '../config';
 

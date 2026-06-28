@@ -1,3 +1,13 @@
+// ============================================================
+// Help.jsx — หน้าช่วยเหลือ (FAQ / Getting Started)
+//
+// หน้าที่: แสดงข้อมูลวิธีใช้งานแอปและคำถามที่พบบ่อย
+//
+// ส่วนที่มี:
+//   - Getting Started: วิธีเริ่มใช้งาน, ค้นหาตลาด, สั่งซื้อ
+//   - FAQ แบบ accordion (กดเปิด/ปิดแต่ละข้อ)
+//   - ข้อมูลติดต่อ / Social media
+// ============================================================
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import useCartCount from './useCartCount';

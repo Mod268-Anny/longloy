@@ -1,3 +1,14 @@
+// ============================================================
+// EditShop.jsx — ฟอร์มแก้ไขข้อมูลร้านค้า
+//
+// หน้าที่: โหลดข้อมูลร้านปัจจุบันและให้แก้ไขได้
+//
+// รับ query: ?shop_id=xxx
+// ฟิลด์: ชื่อร้าน, ประเภท, เวลาเปิดปิด, เบอร์โทร, รูปร้าน
+// หลังบันทึก: PUT /my-shop → navigate กลับ EntrepreneurDashboard
+//
+// เส้นทาง: /editshop?shop_id=xxx (ต้องล็อกอิน + เจ้าของร้าน)
+// ============================================================
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FaBasketShopping } from 'react-icons/fa6';

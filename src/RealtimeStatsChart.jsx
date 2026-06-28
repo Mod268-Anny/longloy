@@ -1,3 +1,14 @@
+// ============================================================
+// RealtimeStatsChart.jsx — กราฟสถิติแบบ Realtime (Socket.io)
+//
+// หน้าที่: แสดงกราฟสถิติออเดอร์และรายได้แบบ realtime
+//
+// ใช้: Socket.io (io จาก socket.io-client) รับ event จาก server ทุก 6 วินาที
+// กราฟ: AreaChart (ยอดขายตามเวลา), BarChart (สถิติตามตลาด)
+// Library: recharts
+//
+// ใช้ใน: AdminDashboard.jsx tab "dashboard"
+// ============================================================
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   AreaChart, Area, BarChart, Bar,

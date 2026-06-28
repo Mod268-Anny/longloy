@@ -1,3 +1,17 @@
+// ============================================================
+// OrderDetail.jsx — หน้ารายละเอียดออเดอร์
+//
+// หน้าที่: แสดงรายการสินค้าในออเดอร์ + ติดตามสถานะ
+//
+// ส่วนที่มี:
+//   - Stepper: Pending → Confirmed → Cooking → Completed / Cancelled
+//   - รายการสินค้า + ราคารวม
+//   - ข้อมูลการชำระเงิน + ที่อยู่จัดส่ง
+//   - polling สถานะทุก 30 วิ
+//
+// API: GET /orders/:order_id
+// เส้นทาง: /order/:order_id (ต้องล็อกอิน)
+// ============================================================
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import API_URL, { secureLocalFetch } from './config';

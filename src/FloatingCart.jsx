@@ -1,3 +1,12 @@
+// ============================================================
+// FloatingCart.jsx — ไอคอนตะกร้าลอยตัว (Floating Action Button)
+//
+// หน้าที่: แสดงปุ่มตะกร้าที่มุมขวาล่าง พร้อม badge จำนวนสินค้า
+//         มี animation "bump" เมื่อจำนวนสินค้าเพิ่มขึ้น
+//
+// ใช้ใน: Homepage, ShopProfile, ShopPage, ProductDetail ฯลฯ
+// ซ่อนอัตโนมัติ: เมื่ออยู่หน้า /cart (ไม่แสดงซ้อน)
+// ============================================================
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaBasketShopping } from 'react-icons/fa6';

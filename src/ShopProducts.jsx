@@ -1,3 +1,14 @@
+// ============================================================
+// ShopProducts.jsx — จัดการสินค้าของร้าน (standalone page)
+//
+// หน้าที่: แสดงรายการสินค้าทั้งหมดของร้าน + เพิ่ม/แก้ไข/ลบสินค้า
+//
+// หมายเหตุ: ฟีเจอร์นี้มีอยู่ใน EntrepreneurDashboard.jsx แล้ว
+//           ไฟล์นี้เป็น standalone page แยกต่างหาก
+//
+// API: GET /products/by-shop/:id, POST /products/add, DELETE /products/:id
+// เส้นทาง: /shop-products (ต้องล็อกอิน + entrepreneur)
+// ============================================================
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {

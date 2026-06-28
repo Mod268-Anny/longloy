@@ -1,3 +1,17 @@
+// ============================================================
+// games/GameStepCounter.jsx — เกมนับก้าวเดิน (Step Counter)
+//
+// หน้าที่: นับก้าวเดินผ่าน DeviceMotion API แล้วแลกเป็นคะแนน
+//
+// Flow:
+//   1. กดปุ่ม "เริ่มนับก้าว" → เปิด DeviceMotionEvent listener
+//   2. ตรวจจับการสั่นของมือถือ → นับก้าว (threshold-based)
+//   3. เป้าหมาย: STEP_GOAL = 5000 ก้าว/วัน
+//   4. POST /user/save-steps → บันทึกก้าว
+//   5. POST /user/claim-daily-steps-reward → แลกคะแนนประจำวัน
+//
+// หมายเหตุ: ใช้ได้เฉพาะบนมือถือที่รองรับ DeviceMotionEvent
+// ============================================================
 import React from 'react';
 import API_URL, { secureLocalFetch } from '../config';
 

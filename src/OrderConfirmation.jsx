@@ -1,3 +1,17 @@
+// ============================================================
+// OrderConfirmation.jsx — หน้ายืนยันการสั่งซื้อสำเร็จ
+//
+// หน้าที่: แสดงผลหลังชำระเงินสำเร็จ + แสดงสถานะออเดอร์แบบ real-time
+//
+// รับ state จาก Payment.jsx:
+//   { order_id, charge_id, amount, payment_method }
+//
+// ส่วนที่มี:
+//   - สรุปออเดอร์ + เลขอ้างอิง
+//   - MiniStepper แสดงสถานะปัจจุบัน (Pending → Cooking → Completed)
+//   - polling ทุก 30 วิ เพื่ออัปเดตสถานะ
+//   - ล้างตะกร้าอัตโนมัติหลัง checkout สำเร็จ
+// ============================================================
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import API_URL, { secureLocalFetch } from './config';

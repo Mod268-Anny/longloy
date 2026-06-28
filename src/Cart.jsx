@@ -1,8 +1,20 @@
+// ============================================================
+// Cart.jsx — หน้าตะกร้าสินค้า
+//
+// หน้าที่: แสดงรายการสินค้าในตะกร้า จัดการจำนวน ลบสินค้า
+//         ใช้คูปองส่วนลด และนำทางไปหน้า Payment
+//
+// Flow: localStorage cart → checkout → /payment
+//   - ตะกร้า sync จาก localStorage key "cart"
+//   - รองรับคูปองส่วนลด (GET /coupons/mine)
+//   - รองรับ redeem reward (แลกแต้มเป็นส่วนลด)
+//   - เมื่อกด checkout → POST /orders/checkout → navigate("/payment")
+// ============================================================
 import React, { useState, useEffect } from 'react';
 import { checkoutCart } from './api/checkoutCart';
 import { syncCartToBackend } from './api/syncCartToBackend';
 import { useNavigate, useLocation } from 'react-router-dom';
-import API_URL, { secureLocalFetch } from './config';
+import API_URL, { secureLocalFetch, resolveImg } from './config';
 import { FaTrashCan, FaChevronLeft } from 'react-icons/fa6';
 import Footer from './Footer';
 import { MdHome, MdStorefront, MdOutlineSportsEsports, MdHelpOutline } from 'react-icons/md';
@@ -14,9 +26,8 @@ const NAV = [
   { label: "ช่วยเหลือ", icon: <MdHelpOutline size={18}/>,          path: "/help"     },
 ];
 
-const imgSrc = (url) =>
-  !url ? 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=300&q=80'
-  : url.startsWith('http') || url.startsWith('/') ? url : `/images/${url}`;
+const CART_FALLBACK = 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=300&q=80';
+const imgSrc = (url) => resolveImg(url, CART_FALLBACK);
 
 export default function Cart() {
   const navigate = useNavigate();

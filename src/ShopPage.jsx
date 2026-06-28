@@ -1,3 +1,17 @@
+// ============================================================
+// ShopPage.jsx — หน้าร้านค้า (Shop Detail Page)
+//
+// หน้าที่: แสดงสินค้าของร้าน + รีวิวร้าน
+//
+// ส่วนที่มี:
+//   - Header ร้าน: ชื่อ, รูป, ประเภท, เวลาเปิดปิด, สถานะ
+//   - ค้นหาสินค้าภายในร้าน
+//   - Grid สินค้า → กดดูรายละเอียด หรือ เพิ่มตะกร้า
+//   - รีวิวร้านค้า + ฟอร์มส่งรีวิว
+//
+// API: GET /shops/:shop_id, GET /products/by-shop/:id, GET/POST /shop-reviews
+// เส้นทาง: /shop/:shop_id
+// ============================================================
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import {

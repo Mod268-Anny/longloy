@@ -1,3 +1,16 @@
+// ============================================================
+// ShopProfile.jsx — หน้าโปรไฟล์ร้านค้า (ดูร้านพร้อมซื้อสินค้าได้)
+//
+// หน้าที่: คล้าย ShopPage แต่เน้นข้อมูลร้านและเพิ่มลงตะกร้าได้ทันที
+//
+// ส่วนที่มี:
+//   - รูป / ชื่อร้าน / ตลาด / ประเภท / สถานะเปิดปิด
+//   - สินค้าในร้าน (grid) + ปุ่มเพิ่มลงตะกร้า
+//   - รีวิวร้าน (GET /shop-reviews)
+//   - sync cart กับ backend หลัง login (syncCartToBackend)
+//
+// เส้นทาง: /shop-profile/:shop_id
+// ============================================================
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { FaBasketShopping, FaStar, FaChevronLeft, FaCartPlus } from 'react-icons/fa6';

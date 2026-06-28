@@ -1,3 +1,16 @@
+// ============================================================
+// UserOrders.jsx — หน้าประวัติคำสั่งซื้อของผู้ใช้
+//
+// หน้าที่: แสดงรายการออเดอร์ทั้งหมดของผู้ใช้ที่ล็อกอินอยู่
+//
+// ส่วนที่มี:
+//   - กรองตามสถานะ (ทั้งหมด / รอยืนยัน / สำเร็จ / ยกเลิก ฯลฯ)
+//   - Stepper สถานะแต่ละออเดอร์
+//   - กด "ดูรายละเอียด" → navigate("/order/:order_id")
+//   - Pagination ทีละ 10 รายการ
+//
+// API: GET /my-orders (ต้องมี JWT token)
+// ============================================================
 import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API_URL, { secureLocalFetch } from './config';

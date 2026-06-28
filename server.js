@@ -1,4 +1,26 @@
 
+// ============================================================
+// server.js — Backend หลักของแอป LongLoy (Node.js + Express)
+//
+// ภาพรวมของไฟล์นี้ (ตามลำดับจากบนลงล่าง):
+//   1. Setup          — Express, CORS, MySQL pool, Socket.io
+//   2. DB Init        — สร้างตาราง + migration ทุกครั้งที่ server เริ่ม
+//   3. Auth           — POST /login, POST /register, verifyToken middleware
+//   4. Markets        — GET /floating-markets/*
+//   5. Shops          — GET/POST /shops/*, /entrepreneur/*
+//   6. Reviews        — GET/POST /market-reviews, /shop-reviews, /product-reviews
+//   7. Points/Steps   — POST /user/add-points, /user/save-steps, /user/steps
+//   8. Cart           — POST /cart/add
+//   9. Payment        — POST /orders/checkout, /payments/create-charge (Omise)
+//  10. Products       — POST/PUT/DELETE /products/*
+//  11. Points API     — GET/POST /user/points, /user/exchange-steps-to-points
+//  12. Rewards/Quests — GET/POST /rewards/*, /quests/*
+//  13. Admin          — GET/PUT /admin/* (ต้องการ role Admin)
+//  14. Quiz/Game      — GET/POST /quiz/*, /game/*
+//  15. Socket.io      — realtime notification ออเดอร์ใหม่
+// ============================================================
+
+// ── Dependencies ─────────────────────────────────────────────
 const express = require('express');
 const cors = require('cors');
 const mysql = require('mysql2');
@@ -85,6 +107,7 @@ db.on('error', (err) => {
   }
 });
 
+// ── JWT Secret + Omise Payment Gateway Config ────────────────
 const SECRET_KEY = "SUPER_SECRET_LONGLOY_APP";
 
 // Omise payment gateway configuration
@@ -137,6 +160,7 @@ function makeOmiseRequest(method, endpoint, data) {
   });
 }
 
+// ── ตั้งค่า charset + migration เบื้องต้น ────────────────────
 db.query("SET NAMES utf8mb4");
 
 // Add open_days / open_hours columns to tbl_floating_markets (safe to run multiple times)
@@ -184,7 +208,12 @@ db.query(createUserStepsTable, (err) => {
   }
 });
 
-// Initialize payment tables if they don't exist
+// ── initializeTables() — สร้าง/อัปเดตตาราง DB ตอน server เริ่ม ──
+// รันทุกครั้งที่ server boot ปลอดภัย (ใช้ IF NOT EXISTS / ALTER ADD IF NOT EXISTS)
+// ตารางที่สร้าง: payment_logs, tbl_redemption_history, tbl_coupon_usage,
+//               tbl_quests, tbl_user_quests, tbl_quiz_questions,
+//               tbl_settings, tbl_quiz_daily_sessions, tbl_product_sizes
+// Migration: เพิ่มคอลัมน์ใหม่ให้ตารางเดิมถ้ายังไม่มี
 const initializeTables = () => {
   // Drop and recreate tables to ensure clean state
   db.query('SET FOREIGN_KEY_CHECKS = 0', (err) => {
@@ -696,6 +725,10 @@ const initializeTables = () => {
 // Initialize tables on startup
 initializeTables();
 
+// ============================================================
+// AUTH ROUTES — ล็อกอิน, สมัครสมาชิก, Middleware ตรวจ token
+// ============================================================
+
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -730,6 +763,9 @@ app.post('/login', (req, res) => {
   });
 });
 
+// verifyToken — Middleware แนบกับทุก route ที่ต้อง login
+// อ่าน Bearer token จาก Authorization header → verify JWT → ใส่ req.user_id
+// ถ้า token หมดอายุหรือ user ถูก ban → ตอบ 401/403 ทันที
 function verifyToken(req, res, next) {
   const authHeader = req.headers['authorization'] || req.headers['Authorization'];
   let token = null;
@@ -802,6 +838,13 @@ app.post('/register', async (req, res) => {
   });
 });
 
+
+// ============================================================
+// MARKET ROUTES — ตลาดน้ำ (tbl_floating_markets)
+//   GET /floating-markets/search      ค้นหาตลาดตามชื่อ
+//   GET /floating-markets/all         ดึงทั้งหมด + จำนวนร้านในแต่ละตลาด
+//   GET /floating-markets/top3-weekly ท็อป 3 ตลาดที่มียอดสั่งซื้อสูงสุดในสัปดาห์นี้
+// ============================================================
 
 // Search floating markets by name (partial match)
 app.get('/floating-markets/search', (req, res) => {
@@ -879,6 +922,15 @@ app.get('/floating-markets/top3-weekly', (req, res) => {
     });
   });
 });
+
+// ============================================================
+// SHOP & PRODUCT ROUTES — ร้านค้าและสินค้า
+//   GET  /shops/by-market/:id          ร้านทั้งหมดในตลาด
+//   GET  /shops/:shop_id               ข้อมูลร้านเดียว
+//   GET  /product-detail/:id           รายละเอียดสินค้า + sizes
+//   GET  /products/by-shop/:id         สินค้าทั้งหมดในร้าน
+//   GET  /products/by-entre/:id        สินค้าทั้งหมดของผู้ประกอบการ
+// ============================================================
 
 // Get all shops by market_id
 app.get('/shops/by-market/:market_id', (req, res) => {
@@ -1009,7 +1061,16 @@ app.get('/products/by-entre/:entrepreneurs_id', (req, res) => {
   });
 });
 
-// Add new entrepreneur/shop
+// ============================================================
+// ENTREPRENEUR ROUTES — ผู้ประกอบการและการจัดการร้านค้า
+//   POST /add-entrepreneur             สมัครเป็นผู้ประกอบการ + สร้างร้าน
+//   GET  /entrepreneur/my-shops        ร้านทั้งหมดของผู้ใช้ที่ login อยู่
+//   GET  /entrepreneur/:user_id        ข้อมูลผู้ประกอบการตาม user_id
+//   GET  /my-shop                      ข้อมูลร้านของตัวเอง (สำหรับหน้า EditShop)
+//   PUT  /entrepreneur/shop-status/:id สลับสถานะ Open/Closed
+//   POST /edit-shop                    แก้ไขชื่อร้าน รูป เบอร์ ฯลฯ
+//   GET  /shop-sales/:shop_id          ยอดขายรายเดือนของร้าน
+// ============================================================
 
 // Add new entrepreneur/shop
 app.post('/add-entrepreneur', verifyToken, (req, res) => {
@@ -1251,6 +1312,12 @@ app.post('/edit-shop', verifyToken, (req, res) => {
   }
 });
 
+// ============================================================
+// SHOP ORDER MANAGEMENT — จัดการออเดอร์ฝั่งเจ้าของร้าน
+//   GET /shop-orders/:shop_id          ดึงออเดอร์ทั้งหมดในร้าน (เจ้าของร้านเท่านั้น)
+//   GET /shop-sales/:shop_id           ยอดขายรายวัน/รายเดือน (chart ใน dashboard)
+// ============================================================
+
 // Get all orders for a shop (with customer, product, quantity) - from payment system
 // Updated: Add token verification and check if user is the shop owner
 app.get('/shop-orders/:shop_id', verifyToken, (req, res) => {
@@ -1404,6 +1471,13 @@ app.get('/shop-sales/:shop_id', verifyToken, async (req, res) => {
   }
 });
 
+// ============================================================
+// REVIEW ROUTES — รีวิวตลาด, ร้านค้า, สินค้า
+//   GET/POST /market-reviews/:id    รีวิวตลาดน้ำ
+//   GET/POST /shop-reviews/:id      รีวิวร้านค้า
+//   GET/POST /product-reviews/:id   รีวิวสินค้า
+// ============================================================
+
 // Get reviews for a floating market (MySQL)
 app.get('/market-reviews/:market_id', (req, res) => {
   const { market_id } = req.params;
@@ -1555,6 +1629,17 @@ app.post('/shop-reviews/:shop_id', express.json(), (req, res) => {
 });
 
 
+
+// ============================================================
+// POINTS & STEP COUNTER ROUTES — แต้มสะสมและการนับก้าวเดิน
+//   POST /user/add-points               เพิ่มแต้มให้ user (legacy)
+//   POST /user/save-steps               บันทึกจำนวนก้าวลง user_steps
+//   GET  /user/step-history             ประวัติก้าวย้อนหลัง 30 วัน
+//   GET  /user/daily-step-reward        ตรวจว่ารับ reward วันนี้แล้วหรือยัง
+//   POST /user/claim-daily-steps-reward claim 100 แต้มเมื่อเดิน 5,000 ก้าว/วัน
+//   POST /user/steps                    บันทึก+ให้แต้มทันทีถ้าถึงเป้า (legacy)
+//   POST /user/sync-google-fit          sync ก้าวจาก Google Fit API
+// ============================================================
 
 // เพิ่มแต้มให้ user (ต้อง login)
 app.post('/user/add-points', verifyToken, (req, res) => {
@@ -1755,6 +1840,12 @@ app.post('/user/claim-daily-steps-reward', verifyToken, (req, res) => {
   });
 });
 
+// ============================================================
+// CART ROUTES — ตะกร้าสินค้า
+//   POST /cart/add   รับ cartItems จาก frontend แล้ว sync ไว้ใน DB
+//                    (ปัจจุบัน backend แค่ log ไว้ ตะกร้าจริงอยู่ใน localStorage)
+// ============================================================
+
 // Sync cart to backend
 app.post('/cart/add', verifyToken, (req, res) => {
   const user_id = req.user_id;
@@ -1765,7 +1856,20 @@ app.post('/cart/add', verifyToken, (req, res) => {
   res.json({ success: true, message: 'Cart synced' });
 });
 
-// ============ PAYMENT ENDPOINTS ============
+// ============================================================
+// PAYMENT ROUTES — การชำระเงินผ่าน Omise
+//   GET  /payments/token                ดึง Omise Public Key ให้ frontend tokenize บัตร
+//   POST /orders/checkout               สร้าง order + คำนวณยอด + ใช้คูปอง
+//   POST /payments/create-charge        ส่งบัตรไปชาร์จผ่าน Omise API
+//   GET  /orders/:id                    ดึงรายละเอียดออเดอร์ (buyer เท่านั้น)
+//   GET  /user-orders                   ประวัติออเดอร์ทั้งหมดของ user
+//   POST /orders/:id/cancel             ยกเลิกออเดอร์ (buyer)
+//   PUT  /orders/:id/status             อัปเดตสถานะออเดอร์ (เจ้าของร้าน)
+//   POST /orders/:id/confirm-payment    เจ้าของร้านยืนยันรับเงินสด → เปลี่ยนเป็น Cooking
+//   POST /webhooks/omise                webhook รับ notification จาก Omise
+//
+// queryAsync — helper แปลง db.query callback เป็น Promise สำหรับ async/await
+// ============================================================
 
 // Get Omise public key for frontend
 app.get('/payments/token', (req, res) => {
@@ -2350,6 +2454,16 @@ app.post('/webhooks/omise', express.json(), (req, res) => {
   res.json({ received: true });
 });
 
+// ============================================================
+// PRODUCT CRUD ROUTES — จัดการสินค้า
+//   POST   /edit-product                  แก้ไขสินค้า (legacy endpoint)
+//   POST   /upload-image                  อัปโหลดรูปภาพ base64 → บันทึกใน /uploads/
+//   POST   /products/add                  เพิ่มสินค้าใหม่ + sizes (ใช้ใน AddProduct.jsx)
+//   PUT    /products/update/:id           แก้ไขสินค้า + replace sizes
+//   DELETE /products/:id                  ลบสินค้า (Admin หรือเจ้าของร้านเท่านั้น)
+//   POST   /products/create               เพิ่มสินค้า (legacy endpoint)
+// ============================================================
+
 // แก้ไขข้อมูลสินค้า (ชื่อ, ราคา, สถานะการขาย) ต้อง login
 app.post('/edit-product', verifyToken, (req, res) => {
   const { product_id, name, price, is_available, image_url } = req.body;
@@ -2788,7 +2902,13 @@ app.post('/user/sync-google-fit', verifyToken, async (req, res) => {
   }
 });
 
-// ============ NEW POINTS ENDPOINTS ============
+// ============================================================
+// POINTS API — แต้มสะสม (ระบบใหม่ ใช้ tbl_users.current_points)
+//   GET  /user/points                     ดึงแต้มและวันหมดอายุของ user
+//   POST /user/exchange-steps-to-points   แปลงก้าวเป็นแต้ม (10 ก้าว = 1 แต้ม)
+//   POST /user/add-game-points            เพิ่มแต้มจากเกม (quiz, step counter)
+//   GET  /user/redemption-history         ประวัติการแลก reward ของ user
+// ============================================================
 
 // Get user's current accumulated points
 app.get('/user/points', verifyToken, async (req, res) => {
@@ -2891,7 +3011,13 @@ app.post('/user/exchange-steps-to-points', verifyToken, async (req, res) => {
   }
 });
 
-// ============ REWARDS ENDPOINTS ============
+// ============================================================
+// REWARDS & QUEST SYSTEM
+//   GET  /rewards                  รายการ reward ทั้งหมดที่แลกได้
+//   POST /rewards/redeem           แลกแต้มเป็นคูปอง (หักแต้ม + บันทึก redemption_history)
+//   GET  /quests                   เควสทั้งหมด + progress ของ user ที่ login
+//   POST /quests/:id/claim         claim รางวัลเควส (verify + เพิ่มแต้ม)
+// ============================================================
 
 // ══ QUEST SYSTEM ══════════════════════════════════════════════════
 
@@ -4024,7 +4150,13 @@ app.get('/user/my-coupons', verifyToken, async (req, res) => {
   }
 });
 
-// ── Socket.io realtime stats ─────────────────────────────────────────────────
+// ============================================================
+// SOCKET.IO — Realtime Stats สำหรับ Admin Dashboard
+//   ต่อ socket เฉพาะ Admin (verify JWT + role ใน io.use middleware)
+//   broadcastStats()   push ข้อมูล users/orders ให้ทุก Admin ทุก 6 วินาที
+//   fetchRealtimeStats() query ตัวเลขรวมจาก DB แล้ว callback กลับ
+//   event ที่ emit: "stats:update" → { totalUsers, tourists, businesses, orders }
+// ============================================================
 const httpServer = http.createServer(app);
 
 const io = new Server(httpServer, {
@@ -4217,6 +4349,18 @@ app.get('/admin/realtime-stats/markets', verifyAdmin, async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+// ============================================================
+// QUIZ & GAME ROUTES
+//   GET  /quiz/daily              ดึงชุดคำถามวันนี้ (5 ข้อสุ่ม, ทำวันละ 1 ครั้ง)
+//   POST /quiz/daily/complete     บันทึกคะแนน + เพิ่มแต้มให้ user
+//   GET  /quiz-questions          คำถามทั้งหมดที่ active (ใช้ใน GameQuiz.jsx)
+//   GET  /settings/game           ตรวจว่าเกมเปิดอยู่หรือเปล่า
+//   --- Admin ---
+//   GET/POST/PUT/DELETE /admin/quiz-questions  จัดการข้อสอบ
+//   GET/POST/PUT/DELETE /admin/quests         จัดการเควส
+//   PUT  /admin/settings/game                 เปิด/ปิดระบบเกม
+// ============================================================
 
 // ══════════════════════════════════════════════════════════════════
 // DAILY QUIZ SYSTEM
@@ -4645,7 +4789,7 @@ app.get('/admin/coupon-usage', verifyAdmin, (req, res) => {
 
 // ══ END ADMIN COUPON / REWARD MANAGEMENT ════════════════════════════════════
 
-// ── Start server ──────────────────────────────────────────────────────────────
+// ── เริ่ม server — ฟัง PORT จาก env (Railway ใช้ process.env.PORT) ──────────
 const PORT = process.env.PORT || 3000;
 httpServer.listen(PORT, () => {
   console.log('');

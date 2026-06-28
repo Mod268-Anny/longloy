@@ -1,3 +1,14 @@
+// ============================================================
+// ShopOrders.jsx — หน้าออเดอร์ของร้านค้า (standalone)
+//
+// หน้าที่: แสดงออเดอร์ทั้งหมดของร้านค้าตาม :shop_id
+//
+// หมายเหตุ: ฟีเจอร์นี้มีใน EntrepreneurDashboard.jsx ด้วย
+//           ไฟล์นี้เป็นหน้าแยกสำหรับกรณีที่ต้องการเปิดเฉพาะออเดอร์
+//
+// API: GET /shop-orders/:shop_id
+// เส้นทาง: /shop-orders/:shop_id
+// ============================================================
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { FaChevronLeft, FaRotateRight } from 'react-icons/fa6';

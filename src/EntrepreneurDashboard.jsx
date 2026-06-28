@@ -1,3 +1,16 @@
+// ============================================================
+// EntrepreneurDashboard.jsx — แดชบอร์ดผู้ประกอบการ
+//
+// หน้าที่: หน้าหลักสำหรับเจ้าของร้านค้า จัดการออเดอร์ สินค้า และดูยอดขาย
+//
+// แท็บที่มี:
+//   - orders   → ดูและอัปเดตสถานะออเดอร์ (AwaitingPayment → Cooking → Completed)
+//   - products → เพิ่ม / แก้ไข / ลบสินค้า พร้อมอัปโหลดรูปภาพ
+//   - sales    → ยอดขายรายเดือน + กราฟบาร์รายวัน
+//   - shop     → ดูและแก้ไขข้อมูลร้านค้า / เปิด-ปิดร้าน
+//
+// สำหรับ: เส้นทาง /entrepreneur-dashboard (ต้องล็อกอินและมีสิทธิ์ entrepreneur)
+// ============================================================
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { MdHome, MdStorefront, MdOutlineSportsEsports, MdHelpOutline } from 'react-icons/md';
