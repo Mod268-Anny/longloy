@@ -11,7 +11,7 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import useCartCount from './useCartCount';
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+import { FaChevronLeft, FaChevronRight, FaRocket, FaCircleQuestion, FaLock } from "react-icons/fa6";
 import { MdHome, MdStorefront, MdOutlineSportsEsports, MdHelpOutline } from "react-icons/md";
 import Footer from "./Footer";
 import FloatingCart from './FloatingCart';
@@ -25,7 +25,7 @@ const NAV = [
 
 const SERVICES = [
   {
-    id: 1, emoji: "🚀",
+    id: 1, icon: <FaRocket size={24} />,
     title: "Getting Started",
     description: "ส่วนแนะนำการใช้งานเบื้องต้นของแพลตฟอร์ม เพื่อช่วยให้ผู้ใช้งานใหม่สามารถเรียนรู้วิธีค้นหาสถานที่ ร้านค้า กิจกรรม และการใช้งานฟังก์ชันต่าง ๆ ได้อย่างรวดเร็ว",
     image: "https://images.unsplash.com/photo-1521321205814-9d673c65c167?q=80&w=800&auto=format&fit=crop",
@@ -42,7 +42,7 @@ const SERVICES = [
     },
   },
   {
-    id: 2, emoji: "❓",
+    id: 2, icon: <FaCircleQuestion size={24} />,
     title: "FAQs",
     description: "คำถามที่พบบ่อย เป็นส่วนที่รวบรวมคำถามและคำตอบเกี่ยวกับการใช้งานระบบ เพื่อช่วยแก้ไขข้อสงสัยของผู้ใช้งานได้อย่างรวดเร็ว",
     image: "https://images.unsplash.com/photo-1535378620166-273708d44e4c?q=80&w=800&auto=format&fit=crop",
@@ -59,7 +59,7 @@ const SERVICES = [
     },
   },
   {
-    id: 3, emoji: "🔒",
+    id: 3, icon: <FaLock size={24} />,
     title: "Privacy & Security",
     description: "อธิบายนโยบายความเป็นส่วนตัวและมาตรการรักษาความปลอดภัยของระบบ การปกป้องข้อมูลส่วนบุคคล และการรักษาความปลอดภัยของข้อมูล",
     image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=800&auto=format&fit=crop",
@@ -113,7 +113,7 @@ function DetailPage({ service, onBack, navigate, location }) {
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(15,23,42,0.15) 0%, rgba(15,23,42,0.7) 100%)" }} />
         <div style={{ position: "absolute", bottom: 24, left: 32, right: 32 }}>
           <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", margin: "0 0 6px" }}>Help Center</p>
-          <h1 style={{ color: "#fff", fontWeight: 800, fontSize: "clamp(1.5rem,4vw,2.4rem)", margin: "0 0 6px" }}>{service.emoji} {service.title}</h1>
+          <h1 style={{ color: "#fff", fontWeight: 800, fontSize: "clamp(1.5rem,4vw,2.4rem)", margin: "0 0 6px" }}>{service.icon} {service.title}</h1>
           <p style={{ color: "rgba(255,255,255,0.8)", fontSize: 14, margin: 0, fontStyle: "italic" }}>{details.tagline}</p>
         </div>
       </div>

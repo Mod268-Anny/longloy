@@ -11,15 +11,16 @@
 // ใช้ใน: AdminDashboard.jsx tab "dashboard"
 // ============================================================
 import React, { useState, useEffect } from 'react';
+import { FaUsers, FaBriefcase, FaStore, FaClock, FaBan, FaCartShopping, FaChartColumn, FaTriangleExclamation } from 'react-icons/fa6';
 import API_URL, { secureLocalFetch } from '../config';
 
 const STAT_CARDS = [
-  { key: "total_users",          emoji: "👥", label: "ผู้ใช้ทั้งหมด",      color: "#4b8ff4", bg: "#edf3ff", border: "#b8d4fb" },
-  { key: "total_tourists",       emoji: "🧳", label: "นักท่องเที่ยว",       color: "#4b8ff4", bg: "#edf3ff", border: "#b8d4fb" },
-  { key: "total_entrepreneurs",  emoji: "🏪", label: "ผู้ประกอบการ",        color: "#4b8ff4", bg: "#edf3ff", border: "#b8d4fb" },
-  { key: "pending_entrepreneurs",emoji: "⏳", label: "รอการอนุมัติ",        color: "#8d4d11", bg: "#fff8f0", border: "#d4880a" },
-  { key: "banned_users",         emoji: "🚫", label: "ผู้ใช้ที่ถูกแบน",    color: "#8d4d11", bg: "#fff0e8", border: "#ffe8d4" },
-  { key: "total_orders",         emoji: "🛒", label: "คำสั่งซื้อทั้งหมด",  color: "#8b5cf6", bg: "#f5f3ff", border: "#ddd6fe" },
+  { key: "total_users",          icon: <FaUsers size={20} />, label: "ผู้ใช้ทั้งหมด",      color: "#4b8ff4", bg: "#edf3ff", border: "#b8d4fb" },
+  { key: "total_tourists",       icon: <FaBriefcase size={20} />, label: "นักท่องเที่ยว",       color: "#4b8ff4", bg: "#edf3ff", border: "#b8d4fb" },
+  { key: "total_entrepreneurs",  icon: <FaStore size={20} />, label: "ผู้ประกอบการ",        color: "#4b8ff4", bg: "#edf3ff", border: "#b8d4fb" },
+  { key: "pending_entrepreneurs",icon: <FaClock size={20} />, label: "รอการอนุมัติ",        color: "#8d4d11", bg: "#fff8f0", border: "#d4880a" },
+  { key: "banned_users",         icon: <FaBan size={20} />, label: "ผู้ใช้ที่ถูกแบน",    color: "#8d4d11", bg: "#fff0e8", border: "#ffe8d4" },
+  { key: "total_orders",         icon: <FaCartShopping size={20} />, label: "คำสั่งซื้อทั้งหมด",  color: "#8b5cf6", bg: "#f5f3ff", border: "#ddd6fe" },
 ];
 
 function DashboardStats({ token }) {
@@ -50,12 +51,12 @@ function DashboardStats({ token }) {
   );
 
   if (error) return (
-    <div style={{ padding: "13px 16px", borderRadius: 10, background: "#fff0e8", border: "1px solid #ffe8d4", color: "#4a2008", fontSize: 13 }}>⚠️ {error}</div>
+    <div style={{ padding: "13px 16px", borderRadius: 10, background: "#fff0e8", border: "1px solid #ffe8d4", color: "#4a2008", fontSize: 13, display: "flex", alignItems: "center", gap: 8 }}><FaTriangleExclamation /> {error}</div>
   );
 
   return (
     <div>
-      <h2 style={{ fontWeight: 800, fontSize: 17, color: "#0f172a", margin: "0 0 20px" }}>📊 สถิติภาพรวม</h2>
+      <h2 style={{ fontWeight: 800, fontSize: 17, color: "#0f172a", margin: "0 0 20px", display: "flex", alignItems: "center", gap: 8 }}><FaChartColumn /> สถิติภาพรวม</h2>
 
       {/* Stat cards */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(160px,1fr))", gap: 16, marginBottom: 28 }}>
@@ -67,7 +68,7 @@ function DashboardStats({ token }) {
             onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = `0 8px 20px ${c.color}25`; }}
             onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}
           >
-            <div style={{ fontSize: 28, marginBottom: 10 }}>{c.emoji}</div>
+            <div style={{ fontSize: 28, marginBottom: 10, display: "flex", alignItems: "center" }}>{c.icon}</div>
             <div style={{ fontSize: 32, fontWeight: 900, color: c.color, lineHeight: 1, marginBottom: 6 }}>
               {stats?.[c.key] ?? "—"}
             </div>

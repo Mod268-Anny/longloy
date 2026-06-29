@@ -13,7 +13,7 @@
 // ============================================================
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { FaBasketShopping, FaXmark, FaTrashCan, FaCartPlus, FaLocationDot, FaMagnifyingGlass, FaChevronRight, FaStar } from "react-icons/fa6";
+import { FaBasketShopping, FaXmark, FaTrashCan, FaCartPlus, FaLocationDot, FaMagnifyingGlass, FaChevronRight, FaStar, FaWater } from "react-icons/fa6";
 import { MdHome, MdStorefront, MdOutlineSportsEsports, MdHelpOutline } from "react-icons/md";
 import Footer from "./Footer";
 import FloatingCart from './FloatingCart';
@@ -436,7 +436,7 @@ function ProductSkeleton() {
 function EmptyState({ text }) {
   return (
     <div style={{ textAlign:"center", padding:"80px 0", color:"#94a3b8" }}>
-      <p style={{ fontSize:40, margin:"0 0 12px" }}>🌊</p>
+      <p style={{ fontSize:40, margin:"0 0 12px", display:'flex', justifyContent:'center' }}><FaWater /></p>
       <p style={{ fontWeight:600, margin:0 }}>{text}</p>
     </div>
   );

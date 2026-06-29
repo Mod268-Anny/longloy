@@ -8,6 +8,7 @@
 // ใช้ใน: AdminPanel/GameContent.jsx แท็บ Quiz
 // ============================================================
 import React, { useState, useEffect } from 'react';
+import { FaPlus, FaRotateRight, FaBrain, FaCircleCheck, FaTrashCan, FaSpinner } from 'react-icons/fa6';
 import API_URL, { secureLocalFetch } from '../config';
 
 const OPTS = ['A', 'B', 'C', 'D'];
@@ -70,19 +71,19 @@ export default function QuizManagement({ token }) {
         <div style={{ width:4, height:22, borderRadius:2, background:'linear-gradient(to bottom,#4b8ff4,#2d6fd4)' }}/>
         <div>
           <p style={{ margin:0, fontSize:11, fontWeight:700, color:'#4b8ff4', letterSpacing:'0.1em', textTransform:'uppercase' }}>เกมตอบคำถาม</p>
-          <h2 style={{ margin:0, fontSize:18, fontWeight:800, color:'#0f172a' }}>🧠 จัดการคำถาม Quiz</h2>
+          <h2 style={{ margin:0, fontSize:18, fontWeight:800, color:'#0f172a', display:'flex', alignItems:'center', gap:8 }}><FaBrain /> จัดการคำถาม Quiz</h2>
         </div>
       </div>
 
       {msg && (
         <div style={{ marginBottom:16, padding:'10px 16px', borderRadius:10, background: msg.ok ? '#f0fdf4' : '#fef2f2', border:`1px solid ${msg.ok?'#bbf7d0':'#fca5a5'}`, color: msg.ok ? '#166534' : '#991b1b', fontWeight:600, fontSize:13 }}>
-          {msg.ok ? '✅' : '❌'} {msg.text}
+          {msg.ok ? <FaCircleCheck /> : <FaCircleXmark />} {msg.text}
         </div>
       )}
 
       {/* ── Add form ── */}
       <div style={{ background:'#f8fafc', borderRadius:16, padding:24, border:'1px solid #e8edf3', marginBottom:28 }}>
-        <p style={{ margin:'0 0 16px', fontWeight:700, fontSize:15, color:'#0f172a' }}>➕ เพิ่มคำถามใหม่</p>
+        <p style={{ margin:'0 0 16px', fontWeight:700, fontSize:15, color:'#0f172a', display:'flex', alignItems:'center', gap:8 }}><FaPlus /> เพิ่มคำถามใหม่</p>
         <form onSubmit={handleAdd} style={{ display:'flex', flexDirection:'column', gap:12 }}>
           <div>
             <label style={L}>คำถาม</label>
@@ -109,7 +110,7 @@ export default function QuizManagement({ token }) {
           </div>
           <button type="submit" disabled={saving}
             style={{ padding:'12px', borderRadius:12, border:'none', background: saving ? '#e2e8f0':'linear-gradient(135deg,#4b8ff4,#2d6fd4)', color: saving?'#94a3b8':'#fff', fontWeight:700, fontSize:14, cursor: saving?'not-allowed':'pointer', boxShadow: saving?'none':'0 4px 14px rgba(75,143,244,0.35)' }}>
-            {saving ? '⏳ กำลังบันทึก...' : '➕ เพิ่มคำถาม'}
+            {saving ? <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}><FaSpinner /> กำลังบันทึก...</span> : <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}><FaPlus /> เพิ่มคำถาม</span>}
           </button>
         </form>
       </div>
@@ -117,14 +118,14 @@ export default function QuizManagement({ token }) {
       {/* ── Question list ── */}
       <div style={{ marginBottom:8, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
         <p style={{ margin:0, fontWeight:700, fontSize:15, color:'#0f172a' }}>คำถามทั้งหมด ({questions.length})</p>
-        <button onClick={load} style={{ padding:'6px 14px', borderRadius:8, border:'1px solid #e2e8f0', background:'#fff', fontSize:12, fontWeight:600, color:'#475569', cursor:'pointer' }}>🔄 รีเฟรช</button>
+        <button onClick={load} style={{ padding:'6px 14px', borderRadius:8, border:'1px solid #e2e8f0', background:'#fff', fontSize:12, fontWeight:600, color:'#475569', cursor:'pointer', display:'inline-flex', alignItems:'center', gap:6 }}><FaRotateRight /> รีเฟรช</button>
       </div>
 
       {loading ? (
         <div style={{ textAlign:'center', padding:'40px 0', color:'#94a3b8' }}>กำลังโหลด...</div>
       ) : questions.length === 0 ? (
         <div style={{ textAlign:'center', padding:'40px 0', color:'#94a3b8' }}>
-          <p style={{ fontSize:32 }}>🧠</p><p style={{ fontWeight:600 }}>ยังไม่มีคำถาม</p>
+          <p style={{ fontSize:32 }}><FaBrain /></p><p style={{ fontWeight:600 }}>ยังไม่มีคำถาม</p>
         </div>
       ) : (
         <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
@@ -142,14 +143,14 @@ export default function QuizManagement({ token }) {
                       <div key={i} style={{ display:'flex', alignItems:'center', gap:6, padding:'5px 10px', borderRadius:8, background: q.correct_answer === i ? '#f0fdf4' : '#f8fafc', border:`1px solid ${q.correct_answer===i?'#bbf7d0':'#f1f5f9'}` }}>
                         <span style={{ fontWeight:800, fontSize:12, color: q.correct_answer===i?'#16a34a':'#94a3b8', minWidth:16 }}>{OPTS[i]}.</span>
                         <span style={{ fontSize:13, color: q.correct_answer===i?'#166534':'#475569', fontWeight: q.correct_answer===i?600:400 }}>{opt}</span>
-                        {q.correct_answer === i && <span style={{ marginLeft:'auto', fontSize:12 }}>✓</span>}
+                        {q.correct_answer === i && <span style={{ marginLeft:'auto', fontSize:12, display:'inline-flex', alignItems:'center' }}><FaCircleCheck /></span>}
                       </div>
                     ))}
                   </div>
                 </div>
                 <button onClick={() => handleDelete(q.question_id)}
                   style={{ flexShrink:0, width:32, height:32, borderRadius:8, border:'1px solid #fca5a5', background:'#fff5f5', color:'#ef4444', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', fontSize:13 }}>
-                  🗑️
+                  <FaTrashCan />
                 </button>
               </div>
             </div>

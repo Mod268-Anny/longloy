@@ -14,15 +14,16 @@
 // ============================================================
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { FaBasketShopping, FaCircleCheck, FaClipboardList, FaGift, FaMoneyBillWave, FaStore, FaTruckFast } from 'react-icons/fa6';
 import API_URL, { secureLocalFetch } from './config';
 import Footer from './Footer';
 import Navbar from './Navbar';
 
 const STEPS = [
-  { label: 'รอยืนยัน',     icon: '📋' },
-  { label: 'ยืนยันออเดอร์', icon: '✅' },
-  { label: 'จัดเตรียม',    icon: '🍳' },
-  { label: 'สำเร็จ',        icon: '🎉' },
+  { label: 'รอยืนยัน',     icon: <FaClipboardList /> },
+  { label: 'ยืนยันออเดอร์', icon: <FaCircleCheck /> },
+  { label: 'จัดเตรียม',    icon: <FaStore /> },
+  { label: 'สำเร็จ',        icon: <FaGift /> },
 ];
 
 function MiniStepper({ activeStep = 0 }) {
@@ -42,7 +43,7 @@ function MiniStepper({ activeStep = 0 }) {
               <div style={{ position: 'absolute', top: 18, left: '50%', width: '100%', height: 2, background: lineColor, borderRadius: 1, zIndex: 0 }} />
             )}
             <div style={{ width: 36, height: 36, borderRadius: '50%', zIndex: 1, background: dotBg, border: `2px solid ${dotBorder}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15, color: '#fff', fontWeight: 800 }}>
-              {done ? '✓' : step.icon}
+              {done ? <FaCircleCheck /> : step.icon}
             </div>
             <p style={{ margin: '8px 0 0', fontSize: 10, fontWeight: active ? 800 : 500, color: active ? '#fff' : 'rgba(255,255,255,0.65)', textAlign: 'center', lineHeight: 1.3 }}>{step.label}</p>
           </div>
@@ -101,7 +102,7 @@ export default function OrderConfirmation() {
           <div style={{ position: 'absolute', bottom: -30, left: -30, width: 120, height: 120, borderRadius: '50%', background: 'rgba(255,255,255,0.04)', pointerEvents: 'none' }} />
           <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', marginBottom: 8 }}>
             <div style={{ fontSize: 52, marginBottom: 10 }}>
-              {paymentResult.payment_method === 'cash' ? '✅' : '🎉'}
+              {paymentResult.payment_method === 'cash' ? <FaCircleCheck /> : <FaGift />}
             </div>
             <h2 style={{ margin: '0 0 6px', fontSize: 22, fontWeight: 900, color: '#fff' }}>
               {paymentResult.payment_method === 'cash' ? 'สั่งซื้อสำเร็จ!' : 'ชำระเงินสำเร็จ!'}
@@ -121,11 +122,11 @@ export default function OrderConfirmation() {
         {/* Order info card */}
         <div style={{ background: '#fff', borderRadius: 20, border: '1px solid #ede9e3', boxShadow: '0 2px 12px rgba(0,0,0,0.05)', marginBottom: 16, overflow: 'hidden', animation: 'oc-in 0.5s ease' }}>
           <div style={{ padding: '16px 22px', borderBottom: '1px solid #f0ebe3', background: '#faf8f5' }}>
-            <h3 style={{ margin: 0, fontWeight: 800, fontSize: 14, color: '#3d1a05' }}>📋 รายละเอียดคำสั่งซื้อ</h3>
+            <h3 style={{ margin: 0, fontWeight: 800, fontSize: 14, color: '#3d1a05', display: 'flex', alignItems: 'center', gap: 8 }}><FaClipboardList />รายละเอียดคำสั่งซื้อ</h3>
           </div>
           {[
             ['Order ID',  `#${paymentResult.order_id}`],
-            ['วิธีชำระ',  paymentResult.payment_method === 'cash' ? '💵 เงินสด' : '💳 บัตรเครดิต'],
+            ['วิธีชำระ',  paymentResult.payment_method === 'cash' ? 'เงินสด' : 'บัตรเครดิต'],
             ['สถานะ',     'รอยืนยันออเดอร์'],
             ['จำนวนเงิน', fmt(paymentResult.amount / 100)],
             ['วันที่',    new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })],
@@ -153,7 +154,7 @@ export default function OrderConfirmation() {
         {!loading && orderDetails?.items?.length > 0 && (
           <div style={{ background: '#fff', borderRadius: 20, border: '1px solid #ede9e3', boxShadow: '0 2px 12px rgba(0,0,0,0.05)', marginBottom: 16, overflow: 'hidden', animation: 'oc-in 0.55s ease' }}>
             <div style={{ padding: '16px 22px', borderBottom: '1px solid #f0ebe3', background: '#faf8f5' }}>
-              <h3 style={{ margin: 0, fontWeight: 800, fontSize: 14, color: '#3d1a05' }}>🛍️ สินค้าที่สั่งซื้อ</h3>
+              <h3 style={{ margin: 0, fontWeight: 800, fontSize: 14, color: '#3d1a05', display: 'flex', alignItems: 'center', gap: 8 }}><FaBasketShopping />สินค้าที่สั่งซื้อ</h3>
             </div>
             {orderDetails.items.map((item, idx) => (
               <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '13px 22px', borderBottom: idx < orderDetails.items.length - 1 ? '1px solid #f4f2ef' : 'none' }}>
@@ -168,19 +169,19 @@ export default function OrderConfirmation() {
         )}
 
         {loading && (
-          <div style={{ textAlign: 'center', padding: '16px 0', color: '#b89a7a', fontSize: 14 }}>⏳ กำลังโหลดรายละเอียด...</div>
+          <div style={{ textAlign: 'center', padding: '16px 0', color: '#b89a7a', fontSize: 14 }}>กำลังโหลดรายละเอียด...</div>
         )}
 
         {/* Next steps guide */}
         <div style={{ background: '#fff8f0', border: '1px solid rgba(141,77,17,0.2)', borderRadius: 16, padding: '16px 20px', marginBottom: 20, animation: 'oc-in 0.6s ease' }}>
           <p style={{ margin: '0 0 12px', fontSize: 13, fontWeight: 800, color: '#5c2c08' }}>
-            {paymentResult.payment_method === 'cash' ? '💵 ขั้นตอนถัดไป' : '📱 ขั้นตอนถัดไป'}
+            {paymentResult.payment_method === 'cash' ? 'ขั้นตอนถัดไป' : 'ขั้นตอนถัดไป'}
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {[
-              { icon: '📋', text: 'ร้านค้าจะยืนยันออเดอร์ของคุณ' },
-              { icon: '🍳', text: 'ร้านค้าเริ่มจัดเตรียมสินค้า' },
-              { icon: '🎉', text: 'รับสินค้า' + (paymentResult.payment_method === 'cash' ? ' และชำระเงินสด' : '') },
+              { icon: <FaClipboardList />, text: 'ร้านค้าจะยืนยันออเดอร์ของคุณ' },
+              { icon: <FaStore />, text: 'ร้านค้าเริ่มจัดเตรียมสินค้า' },
+              { icon: <FaTruckFast />, text: 'รับสินค้า' + (paymentResult.payment_method === 'cash' ? ' และชำระเงินสด' : '') },
             ].map((step, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <span style={{ fontSize: 16, flexShrink: 0 }}>{step.icon}</span>
@@ -194,11 +195,11 @@ export default function OrderConfirmation() {
         <div style={{ display: 'flex', gap: 12 }}>
           <button onClick={() => navigate('/user-orders')}
             style={{ flex: 1, padding: '14px', borderRadius: 14, border: '1.5px solid #ede9e3', background: '#fff', color: '#5c4a38', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
-            📦 ดูคำสั่งซื้อ
+            ดูคำสั่งซื้อ
           </button>
           <button onClick={() => navigate('/homepage')}
             style={{ flex: 1, padding: '14px', borderRadius: 14, border: 'none', background: 'linear-gradient(135deg,#8d4d11,#6b3a0d)', color: '#fff', fontSize: 14, fontWeight: 700, cursor: 'pointer', boxShadow: '0 6px 20px rgba(141,77,17,0.35)' }}>
-            🛍️ ช้อปต่อ
+            ช้อปต่อ
           </button>
         </div>
       </main>

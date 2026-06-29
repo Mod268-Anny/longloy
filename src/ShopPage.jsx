@@ -16,7 +16,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import {
   FaBasketShopping,
-  FaMagnifyingGlass, FaStar, FaChevronLeft,
+  FaLock, FaMagnifyingGlass, FaStar, FaChevronLeft, FaTriangleExclamation, FaStore,
 } from 'react-icons/fa6';
 import Footer from './Footer';
 import FloatingCart from './FloatingCart';
@@ -215,9 +215,9 @@ export default function ShopPage() {
             onChange={e => setSortBy(e.target.value)}
             style={{ appearance: "none", padding: "8px 32px 8px 14px", borderRadius: 10, border: "1.5px solid #e2e8f0", background: "#fff url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2394a3b8'/%3E%3C/svg%3E\") no-repeat right 10px center", fontSize: 13, fontWeight: 500, color: "#475569", cursor: "pointer", outline: "none" }}
           >
-            <option value="open_first">🟢 เปิดก่อน</option>
-            <option value="closed_first">🔴 ปิดก่อน</option>
-            <option value="rating">⭐ คะแนนสูงสุด</option>
+            <option value="open_first">เปิดก่อน</option>
+            <option value="closed_first">ปิดก่อน</option>
+            <option value="rating">คะแนนสูงสุด</option>
             <option value="name_az">ชื่อ A → Z</option>
           </select>
         </div>
@@ -237,12 +237,12 @@ export default function ShopPage() {
           </div>
         ) : error ? (
           <div style={{ textAlign: "center", padding: "60px 0", color: "#8d4d11" }}>
-            <p style={{ fontSize: 36, marginBottom: 8 }}>⚠️</p>
+            <p style={{ fontSize: 36, marginBottom: 8, display: 'flex', justifyContent: 'center' }}><FaTriangleExclamation /></p>
             <p style={{ fontWeight: 600 }}>{error}</p>
           </div>
         ) : filteredShops.length === 0 ? (
           <div style={{ textAlign: "center", padding: "80px 0", color: "#94a3b8" }}>
-            <p style={{ fontSize: 40, marginBottom: 12 }}>🏪</p>
+            <p style={{ fontSize: 40, marginBottom: 12, display: 'flex', justifyContent: 'center' }}><FaStore /></p>
             <p style={{ fontWeight: 600, fontSize: 16 }}>ไม่พบร้านค้าในตลาดน้ำนี้</p>
           </div>
         ) : (
@@ -328,12 +328,12 @@ function ShopCard({ shop, ratingObj, onProfile, onProducts, locked }) {
 
         {isClosed && (
           <div style={{ marginBottom: 8, padding: "6px 10px", borderRadius: 8, background: "#fef2f2", border: "1px solid rgba(239,68,68,0.2)", fontSize: 11, color: "#dc2626", fontWeight: 600, textAlign: "center" }}>
-            🔒 ร้านนี้ปิดให้บริการชั่วคราว
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><FaLock /><span>ร้านนี้ปิดให้บริการชั่วคราว</span></span>
           </div>
         )}
         {locked && !isClosed && (
           <div style={{ marginBottom: 8, padding: "6px 10px", borderRadius: 8, background: "#fff0db", border: "1px solid rgba(141,77,17,0.2)", fontSize: 11, color: "#8d4d11", fontWeight: 600, textAlign: "center" }}>
-            🔒 มีสินค้าในตะกร้าจากร้านอื่นอยู่แล้ว
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><FaLock /><span>มีสินค้าในตะกร้าจากร้านอื่นอยู่แล้ว</span></span>
           </div>
         )}
         <div style={{ display: "flex", gap: 8, marginTop: "auto" }}>
@@ -348,7 +348,7 @@ function ShopCard({ shop, ratingObj, onProfile, onProducts, locked }) {
             style={{ flex: 2, padding: "10px 0", borderRadius: 12, border: "none", background: disabled ? "#e2e8f0" : "#4b8ff4", color: disabled ? "#94a3b8" : "#fff", fontSize: 13, fontWeight: 700, cursor: disabled ? "not-allowed" : "pointer", boxShadow: disabled ? "none" : "0 3px 10px rgba(75,143,244,0.28)", transition: "all 0.18s" }}
             onMouseEnter={e => { if (!disabled) { e.currentTarget.style.background="#2d6fd4"; e.currentTarget.style.boxShadow="0 6px 18px rgba(75,143,244,0.42)"; } }}
             onMouseLeave={e => { if (!disabled) { e.currentTarget.style.background="#4b8ff4"; e.currentTarget.style.boxShadow="0 3px 10px rgba(75,143,244,0.28)"; } }}
-          >{isClosed ? "ร้านปิดชั่วคราว" : locked ? "🔒 เข้าร้าน" : "เข้าร้าน"}</button>
+          >{isClosed ? "ร้านปิดชั่วคราว" : locked ? "เข้าร้าน" : "เข้าร้าน"}</button>
         </div>
       </div>
     </div>

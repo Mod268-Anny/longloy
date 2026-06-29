@@ -15,7 +15,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import {
   FaUser, FaStore, FaShieldHalved, FaClipboardList,
-  FaArrowRightFromBracket, FaPlus, FaPhone, FaIdCard,
+  FaArrowRightFromBracket, FaPlus, FaPhone, FaIdCard, FaBasketShopping, FaCircleCheck, FaHand, FaHourglassHalf,
 } from 'react-icons/fa6';
 import Footer from './Footer';
 import { MdHome, MdStorefront, MdOutlineSportsEsports, MdHelpOutline } from 'react-icons/md';
@@ -154,7 +154,7 @@ function Profile() {
           </div>
 
           {/* Greeting */}
-          <p style={{ margin: "0 0 4px", fontSize: 13, color: "rgba(255,255,255,0.65)", fontWeight: 500 }}>ยินดีต้อนรับกลับมา 👋</p>
+          <p style={{ margin: "0 0 4px", fontSize: 13, color: "rgba(255,255,255,0.65)", fontWeight: 500, display:'flex', alignItems:'center', justifyContent:'center', gap:6 }}>ยินดีต้อนรับกลับมา <FaHand /></p>
 
           {/* Name */}
           <h1 style={{ margin: "0 0 10px", fontWeight: 900, fontSize: "clamp(1.3rem,4vw,1.7rem)", color: "#fff", letterSpacing: "-0.02em" }}>
@@ -180,7 +180,7 @@ function Profile() {
               color: user?.is_active ? "#86efac" : "#fca5a5",
               border: `1px solid ${user?.is_active ? "rgba(34,197,94,0.35)" : "rgba(239,68,68,0.35)"}`,
             }}>
-              {user?.is_active ? "✓ ใช้งานได้" : "✕ ถูกปิดใช้งาน"}
+              {user?.is_active ? "ใช้งานได้" : "ถูกปิดใช้งาน"}
             </span>
           </div>
 
@@ -232,7 +232,7 @@ function Profile() {
               <FaClipboardList style={{ color: "#8d4d11", fontSize: 20 }} />
             </div>
             <div>
-              <h3 style={{ margin: "0 0 3px", fontWeight: 700, fontSize: 15, color: "#0f172a" }}>📦 คำสั่งซื้อของฉัน</h3>
+              <h3 style={{ margin: "0 0 3px", fontWeight: 700, fontSize: 15, color: "#0f172a", display:'flex', alignItems:'center', gap:8 }}><FaBasketShopping />คำสั่งซื้อของฉัน</h3>
               <p style={{ margin: 0, fontSize: 13, color: "#94a3b8" }}>ดูประวัติการซื้อและสถานะคำสั่งซื้อของคุณ</p>
             </div>
           </div>
@@ -257,7 +257,7 @@ function Profile() {
               </div>
               <h2 style={{ margin: 0, fontWeight: 700, fontSize: 15, color: "#0f172a" }}>ข้อมูลร้านค้าของคุณ</h2>
               <span style={{ marginLeft: "auto", fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 6, background: entrepreneur?.is_verified === 1 ? "#f0fdf4" : "#fff8f0", color: entrepreneur?.is_verified === 1 ? "#166534" : "#5c2c08", border: `1px solid ${entrepreneur?.is_verified === 1 ? "#bbf7d0" : "rgba(141,77,17,0.25)"}` }}>
-                {entrepreneur?.is_verified === 1 ? "✓ อนุมัติแล้ว" : "⏳ รอการอนุมัติ"}
+                {entrepreneur?.is_verified === 1 ? "อนุมัติแล้ว" : "รอการอนุมัติ"}
               </span>
             </div>
 
@@ -278,7 +278,7 @@ function Profile() {
               <button onClick={() => navigate("/entrepreneur-dashboard")} className="profile-action-btn"
                 style={{ width: "100%", padding: "12px 16px", borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: "pointer", background: "linear-gradient(135deg,#8d4d11,#6b3a0d)", border: "none", color: "#fff", boxShadow: "0 4px 16px rgba(141,77,17,0.28)", transition: "all 0.15s" }}
               >
-                🏪 จัดการร้านค้า (Dashboard)
+                <span style={{ display:'inline-flex', alignItems:'center', gap:8 }}><FaStore />จัดการร้านค้า (Dashboard)</span>
               </button>
             )}
 
@@ -320,7 +320,7 @@ function Profile() {
                 <FaShieldHalved style={{ color: "#8d4d11", fontSize: 20 }} />
               </div>
               <div>
-                <h3 style={{ margin: "0 0 3px", fontWeight: 700, fontSize: 15, color: "#0f172a" }}>🛡️ ผู้ดูแลระบบ</h3>
+                <h3 style={{ margin: "0 0 3px", fontWeight: 700, fontSize: 15, color: "#0f172a", display:'flex', alignItems:'center', gap:8 }}><FaShieldHalved />ผู้ดูแลระบบ</h3>
                 <p style={{ margin: 0, fontSize: 13, color: "#94a3b8" }}>เข้าถึง Admin Dashboard เพื่อจัดการระบบ</p>
               </div>
             </div>

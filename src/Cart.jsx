@@ -15,7 +15,7 @@ import { checkoutCart } from './api/checkoutCart';
 import { syncCartToBackend } from './api/syncCartToBackend';
 import { useNavigate, useLocation } from 'react-router-dom';
 import API_URL, { secureLocalFetch, resolveImg } from './config';
-import { FaTrashCan, FaChevronLeft } from 'react-icons/fa6';
+import { FaTicket, FaTrashCan, FaChevronLeft, FaBasketShopping, FaLocationDot, FaMoneyBillWave, FaRuler, FaShop, FaCreditCard, FaCircleCheck, FaCircleXmark } from 'react-icons/fa6';
 import Footer from './Footer';
 import { MdHome, MdStorefront, MdOutlineSportsEsports, MdHelpOutline } from 'react-icons/md';
 
@@ -242,18 +242,18 @@ export default function Cart() {
             <div>
               <p style={{ color:"#8d4d11", fontSize:11, fontWeight:700, letterSpacing:"0.12em", textTransform:"uppercase", margin:"0 0 6px" }}>ช้อปปิ้ง</p>
               <h1 style={{ fontSize:"clamp(1.5rem,3vw,2rem)", fontWeight:900, color:"#0f172a", margin:0, letterSpacing:"-0.02em" }}>
-                🛒 ตะกร้าสินค้า
+                <span style={{ display:'inline-flex', alignItems:'center', gap:8 }}><FaBasketShopping />ตะกร้าสินค้า</span>
                 {cartItems.length > 0 && <span style={{ marginLeft:12, fontSize:15, fontWeight:500, color:"#64748b" }}>({totalQty} รายการ)</span>}
               </h1>
             </div>
             {cartItems.length > 0 && cartItems[0].shop_name && (
               <div style={{ display:"flex", alignItems:"center", gap:8, flexWrap:"wrap" }}>
                 <span style={{ display:"inline-flex", alignItems:"center", gap:5, padding:"6px 14px", borderRadius:999, background:"#fff8f0", border:"1.5px solid rgba(141,77,17,0.25)", fontSize:13, fontWeight:700, color:"#6b3a0d" }}>
-                  🏪 {cartItems[0].shop_name}
+                  <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}><FaShop />{cartItems[0].shop_name}</span>
                 </span>
                 {cartItems[0].market_name && (
                   <span style={{ display:"inline-flex", alignItems:"center", gap:5, padding:"6px 14px", borderRadius:999, background:"#fff8f0", border:"1.5px solid #d4880a", fontSize:13, fontWeight:600, color:"#5c2c08" }}>
-                    📍 {cartItems[0].market_name}
+                    <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}><FaLocationDot />{cartItems[0].market_name}</span>
                   </span>
                 )}
                 <span style={{ fontSize:12, color:"#94a3b8" }}>· 1 ร้านค้า ต่อ 1 ใบเสร็จ</span>
@@ -369,7 +369,7 @@ export default function Cart() {
                           <div style={{ display:"flex", gap:6, flexWrap:"wrap", alignItems:"center", marginBottom:6 }}>
                             {item.size_name && (
                               <span style={{ fontSize:11, background:"#fff8f0", color:"#8d4d11", padding:"2px 8px", borderRadius:6, fontWeight:700, border:"1px solid rgba(141,77,17,0.22)" }}>
-                                📏 {item.size_name}
+                                <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}><FaRuler />{item.size_name}</span>
                               </span>
                             )}
                             {item.unit && (
@@ -430,12 +430,12 @@ export default function Cart() {
                         <div style={{ display:"flex", gap:10, flexWrap:"wrap", marginBottom:12, paddingTop:14 }}>
                           {item.shop_name && (
                             <span style={{ display:"inline-flex", alignItems:"center", gap:5, fontSize:12, fontWeight:700, color:"#6b3a0d", background:"#fff8f0", border:"1px solid rgba(141,77,17,0.2)", borderRadius:8, padding:"4px 10px" }}>
-                              🏪 {item.shop_name}
+                              <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}><FaShop />{item.shop_name}</span>
                             </span>
                           )}
                           {item.market_name && (
                             <span style={{ display:"inline-flex", alignItems:"center", gap:5, fontSize:12, fontWeight:700, color:"#5c2c08", background:"#fff0db", border:"1px solid #e8b895", borderRadius:8, padding:"4px 10px" }}>
-                              📍 {item.market_name}
+                              <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}><FaLocationDot />{item.market_name}</span>
                             </span>
                           )}
                         </div>
@@ -508,14 +508,14 @@ export default function Cart() {
               {/* Coupon card */}
               <div style={{ background:"#fff", borderRadius:24, boxShadow:"0 4px 24px rgba(0,0,0,0.07)", border:"1px solid #ede9e3", overflow:"hidden" }}>
                 <div style={{ padding:"16px 20px", background:"linear-gradient(135deg,#fffbeb,#fff0db)", borderBottom:"1px solid #e8b895", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
-                  <p style={{ fontSize:13, fontWeight:800, color:"#5c2c08", margin:0 }}>🎟️ โค้ดส่วนลดของฉัน</p>
+                  <p style={{ fontSize:13, fontWeight:800, color:"#5c2c08", margin:0, display:'flex', alignItems:'center', gap:6 }}><FaTicket />โค้ดส่วนลดของฉัน</p>
                   <span style={{ fontSize:11, color:"#5c2c08", fontWeight:600, background:"#fff0db", padding:"3px 10px", borderRadius:6, border:"1px solid #e8b895" }}>เลือกได้ 1 ใบต่อออเดอร์</span>
                 </div>
 
                 <div style={{ padding:"14px 16px" }}>
                   {myCoupons.length === 0 ? (
                     <div style={{ textAlign:"center", padding:"20px 0", color:"#94a3b8" }}>
-                      <p style={{ fontSize:28, margin:"0 0 6px" }}>🎟️</p>
+                      <p style={{ fontSize:28, margin:"0 0 6px", display:'flex', justifyContent:'center' }}><FaTicket /></p>
                       <p style={{ fontSize:13, margin:0, fontWeight:500 }}>ยังไม่มีโค้ดส่วนลด</p>
                       <p style={{ fontSize:12, margin:"4px 0 0", color:"#b0bec5" }}>แลกแต้มที่หน้าเกมเพื่อรับโค้ด</p>
                     </div>
@@ -573,7 +573,7 @@ export default function Cart() {
                   {couponLoading && <p style={{ marginTop:8, fontSize:12, color:"#94a3b8", textAlign:"center" }}>⏳ กำลังตรวจสอบโค้ด...</p>}
                   {couponMsg && !couponLoading && (
                     <p style={{ marginTop:8, fontSize:12, fontWeight:700, color:couponMsg.type==='success'?"#166534":"#8d4d11", background:couponMsg.type==='success'?"#f0fdf4":"#fff8f0", padding:"8px 12px", borderRadius:8, border:`1px solid ${couponMsg.type==='success'?"#86efac":"rgba(141,77,17,0.25)"}` }}>
-                      {couponMsg.type==='success'?'✅':'❌'} {couponMsg.text}
+                      <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}>{couponMsg.type==='success'?<FaCircleCheck />:<FaCircleXmark />}{couponMsg.text}</span>
                     </p>
                   )}
                 </div>
@@ -596,7 +596,7 @@ export default function Cart() {
                     </div>
                     {couponDiscount > 0 && (
                       <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", background:"#fff8f0", padding:"8px 12px", borderRadius:10, border:"1px solid rgba(141,77,17,0.2)" }}>
-                        <span style={{ fontSize:13, color:"#8d4d11", fontWeight:600 }}>🎟️ {couponName || 'ส่วนลดโค้ด'}</span>
+                        <span style={{ fontSize:13, color:"#8d4d11", fontWeight:600, display:'inline-flex', alignItems:'center', gap:6 }}><FaTicket />{couponName || 'ส่วนลดโค้ด'}</span>
                         <span style={{ fontWeight:800, fontSize:14, color:"#8d4d11" }}>-฿{couponDiscount.toLocaleString()}</span>
                       </div>
                     )}
@@ -619,7 +619,7 @@ export default function Cart() {
 
                   {/* Payment note */}
                   <div style={{ background:"linear-gradient(135deg,#fff8f0,#fef3e6)", border:"1px solid rgba(141,77,17,0.18)", borderRadius:14, padding:"12px 16px", marginBottom:20, display:"flex", alignItems:"flex-start", gap:10 }}>
-                    <span style={{ fontSize:20, flexShrink:0 }}>💳</span>
+                    <span style={{ fontSize:20, flexShrink:0, display:'flex' }}><FaCreditCard /></span>
                     <div>
                       <p style={{ margin:"0 0 2px", fontSize:13, color:"#6b3a0d", fontWeight:700 }}>PromptPay QR / Mobile Banking</p>
                       <p style={{ margin:0, fontSize:12, color:"#8a6040", opacity:0.9 }}>สแกนและโอนผ่าน Mobile Banking ได้ทันที</p>
@@ -634,7 +634,7 @@ export default function Cart() {
                     onMouseEnter={e => { if (!isCheckingOut) { e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow="0 14px 36px rgba(141,77,17,0.5)"; } }}
                     onMouseLeave={e => { e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow=isCheckingOut?"none":"0 8px 28px rgba(141,77,17,0.42)"; }}
                   >
-                    {isCheckingOut ? '⏳ กำลังดำเนินการ...' : '🛒 ดำเนินการชำระเงิน'}
+                    {isCheckingOut ? 'กำลังดำเนินการ...' : 'ดำเนินการชำระเงิน'}
                   </button>
                 </div>
               </div>
@@ -664,7 +664,7 @@ export default function Cart() {
                 style={{ display:'flex', alignItems:'center', gap:16, padding:'18px 20px', borderRadius:16, border:'2px solid rgba(141,77,17,0.2)', background:'#fff8f0', cursor:'pointer', textAlign:'left', transition:'all 0.15s' }}
                 onMouseEnter={e => { e.currentTarget.style.borderColor='#8d4d11'; e.currentTarget.style.background='#fef0e0'; }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor='rgba(141,77,17,0.2)'; e.currentTarget.style.background='#fff8f0'; }}>
-                <div style={{ width:48, height:48, borderRadius:14, background:'linear-gradient(135deg,#8d4d11,#6b3a0d)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:22, flexShrink:0 }}>💳</div>
+                <div style={{ width:48, height:48, borderRadius:14, background:'linear-gradient(135deg,#8d4d11,#6b3a0d)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:22, flexShrink:0 }}><FaCreditCard /></div>
                 <div>
                   <p style={{ margin:'0 0 2px', fontWeight:800, fontSize:15, color:'#6b3a0d' }}>ชำระผ่านบัตรเครดิต</p>
                   <p style={{ margin:0, fontSize:12, color:'#8a6040' }}>ชำระออนไลน์ทันที · ปลอดภัย SSL</p>
@@ -677,7 +677,7 @@ export default function Cart() {
                 style={{ display:'flex', alignItems:'center', gap:16, padding:'18px 20px', borderRadius:16, border:'2px solid #86efac', background:'#f0fdf4', cursor:'pointer', textAlign:'left', transition:'all 0.15s' }}
                 onMouseEnter={e => { e.currentTarget.style.borderColor='#22c55e'; e.currentTarget.style.background='#dcfce7'; }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor='#86efac'; e.currentTarget.style.background='#f0fdf4'; }}>
-                <div style={{ width:48, height:48, borderRadius:14, background:'#22c55e', display:'flex', alignItems:'center', justifyContent:'center', fontSize:22, flexShrink:0 }}>💵</div>
+                <div style={{ width:48, height:48, borderRadius:14, background:'#22c55e', display:'flex', alignItems:'center', justifyContent:'center', fontSize:22, flexShrink:0 }}><FaMoneyBillWave /></div>
                 <div>
                   <p style={{ margin:'0 0 2px', fontWeight:800, fontSize:15, color:'#15803d' }}>ชำระเงินสด</p>
                   <p style={{ margin:0, fontSize:12, color:'#64748b' }}>จ่ายตอนรับสินค้า · ร้านค้าจัดเตรียมทันที</p>

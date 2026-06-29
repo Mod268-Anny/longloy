@@ -13,6 +13,7 @@
 // หมายเหตุ: ใช้ได้เฉพาะบนมือถือที่รองรับ DeviceMotionEvent
 // ============================================================
 import React from 'react';
+import { FaCircleCheck, FaCircleXmark, FaTriangleExclamation, FaCircleStop, FaPersonWalking, FaTrophy } from 'react-icons/fa6';
 import API_URL, { secureLocalFetch } from '../config';
 
 export default function GameStepCounter() {
@@ -111,7 +112,7 @@ export default function GameStepCounter() {
   const handleRewardAPI = React.useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
-      if (!token) { setSuccess('❌ ต้องล็อกอินก่อน'); setTimeout(() => setSuccess(null), 2000); return; }
+      if (!token) { setSuccess(<span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><FaCircleXmark /> ต้องล็อกอินก่อน</span>); setTimeout(() => setSuccess(null), 2000); return; }
       const res = await fetch(`${API_URL}/user/claim-daily-steps-reward`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
@@ -126,7 +127,7 @@ export default function GameStepCounter() {
         setRewardPoints(data.reward || 100);
         setRewardedToday(true);
         saveStepCount(stepCountRef.current, true);
-        setSuccess(`🎉 ยินดีด้วย! คุณได้รับ ${data.reward || 100} แต้ม`);
+        setSuccess(<span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><FaTrophy /> ยินดีด้วย! คุณได้รับ {data.reward || 100} แต้ม</span>);
         setTimeout(() => setSuccess(null), 4000);
       }
     } catch {}
@@ -160,7 +161,7 @@ export default function GameStepCounter() {
   const handleStartTracking = React.useCallback(async () => {
     try {
       if (!localStorage.getItem('token')) {
-        setSuccess('⚠️ ยังไม่ได้ล็อกอิน — นับก้าวได้ แต่ยังรับแต้มไม่ได้');
+        setSuccess(<span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><FaTriangleExclamation /> ยังไม่ได้ล็อกอิน — นับก้าวได้ แต่ยังรับแต้มไม่ได้</span>);
         setTimeout(() => setSuccess(null), 2500);
       }
       if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
@@ -173,10 +174,10 @@ export default function GameStepCounter() {
       setIsTracking(true);
       setShakeCount(0);
       motionEventCountRef.current = 0;
-      setSuccess('✅ เริ่มนับก้าวแล้ว! สั่นโทรศัพท์เพื่อนับ');
+      setSuccess(<span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><FaCircleCheck /> เริ่มนับก้าวแล้ว! สั่นโทรศัพท์เพื่อนับ</span>);
       setTimeout(() => setSuccess(null), 2000);
     } catch (error) {
-      setSuccess('❌ ไม่สามารถเข้าถึงเซ็นเซอร์ได้');
+      setSuccess(<span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><FaCircleXmark /> ไม่สามารถเข้าถึงเซ็นเซอร์ได้</span>);
       setTimeout(() => setSuccess(null), 2000);
     }
   }, [handleMotion]);
@@ -185,7 +186,7 @@ export default function GameStepCounter() {
     isTrackingRef.current = false;
     window.removeEventListener('devicemotion', handleMotion);
     setIsTracking(false);
-    setSuccess('⏹️ หยุดนับก้าวแล้ว');
+    setSuccess(<span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><FaCircleStop /> หยุดนับก้าวแล้ว</span>);
     setTimeout(() => setSuccess(null), 2000);
   }, [handleMotion]);
 
@@ -199,8 +200,8 @@ export default function GameStepCounter() {
   const handleExchangeStepsToPoints = React.useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
-      if (!token) { setExchangeMessage('❌ ต้องล็อกอินก่อน'); setTimeout(() => setExchangeMessage(null), 2000); return; }
-      if (steps <= 0) { setExchangeMessage('⚠️ ไม่มีก้าวที่จะแลก'); setTimeout(() => setExchangeMessage(null), 2000); return; }
+      if (!token) { setExchangeMessage(<span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><FaCircleXmark /> ต้องล็อกอินก่อน</span>); setTimeout(() => setExchangeMessage(null), 2000); return; }
+      if (steps <= 0) { setExchangeMessage(<span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><FaTriangleExclamation /> ไม่มีก้าวที่จะแลก</span>); setTimeout(() => setExchangeMessage(null), 2000); return; }
       setExchangeLoading(true);
       const res = await secureLocalFetch(`${API_URL}/user/exchange-steps-to-points`, {
         method: 'POST',
@@ -209,7 +210,7 @@ export default function GameStepCounter() {
       });
       const data = await res.json();
       if (res.ok && data.success) {
-        setExchangeMessage(`🎉 สำเร็จ! แลก ${data.stepsUsed} ก้าว ได้ ${data.pointsEarned} แต้ม`);
+        setExchangeMessage(<span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><FaCircleCheck /> สำเร็จ! แลก {data.stepsUsed} ก้าว ได้ {data.pointsEarned} แต้ม</span>);
         setCurrentPoints(data.currentPoints);
         stepCountRef.current = 0;
         setSteps(0);
@@ -217,11 +218,11 @@ export default function GameStepCounter() {
         localStorage.setItem('stepCounter', JSON.stringify({ date: today, count: 0, rewarded: rewardedToday }));
         setTimeout(() => setExchangeMessage(null), 3000);
       } else {
-        setExchangeMessage(`❌ ${data.message || 'เกิดข้อผิดพลาด'}`);
+        setExchangeMessage(<span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><FaCircleXmark /> {data.message || 'เกิดข้อผิดพลาด'}</span>);
         setTimeout(() => setExchangeMessage(null), 2000);
       }
     } catch (error) {
-      setExchangeMessage(`❌ ${error.message}`);
+      setExchangeMessage(<span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><FaCircleXmark /> {error.message}</span>);
       setTimeout(() => setExchangeMessage(null), 2000);
     } finally { setExchangeLoading(false); }
   }, [steps, rewardedToday]);
@@ -239,7 +240,7 @@ export default function GameStepCounter() {
   const handleSaveStepsToDatabase = React.useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
-      if (!token) { setSuccess('❌ ไม่มี token - กรุณา login ก่อน'); setTimeout(() => setSuccess(null), 3000); return; }
+      if (!token) { setSuccess(<span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><FaCircleXmark /> ไม่มี token - กรุณา login ก่อน</span>); setTimeout(() => setSuccess(null), 3000); return; }
       const dateISO = new Date().toISOString().split('T')[0];
       const res = await secureLocalFetch(`${API_URL}/user/save-steps`, {
         method: 'POST',
@@ -248,7 +249,7 @@ export default function GameStepCounter() {
       });
       const data = await res.json();
       if (res.ok && data.success) {
-        setSuccess(`🎉 บันทึก ${stepCountRef.current} ก้าวสำเร็จ!`);
+        setSuccess(<span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><FaCircleCheck /> บันทึก {stepCountRef.current} ก้าวสำเร็จ!</span>);
         setTimeout(() => setSuccess(null), 3000);
         const histRes = await secureLocalFetch(`${API_URL}/user/step-history`, { headers: { 'Authorization': `Bearer ${token}` } });
         const histData = await histRes.json();
@@ -257,7 +258,7 @@ export default function GameStepCounter() {
         throw new Error(data.error || 'Failed to save');
       }
     } catch (error) {
-      setSuccess(`❌ บันทึกไม่สำเร็จ: ${error.message}`);
+      setSuccess(<span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><FaCircleXmark /> บันทึกไม่สำเร็จ: {error.message}</span>);
       setTimeout(() => setSuccess(null), 3000);
     }
   }, []);
@@ -280,7 +281,12 @@ export default function GameStepCounter() {
     ? Math.round(stepHistory.reduce((s, r) => s + (r.step_count || 0), 0) / stepHistory.length)
     : 0;
 
-  const alertKind = (msg) => msg.includes('❌') ? 'error' : msg.includes('⚠️') ? 'warn' : 'success';
+  const alertKind = (msg) => {
+    if (typeof msg === 'string') {
+      return msg.includes('❌') ? 'error' : msg.includes('⚠️') ? 'warn' : 'success';
+    }
+    return 'success';
+  };
   const alertStyle = {
     error:   { bg: "#fff0e8", border: "#e8b895", color: "#4a2008" },
     warn:    { bg: "#fff8f0", border: "#d4880a", color: "#5c2c08" },
@@ -298,7 +304,7 @@ export default function GameStepCounter() {
       <div style={{ padding:"20px 20px 0", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
         <div>
           <p style={{ margin:0, fontSize:11, color:"#b89a7a", fontWeight:700, letterSpacing:"0.08em", textTransform:"uppercase" }}>เกมสะสมก้าว</p>
-          <h2 style={{ margin:"2px 0 0", fontSize:20, fontWeight:900, color:"#3d1a05" }}>🚶 เกมเก็บก้าว</h2>
+          <h2 style={{ margin:"2px 0 0", fontSize:20, fontWeight:900, color:"#3d1a05", display:'inline-flex', alignItems:'center', gap:8 }}><FaPersonWalking /> เกมเก็บก้าว</h2>
         </div>
         <div style={{ width:50, height:50, borderRadius:"50%", background:"linear-gradient(135deg,#8d4d11,#6b3a0d)", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", boxShadow:"0 4px 14px rgba(141,77,17,0.3)" }}>
           <span style={{ fontSize:14, fontWeight:900, color: goal100 ? "#4ade80" : "#fff", lineHeight:1 }}>{Math.round(pct*100)}%</span>

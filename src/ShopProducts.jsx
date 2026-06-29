@@ -12,7 +12,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
-  FaPlus, FaPenToSquare, FaTrashCan, FaBoxOpen,
+  FaPlus, FaPenToSquare, FaTrashCan, FaBoxOpen, FaTriangleExclamation, FaBoxArchive, FaCircleCheck,
 } from 'react-icons/fa6';
 import Footer from './Footer';
 import FloatingCart from './FloatingCart';
@@ -145,7 +145,7 @@ export default function ShopProducts() {
       <Navbar />
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "70vh", padding: 24 }}>
         <div style={{ background: "#fff", borderRadius: 20, padding: "48px 40px", textAlign: "center", maxWidth: 440, border: "1px solid #ffe8d4", boxShadow: "0 4px 20px rgba(141,77,17,0.08)" }}>
-          <p style={{ fontSize: 48, margin: "0 0 16px" }}>⚠️</p>
+          <p style={{ fontSize: 48, margin: "0 0 16px", display:'flex', justifyContent:'center' }}><FaTriangleExclamation /></p>
           <h2 style={{ fontWeight: 700, fontSize: 18, color: "#0f172a", margin: "0 0 10px" }}>ไม่สามารถเข้าถึงได้</h2>
           <p style={{ fontSize: 14, color: "#64748b", margin: "0 0 24px", lineHeight: 1.7 }}>{error}</p>
           <button onClick={() => navigate('/profile')} style={{ padding: "11px 28px", borderRadius: 10, border: "none", background: "linear-gradient(135deg,#4b8ff4,#4b8ff4)", color: "#fff", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
@@ -175,7 +175,7 @@ export default function ShopProducts() {
         <div style={{ background: "#fff", borderRadius: 20, border: "1px solid #f1f5f9", padding: "24px 28px", marginBottom: 28, boxShadow: "0 1px 4px rgba(0,0,0,0.05)", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
           <div>
             <p style={{ color: "#4b8ff4", fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", margin: "0 0 4px" }}>จัดการร้านค้า</p>
-            <h1 style={{ fontWeight: 800, fontSize: "clamp(1.2rem,2.5vw,1.6rem)", color: "#0f172a", margin: "0 0 4px" }}>📦 จัดการสินค้า</h1>
+            <h1 style={{ fontWeight: 800, fontSize: "clamp(1.2rem,2.5vw,1.6rem)", color: "#0f172a", margin: "0 0 4px", display:'flex', alignItems:'center', gap:8 }}><FaBoxArchive />จัดการสินค้า</h1>
             {entrepreneur?.shop_name && (
               <p style={{ fontSize: 14, color: "#64748b", margin: 0 }}>
                 ร้าน <strong style={{ color: "#0f172a" }}>{entrepreneur.shop_name}</strong>
@@ -198,12 +198,12 @@ export default function ShopProducts() {
         {/* Alerts */}
         {error && (
           <div style={{ background: "#fff0e8", border: "1px solid #ffe8d4", borderRadius: 12, padding: "13px 18px", marginBottom: 20, color: "#4a2008", fontSize: 14, fontWeight: 500 }}>
-            ⚠️ {error}
+            {error}
           </div>
         )}
         {success && (
           <div style={{ background: "#edf3ff", border: "1px solid #b8d4fb", borderRadius: 12, padding: "13px 18px", marginBottom: 20, color: "#1a3a6e", fontSize: 14, fontWeight: 500 }}>
-            ✓ {success}
+            <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}><FaCircleCheck />{success}</span>
           </div>
         )}
 
@@ -285,7 +285,7 @@ function ProductCard({ product, deleting, onEdit, onDelete }) {
           color: "#fff", fontSize: 11, fontWeight: 700,
           padding: "3px 10px", borderRadius: 6, backdropFilter: "blur(4px)",
         }}>
-          {product.is_available ? "✓ พร้อมขาย" : "✕ ไม่พร้อม"}
+          {product.is_available ? "พร้อมขาย" : "ไม่พร้อม"}
         </div>
       </div>
 

@@ -16,7 +16,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import API_URL, { secureLocalFetch, resolveImg } from './config';
 import { MdHome, MdStorefront, MdOutlineSportsEsports, MdHelpOutline } from 'react-icons/md';
-import { FaChevronLeft } from 'react-icons/fa6';
+import { FaBasketShopping, FaChevronLeft, FaFaceFrown, FaLocationDot, FaPen, FaShop, FaTriangleExclamation } from 'react-icons/fa6';
 import Footer from './Footer';
 import FloatingCart from './FloatingCart';
 import useCartCount from './useCartCount';
@@ -139,14 +139,14 @@ export default function ProductDetail() {
       : [...cart, newItem];
     localStorage.setItem('cart', JSON.stringify(next));
     window.dispatchEvent(new Event('cart-updated'));
-    setAddedMsg('✅ เพิ่มลงตะกร้าแล้ว!');
+    setAddedMsg('เพิ่มลงตะกร้าแล้ว!');
     setTimeout(() => setAddedMsg(''), 2000);
   };
 
   if (loading) return (
     <div style={{ minHeight:'100vh', background:'#f4f2ef', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:"'Inter',system-ui,sans-serif" }}>
       <div style={{ textAlign:'center', color:'#94a3b8' }}>
-        <div style={{ fontSize:40, marginBottom:12 }}>⏳</div>
+        <div style={{ fontSize:40, marginBottom:12 }}>...</div>
         <p style={{ fontWeight:600 }}>กำลังโหลดข้อมูล...</p>
       </div>
     </div>
@@ -154,7 +154,7 @@ export default function ProductDetail() {
   if (!product) return (
     <div style={{ minHeight:'100vh', background:'#f4f2ef', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:"'Inter',system-ui,sans-serif" }}>
       <div style={{ textAlign:'center', color:'#94a3b8' }}>
-        <div style={{ fontSize:40, marginBottom:12 }}>😕</div>
+        <div style={{ fontSize:40, marginBottom:12, display:'flex', justifyContent:'center', color:'#94a3b8' }}><FaFaceFrown /></div>
         <p style={{ fontWeight:600 }}>ไม่พบข้อมูลสินค้า</p>
         <button onClick={() => navigate(-1)} style={{ marginTop:16, padding:'10px 24px', background:'linear-gradient(135deg,#8d4d11,#6b3a0d)', color:'#fff', border:'none', borderRadius:10, cursor:'pointer', fontWeight:600 }}>ย้อนกลับ</button>
       </div>
@@ -341,12 +341,12 @@ export default function ProductDetail() {
                       style={{ display:'inline-flex', alignItems:'center', gap:5, padding:'6px 14px', borderRadius:999, background:'#fff8f0', border:'1.5px solid rgba(141,77,17,0.22)', fontSize:13, fontWeight:700, color:'#8d4d11', cursor: product.shop_id ? 'pointer' : 'default', transition:'all 0.15s' }}
                       onMouseEnter={e => { if (product.shop_id) { e.currentTarget.style.background='#fef0e0'; e.currentTarget.style.borderColor='#8d4d11'; }}}
                       onMouseLeave={e => { e.currentTarget.style.background='#fff8f0'; e.currentTarget.style.borderColor='rgba(141,77,17,0.22)'; }}>
-                      🏪 {product.shop_name}{product.shop_id ? ' →' : ''}
+                      <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}><FaShop />{product.shop_name}{product.shop_id ? ' →' : ''}</span>
                     </button>
                   )}
                   {product.market_name && (
                     <span style={{ padding:'6px 14px', borderRadius:999, background:'#f4f2ef', border:'1.5px solid #d4c8b8', fontSize:13, fontWeight:600, color:'#7a6550' }}>
-                      📍 {product.market_name}
+                      <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}><FaLocationDot />{product.market_name}</span>
                     </span>
                   )}
                 </div>
@@ -363,7 +363,7 @@ export default function ProductDetail() {
                   style={{ flex:1, minWidth:160, padding:'14px 24px', background: addedMsg ? 'linear-gradient(135deg,#22c55e,#16a34a)' : 'linear-gradient(135deg,#8d4d11,#6b3a0d)', color:'#fff', border:'none', borderRadius:14, fontWeight:700, fontSize:15, cursor:'pointer', boxShadow: addedMsg ? '0 6px 20px rgba(34,197,94,0.38)' : '0 8px 26px rgba(141,77,17,0.38)', transition:'all 0.3s' }}
                   onMouseEnter={e => { if (!addedMsg) e.currentTarget.style.transform='translateY(-2px)'; }}
                   onMouseLeave={e => { e.currentTarget.style.transform='none'; }}>
-                  {addedMsg || '🛒 เพิ่มลงตะกร้า'}
+                  <span style={{ display:'inline-flex', alignItems:'center', gap:8 }}><FaBasketShopping />{addedMsg || 'เพิ่มลงตะกร้า'}</span>
                 </button>
               </div>
             </div>
@@ -386,7 +386,7 @@ export default function ProductDetail() {
                 <p style={{ color:'#5c4a38', fontSize:14, lineHeight:1.9, margin:0 }}>{product.description}</p>
               ) : (
                 <div style={{ textAlign:'center', padding:'32px 0', color:'#b0a090' }}>
-                  <p style={{ fontSize:28, margin:'0 0 8px' }}>📝</p>
+                  <p style={{ fontSize:28, margin:'0 0 8px', display:'flex', justifyContent:'center' }}><FaPen /></p>
                   <p style={{ fontWeight:600, margin:0 }}>ยังไม่มีรายละเอียดสินค้า</p>
                 </div>
               )
@@ -440,8 +440,8 @@ export default function ProductDetail() {
         <main className="rsp-main" style={{ maxWidth:1100, margin:'0 auto', padding:'0 24px 48px' }}>
           <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:18 }}>
             <div>
-              <h2 style={{ margin:'0 0 3px', fontWeight:900, fontSize:19, color:'#1a0f08', letterSpacing:'-0.01em' }}>🛍️ สินค้าในตลาดน้ำเดียวกัน</h2>
-              {product?.market_name && <p style={{ margin:0, fontSize:13, color:'#b0a090', fontWeight:500 }}>📍 {product.market_name}</p>}
+              <h2 style={{ margin:'0 0 3px', fontWeight:900, fontSize:19, color:'#1a0f08', letterSpacing:'-0.01em', display:'flex', alignItems:'center', gap:8 }}><FaBasketShopping />สินค้าในตลาดน้ำเดียวกัน</h2>
+              {product?.market_name && <p style={{ margin:0, fontSize:13, color:'#b0a090', fontWeight:500, display:'flex', alignItems:'center', gap:6 }}><FaLocationDot />{product.market_name}</p>}
             </div>
           </div>
           <div className="rsp-grid-auto" style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(190px,1fr))', gap:16 }}>
@@ -484,7 +484,7 @@ function RelatedCard({ product: p, onNavigate }) {
           {p.name}
         </p>
         {p.shop_name && (
-          <span style={{ fontSize:11, color:'#94a3b8', fontWeight:600 }}>🏪 {p.shop_name}</span>
+          <span style={{ fontSize:11, color:'#94a3b8', fontWeight:600, display:'inline-flex', alignItems:'center', gap:5 }}><FaShop />{p.shop_name}</span>
         )}
         <div style={{ marginTop:'auto', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
           <span style={{ fontWeight:800, fontSize:15, color:'#8d4d11' }}>฿{Number(p.price||0).toLocaleString()}</span>

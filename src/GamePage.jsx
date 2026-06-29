@@ -14,6 +14,7 @@ import React, { useState } from 'react';
 import API_URL, { secureLocalFetch } from './config';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { MdHome, MdHelpOutline, MdOutlineSportsEsports, MdStorefront } from 'react-icons/md';
+import { FaGamepad, FaStar, FaGift, FaTicketSimple, FaTicket, FaTrophy, FaGem, FaStore, FaPersonRunning, FaBrain, FaCircleCheck, FaLock, FaSpinner, FaRotateRight } from 'react-icons/fa6';
 import Footer from './Footer';
 import FloatingCart from './FloatingCart';
 import GameBuyProduct from './games/GameBuyProduct';
@@ -30,12 +31,12 @@ const NAV = [
 ];
 
 const GAME_CARDS = [
-  { key: "buy",  emoji: "🛍️", label: "เกมซื้อของ",  sub: "ซื้อสินค้าเพื่อรับแต้มพิเศษ",   col: "#8d4d11", dark: "#6b3a0d" },
-  { key: "step", emoji: "🏃",  label: "เกมเก็บก้าว", sub: "เดินและออกกำลังกายเก็บคะแนน",   col: "#8d4d11", dark: "#6b3a0d" },
-  { key: "quiz", emoji: "🧠", label: "เกมตอบคำถาม", sub: "ตอบคำถามรับแต้มโบนัส",           col: "#8d4d11", dark: "#6b3a0d" },
+  { key: "buy",  icon: <FaStore size={24} />, label: "เกมซื้อของ",  sub: "ซื้อสินค้าเพื่อรับแต้มพิเศษ",   col: "#8d4d11", dark: "#6b3a0d" },
+  { key: "step", icon: <FaPersonRunning size={24} />, label: "เกมเก็บก้าว", sub: "เดินและออกกำลังกายเก็บคะแนน",   col: "#8d4d11", dark: "#6b3a0d" },
+  { key: "quiz", icon: <FaBrain size={24} />, label: "เกมตอบคำถาม", sub: "ตอบคำถามรับแต้มโบนัส",           col: "#8d4d11", dark: "#6b3a0d" },
 ];
 
-const REWARD_ICONS = ["🎟️", "🎫", "🏆", "🎀", "💎", "🌟"];
+const REWARD_ICONS = [<FaTicketSimple size={20} />, <FaTicket size={20} />, <FaTrophy size={20} />, <FaGem size={20} />, <FaStar size={20} />, <FaGift size={20} />];
 
 /* ═══════════════════════════════════════════════════════════════ */
 export default function GamePage() {
@@ -80,7 +81,7 @@ export default function GamePage() {
           setPointsExpiryDate(data.expiry_date || data.points_expiry_date);
         }
       } catch (e) {
-        console.error('❌ Error fetching points:', e);
+        console.error('Error fetching points:', e);
       }
       finally { setLoading(false); }
     };
@@ -135,7 +136,13 @@ export default function GamePage() {
       });
       const data = await res.json();
       if (res.ok && data.success) {
-        setRedeemMsg(`🎉 ${data.message}\n🎟️ คูปอง: ${data.coupon_code}\n⭐ ใช้แต้มไป: ${data.points_spent}`);
+        setRedeemMsg(
+          <div style={{ display: 'grid', gap: 8 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}><FaGift /> <span>{data.message}</span></div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}><FaTicketSimple /> <span>คูปอง: {data.coupon_code}</span></div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}><FaStar /> <span>ใช้แต้มไป: {data.points_spent}</span></div>
+          </div>
+        );
         setTotalPoints(data.remaining_points);
         const hist = await secureLocalFetch(`${API_URL}/user/redemption-history`, { headers: { Authorization: `Bearer ${token}` } });
         const hd = await hist.json();
@@ -232,8 +239,8 @@ export default function GamePage() {
 
         <div style={{ maxWidth: 1100, margin: "0 auto", padding: "56px 24px 0", position: "relative", zIndex: 1 }}>
 
-          <h1 className="gp-h1" style={{ fontSize:"clamp(2rem,4vw,3.2rem)", fontWeight:900, margin:"0 0 10px", color:"#fff", letterSpacing:"-0.03em", lineHeight:1.1 }}>
-            🎮 <span style={{ background:"linear-gradient(90deg,#fff 0%,#f5d0a0 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>Game Center</span>
+          <h1 className="gp-h1" style={{ fontSize:"clamp(2rem,4vw,3.2rem)", fontWeight:900, margin:"0 0 10px", color:"#fff", letterSpacing:"-0.03em", lineHeight:1.1, display:"flex", alignItems:"center", gap:10 }}>
+            <FaGamepad /> <span style={{ background:"linear-gradient(90deg,#fff 0%,#f5d0a0 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>Game Center</span>
           </h1>
           <p style={{ color:"rgba(255,255,255,0.5)", fontSize:15, margin:"0 0 40px", lineHeight:1.6 }}>เล่นเกม ทำภารกิจ สะสมแต้ม · แลกรับของรางวัลสุดพิเศษ</p>
 
@@ -255,8 +262,8 @@ export default function GamePage() {
               </div>
               <div style={{ display:"flex", gap:16, marginTop:12, flexWrap:"wrap", alignItems:"center" }}>
                 <div style={{ display:"flex", gap:16 }}>
-                  {[{ icon:"🏃", label:"เดิน" },{ icon:"🛍️", label:"ซื้อของ" },{ icon:"🧠", label:"ตอบคำถาม" }].map(s => (
-                    <span key={s.label} style={{ fontSize:11, color:"rgba(255,255,255,0.35)", fontWeight:600 }}>{s.icon} {s.label}</span>
+                  {[{ icon:<FaPersonRunning />, label:"เดิน" },{ icon:<FaStore />, label:"ซื้อของ" },{ icon:<FaBrain />, label:"ตอบคำถาม" }].map(s => (
+                    <span key={s.label} style={{ fontSize:11, color:"rgba(255,255,255,0.35)", fontWeight:600, display:"inline-flex", alignItems:"center", gap:6 }}>{s.icon} {s.label}</span>
                   ))}
                 </div>
                 <div style={{ display:"flex", alignItems:"center", gap:6, background:"rgba(255,255,255,0.1)", borderRadius:8, padding:"5px 12px", border:"1px solid rgba(255,255,255,0.18)", fontSize:11, color:"rgba(255,255,255,0.7)", fontWeight:600 }}>
@@ -271,7 +278,7 @@ export default function GamePage() {
               </div>
             </div>
             <div className="gp-floating" style={{ background:"linear-gradient(135deg,rgba(255,255,255,0.18),rgba(255,255,255,0.08))", border:"1.5px solid rgba(255,255,255,0.22)", borderRadius:22, padding:"20px 28px", textAlign:"center", boxShadow:"0 8px 28px rgba(0,0,0,0.25)", flexShrink:0, backdropFilter:"blur(8px)" }}>
-              <div style={{ fontSize:48 }}>⭐</div>
+              <div style={{ fontSize:48, display:"flex", alignItems:"center", justifyContent:"center" }}><FaStar /></div>
               <p style={{ margin:"6px 0 0", color:"rgba(255,255,255,0.9)", fontSize:11, fontWeight:800, letterSpacing:"0.1em" }}>POINTS</p>
             </div>
           </div>
@@ -294,7 +301,7 @@ export default function GamePage() {
                 <div style={{ width:4, height:22, borderRadius:2, background:"linear-gradient(to bottom,#8d4d11,#6b3a0d)" }} />
                 <p style={{ margin:0, fontSize:11, fontWeight:700, color:"#8d4d11", letterSpacing:"0.12em", textTransform:"uppercase" }}>เลือกเกมที่ต้องการ</p>
               </div>
-              <h2 className="gp-h2" style={{ margin:0, fontSize:"clamp(1.3rem,2.5vw,1.6rem)", fontWeight:800 }}>🕹️ เลือกเกม</h2>
+              <h2 className="gp-h2" style={{ margin:0, fontSize:"clamp(1.3rem,2.5vw,1.6rem)", fontWeight:800, display:"flex", alignItems:"center", gap:8 }}><FaGamepad /> เลือกเกม</h2>
             </div>
 
             {/* Game Cards */}
@@ -322,16 +329,16 @@ export default function GamePage() {
                     <div style={{ width:4, height:22, borderRadius:2, background:"linear-gradient(to bottom,#8d4d11,#6b3a0d)" }} />
                     <p style={{ margin:0, fontSize:11, fontWeight:700, color:"#8d4d11", letterSpacing:"0.12em", textTransform:"uppercase" }}>แลกแต้มเป็นของรางวัล</p>
                   </div>
-                  <h2 className="gp-h2" style={{ fontSize: "clamp(1.2rem, 2.5vw, 1.6rem)", fontWeight: 800, margin: 0 }}>🎁 คลังรางวัล</h2>
+                  <h2 className="gp-h2" style={{ fontSize: "clamp(1.2rem, 2.5vw, 1.6rem)", fontWeight: 800, margin: 0, display:"flex", alignItems:"center", gap:8 }}><FaGift /> คลังรางวัล</h2>
                 </div>
                 <div style={{ background:"linear-gradient(135deg,#fff0db,#fff0db)", border:"1px solid #d4880a", borderRadius:14, padding:"10px 18px", fontSize:14, color:"#5c2c08", fontWeight:700, boxShadow:"0 2px 8px rgba(141,77,17,0.2)", display:"flex", alignItems:"center", gap:6 }}>
-                  ⭐ <span>{totalPoints.toLocaleString()}</span> <span style={{ fontWeight:400, color:"#5c2c08" }}>แต้มของคุณ</span>
+                  <FaStar /> <span>{totalPoints.toLocaleString()}</span> <span style={{ fontWeight:400, color:"#5c2c08" }}>แต้มของคุณ</span>
                 </div>
               </div>
 
               {rewards.length === 0 ? (
                 <div style={{ textAlign:"center", padding:"56px 24px", color:"#94a3b8", background:"#fff", borderRadius:20, border:"1px solid #ede9e3", boxShadow:"0 2px 12px rgba(0,0,0,0.04)" }}>
-                  <div style={{ fontSize:48, marginBottom:12 }}>🎁</div>
+                  <div style={{ fontSize:48, marginBottom:12, display:"flex", justifyContent:"center" }}><FaGift /></div>
                   <p style={{ fontWeight:700, fontSize:15, color:"#475569", margin:"0 0 6px" }}>ยังไม่มีรางวัลในขณะนี้</p>
                   <p style={{ fontSize:13, margin:0 }}>ทีมงานจะเพิ่มรางวัลใหม่เร็วๆ นี้</p>
                 </div>
@@ -363,7 +370,7 @@ export default function GamePage() {
                       <div style={{ width:4, height:22, borderRadius:2, background:"linear-gradient(to bottom,#8d4d11,#6b3a0d)" }} />
                       <p style={{ margin:0, fontSize:11, fontWeight:700, color:"#8d4d11", letterSpacing:"0.12em", textTransform:"uppercase" }}>วอลเล็ตคูปอง</p>
                     </div>
-                    <h2 className="gp-h2" style={{ fontSize:"clamp(1.2rem,2.5vw,1.6rem)", fontWeight:800, margin:0 }}>🎟️ คูปองของฉัน</h2>
+                    <h2 className="gp-h2" style={{ fontSize:"clamp(1.2rem,2.5vw,1.6rem)", fontWeight:800, margin:0, display:"flex", alignItems:"center", gap:8 }}><FaTicketSimple /> คูปองของฉัน</h2>
                   </div>
                   <span style={{ fontSize:12, color:"#b0a090", fontWeight:500 }}>{myCoupons.length} รายการ</span>
                 </div>
@@ -449,7 +456,7 @@ export default function GamePage() {
                       <div style={{ width:4, height:22, borderRadius:2, background:"linear-gradient(to bottom,#8d4d11,#6b3a0d)" }} />
                       <p style={{ margin:0, fontSize:11, fontWeight:700, color:"#8d4d11", letterSpacing:"0.12em", textTransform:"uppercase" }}>ย้อนหลัง</p>
                     </div>
-                    <h2 className="gp-h2" style={{ fontSize: "clamp(1.2rem, 2.5vw, 1.6rem)", fontWeight: 800, margin: 0 }}>📜 ประวัติการแลกแต้ม</h2>
+                    <h2 className="gp-h2" style={{ fontSize: "clamp(1.2rem, 2.5vw, 1.6rem)", fontWeight: 800, margin: 0, display:"flex", alignItems:"center", gap:8 }}><FaTicket /> ประวัติการแลกแต้ม</h2>
                   </div>
                   <span style={{ fontSize:12, color:"#b0a090", fontWeight:500 }}>{history.length} รายการ</span>
                 </div>
@@ -554,7 +561,7 @@ export default function GamePage() {
                   </button>
                   <div style={{ display:"flex", alignItems:"center", gap:12 }}>
                     <div style={{ width:44, height:44, borderRadius:14, background:`${g.col}20`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:24, border:`1.5px solid ${g.col}30` }}>
-                      {g.emoji}
+                      {g.icon}
                     </div>
                     <div>
                       <h2 className="gp-h2" style={{ margin:0, fontSize:18, fontWeight:800 }}>{g.label}</h2>
@@ -619,7 +626,7 @@ function GameSelectCard({ game, onSelect }) {
       <div style={{ position:"absolute", right:20, bottom:-40, width:100, height:100, borderRadius:"50%", background: hov ? "rgba(255,255,255,0.05)" : `${game.col}04`, pointerEvents:"none", transition:"all 0.3s" }} />
 
       <div style={{ padding: "24px 26px 28px", position: "relative", zIndex: 1, flex: 1, display: "flex", flexDirection: "column" }}>
-        {/* Emoji icon */}
+        {/* Icon */}
         <div style={{
           width: 64, height: 64, borderRadius: 20,
           background: hov ? "rgba(255,255,255,0.22)" : `${game.col}16`,
@@ -629,7 +636,7 @@ function GameSelectCard({ game, onSelect }) {
           boxShadow: hov ? `0 8px 24px rgba(0,0,0,0.18)` : `0 4px 12px ${game.col}20`,
           border: `1.5px solid ${hov ? "rgba(255,255,255,0.28)" : `${game.col}22`}`,
         }}>
-          {game.emoji}
+          {game.icon}
         </div>
 
         <p style={{ margin:"0 0 6px", fontWeight:800, fontSize:18, color: hov ? "#fff" : "#1a0f08", lineHeight:1.3 }}>{game.label}</p>
@@ -699,7 +706,7 @@ function RewardCard({ reward, icon, canAfford, redeeming, onRedeem }) {
           }}>
             ⭐ {reward.points_required} แต้ม
           </span>
-          {canAfford && <span style={{ fontSize:11, color:"#166534", fontWeight:700, background:"#f0fdf4", padding:"3px 10px", borderRadius:6, border:"1px solid #86efac" }}>✓ แต้มพอ</span>}
+          {canAfford && <span style={{ fontSize:11, color:"#166534", fontWeight:700, background:"#f0fdf4", padding:"3px 10px", borderRadius:6, border:"1px solid #86efac", display:'inline-flex', alignItems:'center', gap:6 }}><FaCircleCheck /> แต้มพอ</span>}
           {reward.max_redemptions != null && (
             <span style={{
               fontSize:11, fontWeight:700, padding:"3px 10px", borderRadius:6,
@@ -707,7 +714,7 @@ function RewardCard({ reward, icon, canAfford, redeeming, onRedeem }) {
               color: reward.total_redeemed >= reward.max_redemptions ? "#991b1b" : "#15803d",
               border: `1px solid ${reward.total_redeemed >= reward.max_redemptions ? "#fca5a5" : "#86efac"}`,
             }}>
-              {reward.total_redeemed >= reward.max_redemptions ? '🔒 หมดแล้ว' : `🎟️ เหลือ ${reward.max_redemptions - (reward.total_redeemed || 0)} ใบ`}
+              {reward.total_redeemed >= reward.max_redemptions ? <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}><FaLock /> หมดแล้ว</span> : <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}><FaTicketSimple /> เหลือ {reward.max_redemptions - (reward.total_redeemed || 0)} ใบ</span>}
             </span>
           )}
           {reward.expiration_date && (
@@ -746,7 +753,7 @@ function RewardCard({ reward, icon, canAfford, redeeming, onRedeem }) {
           transform: hov && canAfford && !redeeming ? "scale(1.04)" : "scale(1)",
         }}
       >
-        {redeeming ? "⏳ กำลังแลก..." : outOfStock ? "🔒 หมดแล้ว" : canAfford ? "🎁 แลกเลย" : "🔒 แต้มไม่พอ"}
+        {redeeming ? <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}><FaSpinner /> กำลังแลก...</span> : outOfStock ? <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}><FaLock /> หมดแล้ว</span> : canAfford ? <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}><FaGift /> แลกเลย</span> : <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}><FaLock /> แต้มไม่พอ</span>}
       </button>
     </div>
   );

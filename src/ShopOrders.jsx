@@ -11,7 +11,7 @@
 // ============================================================
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { FaChevronLeft, FaRotateRight } from 'react-icons/fa6';
+import { FaArrowsRotate, FaBasketShopping, FaChevronLeft, FaCircleCheck, FaCircleXmark, FaClipboardList, FaLocationDot, FaMoneyBillWave, FaRotateRight } from 'react-icons/fa6';
 import { MdHome, MdStorefront, MdOutlineSportsEsports, MdHelpOutline } from 'react-icons/md';
 import Footer from './Footer';
 import API_URL from './config';
@@ -25,12 +25,12 @@ const NAV = [
 ];
 
 const STATUS = {
-  AwaitingPayment: { label: 'รอยืนยันออเดอร์',  bg: '#fff8f0', border: 'rgba(141,77,17,0.3)', color: '#5c2c08', dot: '#8d4d11', icon: '📋' },
-  Pending:         { label: 'รอยืนยันออเดอร์',   bg: '#fff8f0', border: 'rgba(141,77,17,0.3)', color: '#5c2c08', dot: '#8d4d11', icon: '📋' },
-  Confirmed:       { label: 'ยืนยันออเดอร์แล้ว', bg: '#f0fff8', border: '#86efac',             color: '#166534', dot: '#22c55e', icon: '✅' },
-  Cooking:         { label: 'กำลังจัดเตรียม',    bg: '#fff8f0', border: 'rgba(141,77,17,0.4)', color: '#6b3a0d', dot: '#b87333', icon: '🍳' },
-  Completed:       { label: 'สำเร็จ',             bg: '#f0fdf4', border: '#bbf7d0',             color: '#166534', dot: '#22c55e', icon: '🎉' },
-  Cancelled:       { label: 'ยกเลิก',             bg: '#fef2f2', border: '#fecaca',             color: '#991b1b', dot: '#ef4444', icon: '❌' },
+  AwaitingPayment: { label: 'รอยืนยันออเดอร์',  bg: '#fff8f0', border: 'rgba(141,77,17,0.3)', color: '#5c2c08', dot: '#8d4d11', icon: <FaClipboardList /> },
+  Pending:         { label: 'รอยืนยันออเดอร์',   bg: '#fff8f0', border: 'rgba(141,77,17,0.3)', color: '#5c2c08', dot: '#8d4d11', icon: <FaClipboardList /> },
+  Confirmed:       { label: 'ยืนยันออเดอร์แล้ว', bg: '#f0fff8', border: '#86efac',             color: '#166534', dot: '#22c55e', icon: <FaCircleCheck /> },
+  Cooking:         { label: 'กำลังจัดเตรียม',    bg: '#fff8f0', border: 'rgba(141,77,17,0.4)', color: '#6b3a0d', dot: '#b87333', icon: <FaArrowsRotate /> },
+  Completed:       { label: 'สำเร็จ',             bg: '#f0fdf4', border: '#bbf7d0',             color: '#166534', dot: '#22c55e', icon: <FaCircleCheck /> },
+  Cancelled:       { label: 'ยกเลิก',             bg: '#fef2f2', border: '#fecaca',             color: '#991b1b', dot: '#ef4444', icon: <FaCircleXmark /> },
 };
 
 const fmt     = n => `฿${Number(n).toLocaleString('th-TH', { minimumFractionDigits: 2 })}`;
@@ -172,7 +172,7 @@ export default function ShopOrders() {
           {/* Title */}
           <div style={{ marginBottom: 24 }}>
             <h1 style={{ margin: 0, fontWeight: 800, fontSize: 'clamp(1.4rem,3vw,1.8rem)', color: '#fff', textShadow: '0 2px 8px rgba(0,0,0,0.3)', letterSpacing: '-0.01em' }}>
-              🧾 จัดการออเดอร์
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}><FaClipboardList />จัดการออเดอร์</span>
             </h1>
             <p style={{ margin: '4px 0 0', fontSize: 13, color: 'rgba(255,255,255,0.6)' }}>อัปเดตอัตโนมัติทุก 15 วินาที</p>
           </div>
@@ -181,13 +181,13 @@ export default function ShopOrders() {
           {!loading && orders.length > 0 && (
             <div className="so-stats" style={{ display: 'flex', gap: 12, flexWrap: 'wrap', paddingBottom: 20 }}>
               {[
-                { label: 'ทั้งหมด',        value: orders.length,                                                                              bg: 'rgba(255,255,255,0.12)', color: '#fff',     icon: '📋' },
-                { label: 'จัดเตรียม',       value: orders.filter(o=>o.status==='Cooking').length,                                             bg: 'rgba(75,143,244,0.25)', color: '#93c5fd',  icon: '🍳' },
-                { label: 'รอชำระ',           value: orders.filter(o=>o.status==='AwaitingPayment'||o.status==='Pending').length,               bg: 'rgba(249,115,22,0.25)', color: '#fed7aa',  icon: '💳' },
-                { label: 'เสร็จสิ้น',        value: orders.filter(o=>o.status==='Completed').length,                                          bg: 'rgba(34,197,94,0.25)',  color: '#86efac',  icon: '✅' },
+                { label: 'ทั้งหมด',        value: orders.length,                                                                              bg: 'rgba(255,255,255,0.12)', color: '#fff',     icon: <FaClipboardList /> },
+                { label: 'จัดเตรียม',       value: orders.filter(o=>o.status==='Cooking').length,                                             bg: 'rgba(75,143,244,0.25)', color: '#93c5fd',  icon: <FaArrowsRotate /> },
+                { label: 'รอชำระ',           value: orders.filter(o=>o.status==='AwaitingPayment'||o.status==='Pending').length,               bg: 'rgba(249,115,22,0.25)', color: '#fed7aa',  icon: <FaMoneyBillWave /> },
+                { label: 'เสร็จสิ้น',        value: orders.filter(o=>o.status==='Completed').length,                                          bg: 'rgba(34,197,94,0.25)',  color: '#86efac',  icon: <FaCircleCheck /> },
               ].map(s => (
                 <div key={s.label} style={{ flex: '1 1 0', minWidth: 90, background: s.bg, backdropFilter: 'blur(8px)', borderRadius: 14, padding: '12px 16px', border: '1px solid rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span style={{ fontSize: 22 }}>{s.icon}</span>
+                  <span style={{ fontSize: 22, display: 'flex' }}>{s.icon}</span>
                   <div>
                     <p style={{ margin: 0, fontWeight: 800, fontSize: 20, color: s.color, lineHeight: 1 }}>{s.value}</p>
                     <p style={{ margin: '2px 0 0', fontSize: 11, color: 'rgba(255,255,255,0.6)', fontWeight: 600 }}>{s.label}</p>
@@ -228,12 +228,12 @@ export default function ShopOrders() {
         {/* Content */}
         {loading ? (
           <div style={{ textAlign: 'center', padding: '80px 0', color: '#94a3b8' }}>
-            <div style={{ fontSize: 48, marginBottom: 12, animation: 'pulse 1.2s infinite' }}>📋</div>
+            <div style={{ fontSize: 48, marginBottom: 12, animation: 'pulse 1.2s infinite', display: 'flex', justifyContent: 'center' }}><FaClipboardList /></div>
             <p style={{ fontWeight: 600, fontSize: 15, margin: 0 }}>กำลังโหลดออเดอร์...</p>
           </div>
         ) : visible.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '80px 24px', background: '#fff', borderRadius: 20, border: '1px solid #e2e8f0', boxShadow: '0 2px 12px rgba(0,0,0,0.05)', animation: 'fadeUp 0.4s ease' }}>
-            <div style={{ fontSize: 56, marginBottom: 14 }}>📭</div>
+            <div style={{ fontSize: 56, marginBottom: 14, display: 'flex', justifyContent: 'center', color: '#94a3b8' }}><FaBasketShopping /></div>
             <p style={{ color: '#0f172a', fontSize: 16, fontWeight: 700, margin: '0 0 6px' }}>ไม่มีออเดอร์</p>
             <p style={{ color: '#94a3b8', fontSize: 13, margin: 0 }}>ยังไม่มีออเดอร์ในหมวดนี้</p>
           </div>
@@ -261,8 +261,8 @@ export default function ShopOrders() {
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 3 }}>
                           <span style={{ fontWeight: 800, fontSize: 15, color: '#0f172a' }}>#{order.order_id}</span>
                           {order.payment_method === 'cash'
-                            ? <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 999, background: '#f0fdf4', color: '#15803d', border: '1px solid #86efac' }}>💵 เงินสด</span>
-                            : <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 999, background: '#edf3ff', color: '#1a3a6e', border: '1px solid #b8d4fb' }}>💳 ออนไลน์</span>
+                            ? <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 999, background: '#f0fdf4', color: '#15803d', border: '1px solid #86efac', display: 'inline-flex', alignItems: 'center', gap: 5 }}><FaMoneyBillWave />เงินสด</span>
+                            : <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 999, background: '#edf3ff', color: '#1a3a6e', border: '1px solid #b8d4fb' }}>ออนไลน์</span>
                           }
                         </div>
                         <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
@@ -293,7 +293,7 @@ export default function ShopOrders() {
                             {order.items.map((item, i) => (
                               <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', borderBottom: i < order.items.length - 1 ? '1px solid #f1f5f9' : 'none' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                                  <span style={{ width: 28, height: 28, borderRadius: 8, background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>🛍️</span>
+                                  <span style={{ width: 28, height: 28, borderRadius: 8, background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}><FaBasketShopping /></span>
                                   <div>
                                     <p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#0f172a' }}>{item.name}</p>
                                     <p style={{ margin: 0, fontSize: 12, color: '#94a3b8' }}>× {item.qty} · {fmt(item.price)} / ชิ้น</p>
@@ -314,12 +314,12 @@ export default function ShopOrders() {
                       {/* Address / Notes */}
                       {order.shipping_address && (
                         <div style={{ padding: '10px 14px', background: '#f0f4ff', borderRadius: 10, fontSize: 13, color: '#1a3a6e', marginBottom: 12, borderLeft: '3px solid #4b8ff4', display: 'flex', gap: 8 }}>
-                          <span>📍</span><span>{order.shipping_address}</span>
+                          <FaLocationDot /><span>{order.shipping_address}</span>
                         </div>
                       )}
                       {order.notes && (
                         <div style={{ padding: '10px 14px', background: '#fff8f0', borderRadius: 10, fontSize: 13, color: '#5c2c08', marginBottom: 12, borderLeft: '3px solid #8d4d11', display: 'flex', gap: 8 }}>
-                          <span>📝</span><span>{order.notes}</span>
+                          <span>{order.notes}</span>
                         </div>
                       )}
 
@@ -336,7 +336,7 @@ export default function ShopOrders() {
                               return (
                                 <React.Fragment key={i}>
                                   <div style={{ display:'flex', flexDirection:'column', alignItems:'center', flex:1 }}>
-                                    <div style={{ width:20, height:20, borderRadius:'50%', border:`2px solid ${c}`, background: done ? '#22c55e' : active ? '#fff8f0' : '#faf8f5', display:'flex', alignItems:'center', justifyContent:'center', fontSize:10, color: done ? '#fff' : c, fontWeight:800 }}>{done ? '✓' : i+1}</div>
+                                    <div style={{ width:20, height:20, borderRadius:'50%', border:`2px solid ${c}`, background: done ? '#22c55e' : active ? '#fff8f0' : '#faf8f5', display:'flex', alignItems:'center', justifyContent:'center', fontSize:10, color: done ? '#fff' : c, fontWeight:800 }}>{done ? <FaCircleCheck /> : i+1}</div>
                                     <span style={{ fontSize:9, marginTop:3, color: done?'#16a34a':active?'#8d4d11':'#b0a090', fontWeight:active?700:500, whiteSpace:'nowrap' }}>{label}</span>
                                   </div>
                                   {i < 3 && <div style={{ flex:1, height:2, background: i < stepIdx ? '#22c55e' : '#e8e2db', borderRadius:1, marginBottom:14 }} />}
@@ -349,15 +349,15 @@ export default function ShopOrders() {
                         <div style={{ display: 'flex', gap: 10 }}>
                           {order.status === 'Completed' ? (
                             <div style={{ flex: 1, padding: '12px', borderRadius: 12, background: '#f0fdf4', border: '1px solid #bbf7d0', textAlign: 'center', fontSize: 14, fontWeight: 700, color: '#166534' }}>
-                              🎉 สำเร็จแล้ว
+                              สำเร็จแล้ว
                             </div>
                           ) : order.status === 'Cancelled' ? (
                             <div style={{ flex: 1, padding: '12px', borderRadius: 12, background: '#fef2f2', border: '1px solid #fecaca', textAlign: 'center', fontSize: 14, fontWeight: 700, color: '#991b1b' }}>
-                              ❌ ออเดอร์ถูกยกเลิก
+                              ออเดอร์ถูกยกเลิก
                             </div>
                           ) : order.status === 'AwaitingPayment' ? (
                             <div style={{ flex: 1, padding: '12px', borderRadius: 12, background: '#fff8f0', border: '1px solid rgba(141,77,17,0.3)', textAlign: 'center', fontSize: 14, fontWeight: 700, color: '#5c2c08' }}>
-                              ⏳ รอลูกค้าชำระเงินออนไลน์
+                              รอลูกค้าชำระเงินออนไลน์
                             </div>
                           ) : order.status === 'Pending' ? (
                             /* Step 1: Pending → Confirm */
@@ -368,7 +368,7 @@ export default function ShopOrders() {
                               onMouseEnter={e => { if (!busy) { e.currentTarget.style.transform='translateY(-1px)'; e.currentTarget.style.boxShadow='0 6px 20px rgba(34,197,94,0.5)'; }}}
                               onMouseLeave={e => { e.currentTarget.style.transform='none'; e.currentTarget.style.boxShadow=busy?'none':'0 4px 14px rgba(34,197,94,0.4)'; }}
                             >
-                              {busy ? '⏳ กำลังอัปเดต...' : '✅ ยืนยันออเดอร์'}
+                              {busy ? 'กำลังอัปเดต...' : 'ยืนยันออเดอร์'}
                             </button>
                           ) : order.status === 'Confirmed' ? (
                             /* Step 2: Confirmed → Cooking */
@@ -379,13 +379,13 @@ export default function ShopOrders() {
                               onMouseEnter={e => { if (!busy) { e.currentTarget.style.transform='translateY(-1px)'; e.currentTarget.style.boxShadow='0 6px 20px rgba(141,77,17,0.5)'; }}}
                               onMouseLeave={e => { e.currentTarget.style.transform='none'; e.currentTarget.style.boxShadow=busy?'none':'0 4px 14px rgba(141,77,17,0.4)'; }}
                             >
-                              {busy ? '⏳ กำลังอัปเดต...' : '🍳 เริ่มจัดเตรียม'}
+                              {busy ? 'กำลังอัปเดต...' : 'เริ่มจัดเตรียม'}
                             </button>
                           ) : order.status === 'Cooking' ? (
                             /* Step 3: Cooking → Completed */
                             <>
                               <div style={{ flex: 1, padding: '12px', borderRadius: 12, background: '#fff8f0', border: '1px solid rgba(141,77,17,0.3)', textAlign: 'center', fontSize: 13, fontWeight: 700, color: '#6b3a0d' }}>
-                                🍳 กำลังจัดเตรียม{order.payment_method === 'cash' ? ' · รับเงินสดเมื่อส่ง' : ''}
+                                กำลังจัดเตรียม{order.payment_method === 'cash' ? ' · รับเงินสดเมื่อส่ง' : ''}
                               </div>
                               <button
                                 onClick={() => updateStatus(order.order_id, 'completed')}
@@ -394,7 +394,7 @@ export default function ShopOrders() {
                                 onMouseEnter={e => { if (!busy) { e.currentTarget.style.transform='translateY(-1px)'; e.currentTarget.style.boxShadow='0 6px 20px rgba(34,197,94,0.5)'; }}}
                                 onMouseLeave={e => { e.currentTarget.style.transform='none'; e.currentTarget.style.boxShadow=busy?'none':'0 4px 14px rgba(34,197,94,0.4)'; }}
                               >
-                                {busy ? '⏳ กำลังอัปเดต...' : '🎉 สำเร็จแล้ว'}
+                                {busy ? 'กำลังอัปเดต...' : 'สำเร็จแล้ว'}
                               </button>
                             </>
                           ) : null}

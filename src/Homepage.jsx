@@ -16,9 +16,9 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
-  FaShip, FaXmark, FaTrashCan, FaCartPlus,
+  FaShip, FaXmark, FaTrashCan, FaCartPlus, FaPersonWalking, FaBasketShopping, FaBrain, FaGamepad, FaBullseye, FaWater,
   FaLocationDot, FaMagnifyingGlass, FaChevronRight,
-  FaChevronLeft, FaBasketShopping,
+  FaChevronLeft,
 } from "react-icons/fa6";
 
 import {
@@ -39,9 +39,9 @@ const MFALLBACK = "https://images.unsplash.com/photo-1628155930542-3c7a64e2c833?
 const OPEN_DAYS = ["เสาร์-อาทิตย์", "เสาร์-อาทิตย์", "ทุกวัน", "เสาร์-อาทิตย์", "ทุกวัน", "ทุกวัน"];
 
 const GAMES = [
-  { emoji: "🏃", label: "เก็บคะแนนสะสม",           sub: "จากการซื้อของหรือทำภารกิจ", path: "/game?game=stepCounter", col: "#6b3a0d" },
-  { emoji: "🛍️", label: "ซื้อจากร้านที่เพิ่งเข้าร่วม", sub: "เพื่อส่วนลดพิเศษ",            path: "/game?game=buyProduct",  col: "#8d4d11" },
-  { emoji: "🧠", label: "ตอบคำถาม",                   sub: "คำถามจะเด้งขึ้นระหว่างทาง",   path: "/game?game=quiz",         col: "#4b8ff4" },
+  { icon: <FaPersonWalking />, label: "เก็บคะแนนสะสม",           sub: "จากการซื้อของหรือทำภารกิจ", path: "/game?game=stepCounter", col: "#6b3a0d" },
+  { icon: <FaBasketShopping />, label: "ซื้อจากร้านที่เพิ่งเข้าร่วม", sub: "เพื่อส่วนลดพิเศษ",            path: "/game?game=buyProduct",  col: "#8d4d11" },
+  { icon: <FaBrain />, label: "ตอบคำถาม",                   sub: "คำถามจะเด้งขึ้นระหว่างทาง",   path: "/game?game=quiz",         col: "#4b8ff4" },
 ];
 
 /* ═══════════════════════════════════════════════════════════════ */
@@ -569,7 +569,7 @@ export default function Homepage() {
             <span style={{ display: "inline-block", background: "#fff5f0", color: "#8d4d11", border: "1px solid #e8b895", borderRadius: 999, padding: "4px 16px", fontSize: 11, fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: 16 }}>
               ลูกเล่นสนุกสนาน
             </span>
-            <h2 className="game-title" style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.6rem)", fontWeight: 800, margin: "0 0 12px" }}>🎮 เกมและภารกิจ</h2>
+            <h2 className="game-title" style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.6rem)", fontWeight: 800, margin: "0 0 12px", display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}><FaGamepad /> เกมและภารกิจ</h2>
             <p style={{ color: "#64748b", fontSize: 15, margin: 0 }}>ได้รับคะแนนและรางวัลโดยการเล่นเกมและทำภารกิจ</p>
           </div>
 
@@ -595,7 +595,7 @@ export default function Homepage() {
               onMouseEnter={e => { e.currentTarget.style.transform="scale(1.04)"; e.currentTarget.style.boxShadow="0 8px 32px rgba(141,77,17,0.5)"; }}
               onMouseLeave={e => { e.currentTarget.style.transform="scale(1)"; e.currentTarget.style.boxShadow="0 6px 24px rgba(141,77,17,0.35)"; }}
             >
-              ดูเกมทั้งหมด 🎯
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}><FaBullseye /> ดูเกมทั้งหมด</span>
             </button>
           </div>
         </div>
@@ -863,7 +863,7 @@ function CardSkeleton({ count, height, cols = "repeat(auto-fill, minmax(280px, 1
 function EmptyState({ text }) {
   return (
     <div style={{ textAlign: "center", padding: "80px 0", color: "#94a3b8" }}>
-      <p style={{ fontSize: 40, margin: "0 0 12px" }}>🌊</p>
+      <p style={{ fontSize: 40, margin: "0 0 12px", display: "flex", justifyContent: "center" }}><FaWater /></p>
       <p style={{ fontWeight: 500 }}>{text}</p>
     </div>
   );

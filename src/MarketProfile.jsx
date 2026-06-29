@@ -13,7 +13,7 @@
 // ============================================================
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { FaBasketShopping, FaStar, FaChevronLeft } from 'react-icons/fa6';
+import { FaBasketShopping, FaComment, FaPenToSquare, FaStar, FaChevronLeft, FaLocationDot, FaWater } from 'react-icons/fa6';
 import Footer from './Footer';
 import FloatingCart from './FloatingCart';
 import { FaUserCircle } from 'react-icons/fa';
@@ -121,7 +121,7 @@ export default function MarketProfile() {
   if (!market) return (
     <div style={{ fontFamily: "'Inter',system-ui,sans-serif", background: "#f0f4f8", minHeight: "100vh" }}>
       <Navbar />
-      <div style={{ textAlign: "center", padding: "80px 0", color: "#94a3b8" }}><p style={{ fontSize: 40 }}>🌊</p><p style={{ fontWeight: 600 }}>ไม่พบข้อมูลตลาดน้ำ</p></div>
+      <div style={{ textAlign: "center", padding: "80px 0", color: "#94a3b8" }}><p style={{ fontSize: 40, display:'flex', justifyContent:'center' }}><FaWater /></p><p style={{ fontWeight: 600 }}>ไม่พบข้อมูลตลาดน้ำ</p></div>
     </div>
   );
 
@@ -170,7 +170,7 @@ export default function MarketProfile() {
               <h1 className="mp-market-title" style={{ fontWeight: 800, fontSize: "2rem", margin: "0 0 8px", textShadow: "0 2px 12px rgba(0,0,0,0.5)", lineHeight: 1.2 }}>{market.name}</h1>
               {market.location && (
                 <p style={{ color: "rgba(255,255,255,0.72)", fontSize: 14, margin: "0 0 10px", display: "flex", alignItems: "center", gap: 6 }}>
-                  📍 {market.location}
+                  <FaLocationDot /> {market.location}
                 </p>
               )}
               {/* Stars on image overlay */}
@@ -208,7 +208,7 @@ export default function MarketProfile() {
               </div>
               {/* Review count stat */}
               <div style={{ display: "flex", alignItems: "center", gap: 10, background: "#f0f4ff", border: "1px solid #bae6fd", borderRadius: 12, padding: "10px 16px" }}>
-                <span style={{ fontSize: 20 }}>💬</span>
+                <FaComment style={{ fontSize: 20 }} />
                 <div>
                   <p style={{ margin: 0, fontWeight: 800, fontSize: 16, color: "#075985" }}>{reviews.length}</p>
                   <p style={{ margin: 0, fontSize: 11, color: "#1a3a6e", fontWeight: 500 }}>รีวิวทั้งหมด</p>
@@ -257,7 +257,7 @@ function ReviewForm({ title, value, onChange, hoverStar, setHoverStar, onSubmit,
   return (
     <div style={{ background: "#fff", borderRadius: 20, border: "1px solid #f1f5f9", borderLeft: "4px solid #4b8ff4", padding: "22px 24px", marginBottom: 20, boxShadow: "0 2px 12px rgba(75,143,244,0.07)" }}>
       <h2 style={{ fontWeight: 700, fontSize: 15, color: "#0f172a", margin: "0 0 18px", display: "flex", alignItems: "center", gap: 8 }}>
-        <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 28, height: 28, borderRadius: 8, background: "linear-gradient(135deg,#4b8ff4,#4b8ff4)", color: "#fff", fontSize: 13 }}>✏️</span>
+        <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 28, height: 28, borderRadius: 8, background: "linear-gradient(135deg,#4b8ff4,#4b8ff4)", color: "#fff", fontSize: 13 }}><FaPenToSquare /></span>
         {title}
       </h2>
       <form onSubmit={onSubmit} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -284,8 +284,8 @@ function ReviewForm({ title, value, onChange, hoverStar, setHoverStar, onSubmit,
             <span key={i} role="button"
               onClick={() => onChange(v => ({ ...v, rating: i }))}
               onMouseEnter={() => setHoverStar(i)} onMouseLeave={() => setHoverStar(0)}
-              style={{ cursor: "pointer", fontSize: 24, color: i <= (hoverStar || value.rating) ? "#8d4d11" : "#e2e8f0", transition: "color 0.15s", lineHeight: 1 }}
-            >★</span>
+              style={{ cursor: "pointer", fontSize: 24, color: i <= (hoverStar || value.rating) ? "#8d4d11" : "#e2e8f0", transition: "color 0.15s", lineHeight: 1, display:'inline-flex' }}
+            ><FaStar /></span>
           ))}
           {value.rating > 0 && <span style={{ fontSize: 12, color: "#94a3b8", marginLeft: 4 }}>{value.rating} ดาว</span>}
         </div>
@@ -296,7 +296,7 @@ function ReviewForm({ title, value, onChange, hoverStar, setHoverStar, onSubmit,
           disabled={submitting}
           style={{ padding: "12px 0", borderRadius: 11, border: "none", background: submitting ? "#e2e8f0" : "linear-gradient(135deg,#4b8ff4,#4b8ff4)", color: submitting ? "#94a3b8" : "#fff", fontSize: 14, fontWeight: 700, cursor: submitting ? "default" : "pointer", boxShadow: submitting ? "none" : "0 4px 16px rgba(75,143,244,0.28)", transition: "opacity 0.15s" }}
         >
-          {submitting ? "⏳ กำลังส่ง..." : "ส่งรีวิว"}
+          {submitting ? "กำลังส่ง..." : "ส่งรีวิว"}
         </button>
       </form>
     </div>
@@ -306,7 +306,7 @@ function ReviewForm({ title, value, onChange, hoverStar, setHoverStar, onSubmit,
 function ReviewList({ reviews }) {
   if (!reviews.length) return (
     <div style={{ background: "#fff", borderRadius: 20, border: "1px solid #f1f5f9", padding: "48px 24px", textAlign: "center", color: "#94a3b8", boxShadow: "0 2px 10px rgba(0,0,0,0.04)" }}>
-      <p style={{ fontSize: 36, margin: "0 0 10px" }}>⭐</p>
+      <p style={{ fontSize: 36, margin: "0 0 10px", display:'flex', justifyContent:'center' }}><FaStar /></p>
       <p style={{ fontWeight: 600, fontSize: 15, margin: 0 }}>ยังไม่มีรีวิว</p>
       <p style={{ fontSize: 13, marginTop: 4 }}>เป็นคนแรกที่รีวิวตลาดแห่งนี้!</p>
     </div>

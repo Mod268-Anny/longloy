@@ -15,6 +15,7 @@
 // ============================================================
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaChartColumn, FaUsers, FaClipboardList, FaGamepad, FaTicketSimple, FaShieldHalved, FaTriangleExclamation } from 'react-icons/fa6';
 import Footer from './Footer';
 import API_URL, { secureLocalFetch } from './config';
 import UserManagement from './AdminPanel/UserManagement';
@@ -26,13 +27,12 @@ import GameContent from './AdminPanel/GameContent';
 import CouponManagement from './AdminPanel/CouponManagement';
 
 const TABS = [
-  { key: "dashboard",        icon: "📊", label: "สถิติ" },
-  { key: "users",            icon: "👥", label: "จัดการผู้ใช้" },
-
-  { key: "entrepreneurs",    icon: "✅", label: "อนุมัติผู้ประกอบการ" },
-  { key: "all-entrepreneurs",icon: "📋", label: "ผู้ประกอบการทั้งหมด" },
-  { key: "game-content",     icon: "🎮", label: "เนื้อหาเกม" },
-  { key: "coupons",          icon: "🎟️", label: "จัดการคูปอง" },
+  { key: "dashboard",        icon: <FaChartColumn size={16} />, label: "สถิติ" },
+  { key: "users",            icon: <FaUsers size={16} />, label: "จัดการผู้ใช้" },
+  { key: "entrepreneurs",    icon: <FaClipboardList size={16} />, label: "อนุมัติผู้ประกอบการ" },
+  { key: "all-entrepreneurs",icon: <FaUsers size={16} />, label: "ผู้ประกอบการทั้งหมด" },
+  { key: "game-content",     icon: <FaGamepad size={16} />, label: "เนื้อหาเกม" },
+  { key: "coupons",          icon: <FaTicketSimple size={16} />, label: "จัดการคูปอง" },
 ];
 
 function AdminDashboard() {
@@ -77,8 +77,8 @@ function AdminDashboard() {
           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
             <div>
               <p style={{ color: "rgba(255,255,255,0.75)", fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", margin: "0 0 6px" }}>Admin Dashboard</p>
-              <h1 style={{ color: "#fff", fontWeight: 800, fontSize: "clamp(1.3rem,3vw,1.8rem)", margin: "0 0 4px" }}>
-                🛡️ ยินดีต้อนรับ {user?.first_name} {user?.last_name}
+              <h1 style={{ color: "#fff", fontWeight: 800, fontSize: "clamp(1.3rem,3vw,1.8rem)", margin: "0 0 4px", display: "flex", alignItems: "center", gap: 10 }}>
+                <FaShieldHalved /> ยินดีต้อนรับ {user?.first_name} {user?.last_name}
               </h1>
               <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 14, margin: 0 }}>จัดการระบบ LongLoy Market</p>
             </div>
@@ -102,7 +102,7 @@ function AdminDashboard() {
         </div>
 
         {error && (
-          <div style={{ background: "#fff0e8", border: "1px solid #ffe8d4", borderRadius: 12, padding: "13px 18px", marginBottom: 20, color: "#4a2008", fontSize: 14 }}>⚠️ {error}</div>
+          <div style={{ background: "#fff0e8", border: "1px solid #ffe8d4", borderRadius: 12, padding: "13px 18px", marginBottom: 20, color: "#4a2008", fontSize: 14, display: "flex", alignItems: "center", gap: 8 }}><FaTriangleExclamation /> {error}</div>
         )}
 
         {/* ── Tab bar ───────────────────────────────────────────── */}

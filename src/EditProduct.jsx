@@ -11,7 +11,7 @@
 // ============================================================
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
-import { FaBasketShopping } from 'react-icons/fa6';
+import { FaBasketShopping, FaPenToSquare } from 'react-icons/fa6';
 import { FaUserCircle } from 'react-icons/fa';
 import { MdHome, MdStorefront, MdOutlineSportsEsports, MdHelpOutline } from 'react-icons/md';
 import API_URL, { secureLocalFetch } from './config';
@@ -52,7 +52,7 @@ function EditProduct() {
   const [submitting, setSubmitting] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
 
-  // ✅ State สำหรับฟอร์มแก้ไขสินค้า
+  // State สำหรับฟอร์มแก้ไขสินค้า
   const [formData, setFormData] = useState({
     name: '',
     price: '',
@@ -62,7 +62,7 @@ function EditProduct() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  // ✅ โหลดข้อมูลสินค้า
+  // โหลดข้อมูลสินค้า
   useEffect(() => {
     if (!product_id) {
       setError('ไม่พบ product_id');
@@ -83,7 +83,7 @@ function EditProduct() {
     // สำหรับตอนนี้ ให้ form ว่างไป และผู้ใช้กรอกข้อมูลที่ต้องแก้ไข
   }, [product_id, navigate]);
 
-  // ✅ จัดการการเปลี่ยนแปลง input
+  // จัดการการเปลี่ยนแปลง input
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({
@@ -92,14 +92,14 @@ function EditProduct() {
     });
   };
 
-  // ✅ จัดการการส่งฟอร์ม
+  // จัดการการส่งฟอร์ม
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setSuccess('');
     setSubmitting(true);
 
-    // ✅ ตรวจสอบข้อมูล
+    // ตรวจสอบข้อมูล
     if (formData.price && (isNaN(formData.price) || formData.price <= 0)) {
       setError('ราคาต้องเป็นตัวเลขและมากกว่า 0');
       setSubmitting(false);
@@ -109,7 +109,7 @@ function EditProduct() {
     try {
       const token = localStorage.getItem('token');
 
-      // ✅ ส่งข้อมูลไปยัง API
+      // ส่งข้อมูลไปยัง API
       const response = await secureLocalFetch(`${API_URL}/edit-product`, {
         method: 'POST',
         headers: {
@@ -267,7 +267,9 @@ function EditProduct() {
           alignItems: 'center',
           gap: '16px',
         }}>
-          <span style={{ fontSize: '36px', lineHeight: 1 }}>✏️</span>
+          <span style={{ fontSize: '32px', lineHeight: 1, display: 'flex', alignItems: 'center' }}>
+            <FaPenToSquare />
+          </span>
           <div>
             <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 800, letterSpacing: '-0.3px' }}>
               แก้ไขสินค้า

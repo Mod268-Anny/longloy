@@ -12,6 +12,7 @@
 // ใช้ใน: AdminDashboard.jsx tab "coupons"
 // ============================================================
 import React, { useState, useEffect } from 'react';
+import { FaTicketSimple, FaPlus, FaPenToSquare, FaXmark, FaCircleCheck, FaTriangleExclamation, FaRotateRight } from 'react-icons/fa6';
 import API_URL, { secureLocalFetch } from '../config';
 
 const EMPTY = {
@@ -157,7 +158,7 @@ export default function CouponManagement({ token }) {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
         <div>
-          <h2 style={{ margin: 0, fontWeight: 800, fontSize: 20, color: '#0f172a' }}>🎟️ จัดการคูปอง / รางวัล</h2>
+          <h2 style={{ margin: 0, fontWeight: 800, fontSize: 20, color: '#0f172a', display: 'flex', alignItems: 'center', gap: 8 }}><FaTicketSimple /> จัดการคูปอง / รางวัล</h2>
           <p style={{ margin: '4px 0 0', fontSize: 13, color: '#64748b' }}>คูปองทั้งหมด {rewards.length} รายการ — ใช้แล้ว {usage.length} ครั้ง</p>
         </div>
         <button onClick={openNew} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '9px 18px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg,#4b8ff4,#2d6fd4)', color: '#fff', fontSize: 14, fontWeight: 700, cursor: 'pointer', boxShadow: '0 3px 12px rgba(75,143,244,0.35)' }}>
@@ -168,13 +169,13 @@ export default function CouponManagement({ token }) {
       {/* Flash message */}
       {msg.text && (
         <div style={{ marginBottom: 16, padding: '11px 16px', borderRadius: 10, fontSize: 13, fontWeight: 600, background: msg.ok ? '#f0fdf4' : '#fff0e8', color: msg.ok ? '#166534' : '#8d4d11', border: `1px solid ${msg.ok ? 'rgba(34,197,94,0.3)' : 'rgba(141,77,17,0.2)'}` }}>
-          {msg.ok ? '✅' : '⚠️'} {msg.text}
+          {msg.ok ? <FaCircleCheck /> : <FaTriangleExclamation />} {msg.text}
         </div>
       )}
 
       {/* Sub-tabs */}
       <div style={{ display: 'flex', gap: 6, marginBottom: 20 }}>
-        {[{ k: 'rewards', label: '🎟️ คูปองทั้งหมด' }, { k: 'usage', label: '📋 ประวัติการใช้' }].map(t => (
+        {[{ k: 'rewards', label: <><FaTicketSimple /> คูปองทั้งหมด</> }, { k: 'usage', label: <><FaRotateRight /> ประวัติการใช้</> }].map(t => (
           <button key={t.k} onClick={() => setTab(t.k)}
             style={{ padding: '7px 16px', borderRadius: 8, border: tab === t.k ? 'none' : '1px solid #e2e8f0', background: tab === t.k ? '#4b8ff4' : '#fff', color: tab === t.k ? '#fff' : '#475569', fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'all 0.15s' }}>
             {t.label}
@@ -187,8 +188,8 @@ export default function CouponManagement({ token }) {
         <div style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(0,0,0,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
           <div style={{ background: '#fff', borderRadius: 20, padding: 28, width: '100%', maxWidth: 520, boxShadow: '0 24px 60px rgba(0,0,0,0.2)', maxHeight: '90vh', overflowY: 'auto' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-              <h3 style={{ margin: 0, fontWeight: 800, fontSize: 17 }}>{editId ? '✏️ แก้ไขคูปอง' : '➕ เพิ่มคูปองใหม่'}</h3>
-              <button onClick={closeForm} style={{ width: 32, height: 32, borderRadius: '50%', border: '1px solid #e2e8f0', background: '#f8fafc', cursor: 'pointer', fontSize: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b' }}>✕</button>
+              <h3 style={{ margin: 0, fontWeight: 800, fontSize: 17, display: 'flex', alignItems: 'center', gap: 8 }}>{editId ? <><FaPenToSquare /> แก้ไขคูปอง</> : <><FaPlus /> เพิ่มคูปองใหม่</>}</h3>
+              <button onClick={closeForm} style={{ width: 32, height: 32, borderRadius: '50%', border: '1px solid #e2e8f0', background: '#f8fafc', cursor: 'pointer', fontSize: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b' }}><FaXmark /></button>
             </div>
 
             <form onSubmit={save} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -236,7 +237,7 @@ export default function CouponManagement({ token }) {
       {tab === 'rewards' && (
         rewards.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '60px 0', color: '#94a3b8' }}>
-            <p style={{ fontSize: 36 }}>🎟️</p>
+            <p style={{ fontSize: 36, display: 'flex', justifyContent: 'center' }}><FaTicketSimple /></p>
             <p style={{ fontWeight: 600 }}>ยังไม่มีคูปอง — กด "เพิ่มคูปองใหม่" เพื่อเริ่ม</p>
           </div>
         ) : (
@@ -251,7 +252,7 @@ export default function CouponManagement({ token }) {
                   </div>
                   <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                     <span style={{ background: 'linear-gradient(135deg,#8d4d11,#6b3a0d)', color: '#fff', fontWeight: 800, fontSize: 12, padding: '2px 10px', borderRadius: 999 }}>
-                      🎟️ {r.coupon_code}
+                      <FaTicketSimple /> {r.coupon_code}
                     </span>
                     <span style={{ fontSize: 12, color: '#4b8ff4', fontWeight: 700 }}>⭐ {r.points_required} แต้ม</span>
                     {r.discount_amount > 0 && <span style={{ fontSize: 12, color: '#16a34a', fontWeight: 700 }}>-฿{r.discount_amount}</span>}
@@ -279,7 +280,7 @@ export default function CouponManagement({ token }) {
       {tab === 'usage' && (
         usage.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '60px 0', color: '#94a3b8' }}>
-            <p style={{ fontSize: 36 }}>📋</p>
+            <p style={{ fontSize: 36 }}><FaTicketSimple /></p>
             <p style={{ fontWeight: 600 }}>ยังไม่มีการใช้คูปอง</p>
           </div>
         ) : (

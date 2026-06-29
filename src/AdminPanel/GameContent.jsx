@@ -12,6 +12,7 @@
 // ใช้ใน: AdminDashboard.jsx tab "game-content"
 // ============================================================
 import React, { useState, useEffect, useMemo } from 'react';
+import { FaBullseye, FaGamepad, FaRotateRight, FaLock, FaSpinner, FaCircleCheck, FaCircleXmark } from 'react-icons/fa6';
 import API_URL, { secureLocalFetch } from '../config';
 
 /* ── Toggle Switch ──────────────────────────────────────────── */
@@ -56,7 +57,7 @@ const QUEST_TYPES = {
   buy_in_market: { label:'ซื้อในตลาดน้ำ',        unit:'ครั้ง' },
 };
 const EMPTY_Q    = { question:'', option_a:'', option_b:'', option_c:'', option_d:'', correct_answer:0, points:10 };
-const EMPTY_QUEST = { name:'', description:'', quest_type:'buy_count', target_value:1, points_reward:50, icon:'🎯', market_id:'' };
+const EMPTY_QUEST = { name:'', description:'', quest_type:'buy_count', target_value:1, points_reward:50, icon:<FaBullseye size={16} />, market_id:'' };
 
 /* ── Pagination component ─────────────────────────────────────── */
 function Pagination({ total, page, onChange }) {
@@ -234,10 +235,10 @@ export default function GameContent({ token }) {
       <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16,flexWrap:'wrap',gap:12}}>
         <div>
           <p style={{margin:'0 0 4px',fontSize:11,fontWeight:700,color:'#4b8ff4',letterSpacing:'0.1em',textTransform:'uppercase'}}>เนื้อหาเกม</p>
-          <h2 style={{margin:0,fontSize:18,fontWeight:800,color:'#0f172a'}}>🎮 จัดการเนื้อหาเกม</h2>
+          <h2 style={{margin:0,fontSize:18,fontWeight:800,color:'#0f172a', display:'flex', alignItems:'center', gap:8}}><FaGamepad /> จัดการเนื้อหาเกม</h2>
         </div>
         <button onClick={loadAll} style={{padding:'8px 16px',borderRadius:10,border:'1px solid #e2e8f0',background:'#fff',fontSize:13,fontWeight:600,color:'#475569',cursor:'pointer'}}>
-          🔄 รีเฟรช
+          <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}><FaRotateRight /> รีเฟรช</span>
         </button>
       </div>
 
@@ -259,7 +260,7 @@ export default function GameContent({ token }) {
             width:48, height:48, borderRadius:14, display:'flex', alignItems:'center', justifyContent:'center', fontSize:24,
             background: gameEnabled ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.12)',
           }}>
-            {gameEnabled ? '🎮' : '🔒'}
+            {gameEnabled ? <FaGamepad /> : <FaLock />}
           </div>
           <div>
             <p style={{margin:0,fontSize:15,fontWeight:800,color: gameEnabled ? '#15803d' : '#b91c1c'}}>
@@ -302,7 +303,7 @@ export default function GameContent({ token }) {
               display:'flex', alignItems:'center', justifyContent:'center',
               fontSize:12,
             }}>
-              {gameToggling ? '⏳' : gameEnabled ? '✓' : '✕'}
+              {gameToggling ? <FaSpinner /> : gameEnabled ? <FaCircleCheck /> : <FaCircleXmark />}
             </span>
           </button>
         </div>
@@ -310,7 +311,7 @@ export default function GameContent({ token }) {
 
       {msg && (
         <div style={{marginBottom:16,padding:'10px 16px',borderRadius:10,background:msg.ok?'#f0fdf4':'#fef2f2',border:`1px solid ${msg.ok?'#bbf7d0':'#fca5a5'}`,color:msg.ok?'#166534':'#991b1b',fontWeight:600,fontSize:13}}>
-          {msg.ok?'✅':'❌'} {msg.text}
+          {msg.ok ? <FaCircleCheck /> : <FaCircleXmark />} {msg.text}
         </div>
       )}
 

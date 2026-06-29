@@ -13,6 +13,24 @@
 // ============================================================
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import {
+  FaArrowsRotate,
+  FaBasketShopping,
+  FaBolt,
+  FaChartColumn,
+  FaCircleCheck,
+  FaCircleExclamation,
+  FaLink,
+  FaLocationDot,
+  FaMagnifyingGlass,
+  FaMoneyBillWave,
+  FaPenToSquare,
+  FaRegBell,
+  FaStore,
+  FaTrashCan,
+  FaUpload,
+  FaXmark,
+} from 'react-icons/fa6';
 import { MdHome, MdStorefront, MdOutlineSportsEsports, MdHelpOutline } from 'react-icons/md';
 import Footer from './Footer';
 import API_URL, { secureLocalFetch, resolveImg } from './config';
@@ -284,11 +302,11 @@ export default function EntrepreneurDashboard() {
   const totalPages  = Math.ceil(filteredOrders.length / PAGE_SIZE);
   const visOrders   = filteredOrders.slice((orderPage - 1) * PAGE_SIZE, orderPage * PAGE_SIZE);
 
-  if (loading) return <div style={{ display:'flex', alignItems:'center', justifyContent:'center', minHeight:'100vh', fontSize:15, color:'#94a3b8' }}>⏳ กำลังโหลด...</div>;
+  if (loading) return <div style={{ display:'flex', alignItems:'center', justifyContent:'center', minHeight:'100vh', fontSize:15, color:'#94a3b8' }}>กำลังโหลด...</div>;
 
   if (!shops.length) return (
     <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', minHeight:'100vh', gap:16 }}>
-      <p style={{ fontSize:48 }}>🏪</p>
+      <p style={{ fontSize:48, lineHeight:1, color:'#4b8ff4', margin:0 }}><FaStore /></p>
       <p style={{ color:'#64748b' }}>คุณยังไม่มีร้านค้า</p>
       <button onClick={() => navigate('/addshop')} style={{ padding:'10px 24px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#4b8ff4,#4b8ff4)', color:'#fff', fontWeight:700, cursor:'pointer' }}>
         + เพิ่มร้านค้า
@@ -352,8 +370,9 @@ export default function EntrepreneurDashboard() {
                         {s.pending_count > 0 && <span style={{ background:'#8d4d11', color:'#fff', borderRadius:999, padding:'1px 7px', fontSize:11, fontWeight:700 }}>{s.pending_count}</span>}
                       </div>
                       {s.market_name && (
-                        <div style={{ fontSize:11, color: active ? '#4b8ff4' : '#94a3b8', marginTop:2, fontWeight:500 }}>
-                          📍 {s.market_name}
+                        <div style={{ fontSize:11, color: active ? '#4b8ff4' : '#94a3b8', marginTop:2, fontWeight:500, display:'flex', alignItems:'center', gap:5 }}>
+                          <FaLocationDot />
+                          <span>{s.market_name}</span>
                         </div>
                       )}
                     </button>
@@ -417,15 +436,17 @@ export default function EntrepreneurDashboard() {
           </div>
           <div style={{ display:'flex', gap:8, alignItems:'center', flexWrap:'wrap' }}>
             {urgentCnt > 0 && (
-              <div className="rsp-hide-mobile" style={{ background:'#fdf4ff', border:'1px solid #e9d5ff', borderRadius:10, padding:'6px 14px', fontSize:13, fontWeight:700, color:'#6b21a8' }}>
-                ⚡ {urgentCnt} ออเดอร์รอดำเนินการ
+              <div className="rsp-hide-mobile" style={{ background:'#fdf4ff', border:'1px solid #e9d5ff', borderRadius:10, padding:'6px 14px', fontSize:13, fontWeight:700, color:'#6b21a8', display:'flex', alignItems:'center', gap:8 }}>
+                <FaBolt />
+                <span>{urgentCnt} ออเดอร์รอดำเนินการ</span>
               </div>
             )}
             <button onClick={() => navigate('/addshop')} style={{ padding:'8px 16px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#4b8ff4,#2d6fd4)', color:'#fff', fontSize:13, fontWeight:700, cursor:'pointer' }}>
               + เพิ่มร้านค้า
             </button>
-            <button onClick={() => { fetchOrders(); fetchProducts(); }} style={{ padding:'8px 14px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#4b8ff4,#4b8ff4)', color:'#fff', fontSize:13, fontWeight:700, cursor:'pointer' }}>
-              🔄 รีเฟรช
+            <button onClick={() => { fetchOrders(); fetchProducts(); }} style={{ padding:'8px 14px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#4b8ff4,#4b8ff4)', color:'#fff', fontSize:13, fontWeight:700, cursor:'pointer', display:'flex', alignItems:'center', gap:8 }}>
+              <FaArrowsRotate />
+              <span>รีเฟรช</span>
             </button>
           </div>
         </div>
@@ -473,7 +494,7 @@ export default function EntrepreneurDashboard() {
             {/* Search + Sort */}
             <div style={{ display:'flex', gap:10, marginBottom:14, flexWrap:'wrap', alignItems:'center' }}>
               <div style={{ position:'relative', flex:1, minWidth:200 }}>
-                <span style={{ position:'absolute', left:12, top:'50%', transform:'translateY(-50%)', fontSize:14, color:'#94a3b8', pointerEvents:'none' }}>🔍</span>
+                <span style={{ position:'absolute', left:12, top:'50%', transform:'translateY(-50%)', fontSize:14, color:'#94a3b8', pointerEvents:'none', display:'flex', alignItems:'center' }}><FaMagnifyingGlass /></span>
                 <input
                   value={orderSearch}
                   onChange={e => { setOrderSearch(e.target.value); setOrderPage(1); }}
@@ -482,7 +503,7 @@ export default function EntrepreneurDashboard() {
                 />
                 {orderSearch && (
                   <button onClick={() => { setOrderSearch(''); setOrderPage(1); }}
-                    style={{ position:'absolute', right:10, top:'50%', transform:'translateY(-50%)', background:'none', border:'none', cursor:'pointer', fontSize:14, color:'#94a3b8' }}>✕</button>
+                    style={{ position:'absolute', right:10, top:'50%', transform:'translateY(-50%)', background:'none', border:'none', cursor:'pointer', fontSize:14, color:'#94a3b8', display:'flex', alignItems:'center' }}><FaXmark /></button>
                 )}
               </div>
               <button onClick={() => { setSortDir(d => d === 'desc' ? 'asc' : 'desc'); setOrderPage(1); }}
@@ -513,7 +534,7 @@ export default function EntrepreneurDashboard() {
             {/* Orders list */}
             {visOrders.length === 0 ? (
               <div style={{ textAlign:'center', padding:'50px 0', background:'#fff', borderRadius:16, border:'1px solid #e2e8f0' }}>
-                <p style={{ fontSize:40, margin:'0 0 10px' }}>📭</p>
+                <p style={{ fontSize:40, margin:'0 0 10px', color:'#94a3b8' }}><FaBasketShopping /></p>
                 <p style={{ color:'#94a3b8', margin:0 }}>ไม่มีออเดอร์</p>
               </div>
             ) : (
@@ -537,7 +558,7 @@ export default function EntrepreneurDashboard() {
                           <span style={{ width:9, height:9, borderRadius:'50%', background:s.dot, flexShrink:0 }} />
                           <div>
                             <p style={{ margin:0, fontWeight:700, fontSize:14, color:'#0f172a' }}>
-                              ออเดอร์ #{order.order_id} {isNew && (order.status==='AwaitingPayment'||order.status==='Pending') ? '🔔' : ''}
+                              ออเดอร์ #{order.order_id} {isNew && (order.status==='AwaitingPayment'||order.status==='Pending') ? <span style={{ marginLeft:4, color:'#f59e0b', verticalAlign:'middle' }}><FaRegBell /></span> : null}
                             </p>
                             <p style={{ margin:'1px 0 0', fontSize:12, color:'#64748b' }}>
                               {fmtD(order.created_at)} · {order.customer_name || 'ลูกค้า'}
@@ -557,17 +578,17 @@ export default function EntrepreneurDashboard() {
                                 onClick={e => { e.stopPropagation(); setStatusMenu(statusMenu === order.order_id ? null : order.order_id); }}
                                 disabled={busy === order.order_id}
                                 style={{ display:'flex', alignItems:'center', gap:5, padding:'5px 12px', borderRadius:8, border:`1.5px solid ${s.border}`, background:s.bg, color:s.color, fontSize:12, fontWeight:700, cursor:'pointer', whiteSpace:'nowrap' }}>
-                                {busy === order.order_id ? '⏳' : <><span style={{ width:7,height:7,borderRadius:'50%',background:s.dot,display:'inline-block' }}/> {s.label} ▾</>}
+                                {busy === order.order_id ? '...' : <><span style={{ width:7,height:7,borderRadius:'50%',background:s.dot,display:'inline-block' }}/> {s.label} ▾</>}
                               </button>
 
                               {statusMenu === order.order_id && (
                                 <div style={{ position:'absolute', top:'110%', right:0, zIndex:200, background:'#fff', borderRadius:14, border:'1px solid #e2e8f0', boxShadow:'0 8px 32px rgba(0,0,0,0.14)', minWidth:210, overflow:'hidden' }}>
                                   <div style={{ padding:'9px 14px', fontSize:11, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:'0.07em', borderBottom:'1px solid #f1f5f9' }}>อัปเดตสถานะ</div>
                                   {[
-                                    order.status === 'AwaitingPayment' && { key:'pay',    emoji:'💰', label:'ยืนยันรับชำระเงิน', desc:'ลูกค้าชำระเงินแล้ว → เริ่มทำ', dot:'#a855f7', color:'#6b21a8', bg:'#fdf4ff', action:()=>{ setStatusMenu(null); confirmPayment(order.order_id); } },
-                                    (order.status==='AwaitingPayment'||order.status==='Pending') && { key:'cook', emoji:'👨‍🍳', label:'กำลังเตรียม/ทำ', desc:'รับออเดอร์แล้ว เริ่มเตรียม', dot:'#4b8ff4', color:'#1a3a6e', bg:'#e0ecfd', action:()=>{ setStatusMenu(null); updateStatus(order.order_id,'Cooking'); } },
-                                    order.status === 'Cooking' && { key:'done', emoji:'✅', label:'เสร็จสิ้น', desc:'ส่งสินค้า/อาหารให้ลูกค้าแล้ว', dot:'#22c55e', color:'#166534', bg:'#f0fdf4', action:()=>{ setStatusMenu(null); updateStatus(order.order_id,'Completed'); } },
-                                    { key:'cancel', emoji:'❌', label:'ยกเลิกออเดอร์', desc:'ยกเลิกและแจ้งลูกค้า', dot:'#8d4d11', color:'#4a2008', bg:'#ffe8d4',
+                                    order.status === 'AwaitingPayment' && { key:'pay', icon:<FaMoneyBillWave />, label:'ยืนยันรับชำระเงิน', desc:'ลูกค้าชำระเงินแล้ว → เริ่มทำ', dot:'#a855f7', color:'#6b21a8', bg:'#fdf4ff', action:()=>{ setStatusMenu(null); confirmPayment(order.order_id); } },
+                                    (order.status==='AwaitingPayment'||order.status==='Pending') && { key:'cook', icon:<FaArrowsRotate />, label:'กำลังเตรียม/ทำ', desc:'รับออเดอร์แล้ว เริ่มเตรียม', dot:'#4b8ff4', color:'#1a3a6e', bg:'#e0ecfd', action:()=>{ setStatusMenu(null); updateStatus(order.order_id,'Cooking'); } },
+                                    order.status === 'Cooking' && { key:'done', icon:<FaCircleCheck />, label:'เสร็จสิ้น', desc:'ส่งสินค้า/อาหารให้ลูกค้าแล้ว', dot:'#22c55e', color:'#166534', bg:'#f0fdf4', action:()=>{ setStatusMenu(null); updateStatus(order.order_id,'Completed'); } },
+                                    { key:'cancel', icon:<FaCircleExclamation />, label:'ยกเลิกออเดอร์', desc:'ยกเลิกและแจ้งลูกค้า', dot:'#8d4d11', color:'#4a2008', bg:'#ffe8d4',
                                       action:()=>{ if(window.confirm('ยืนยันยกเลิกออเดอร์ #'+order.order_id+'?')){ setStatusMenu(null); updateStatus(order.order_id,'Cancelled'); } } },
                                   ].filter(Boolean).map(item => (
                                     <button key={item.key}
@@ -576,7 +597,7 @@ export default function EntrepreneurDashboard() {
                                       onMouseEnter={e => e.currentTarget.style.background = item.bg}
                                       onMouseLeave={e => e.currentTarget.style.background = '#fff'}
                                     >
-                                      <span style={{ fontSize:16 }}>{item.emoji}</span>
+                                      <span style={{ fontSize:16, display:'flex', alignItems:'center', color:item.color }}>{item.icon}</span>
                                       <div>
                                         <div style={{ fontSize:13, fontWeight:700, color:item.color }}>{item.label}</div>
                                         <div style={{ fontSize:11, color:'#94a3b8', marginTop:1 }}>{item.desc}</div>
@@ -619,7 +640,7 @@ export default function EntrepreneurDashboard() {
 
                           {order.notes && (
                             <div style={{ padding:'8px 12px', background:'#fff8f0', borderLeft:'3px solid #8d4d11', borderRadius:8, fontSize:13, color:'#5c2c08', marginBottom:12 }}>
-                              📝 หมายเหตุ: {order.notes}
+                              หมายเหตุ: {order.notes}
                             </div>
                           )}
 
@@ -629,7 +650,7 @@ export default function EntrepreneurDashboard() {
                               <>
                                 <button onClick={() => confirmPayment(order.order_id)} disabled={busy===order.order_id}
                                   style={{ flex:1, padding:'10px 0', borderRadius:10, border:'none', fontSize:13, fontWeight:700, cursor:'pointer', background:'linear-gradient(135deg,#a855f7,#7c3aed)', color:'#fff' }}>
-                                  {busy===order.order_id ? '⏳...' : '💰 ยืนยันรับชำระเงิน → เริ่มทำ'}
+                                  {busy===order.order_id ? '...' : 'ยืนยันรับชำระเงิน → เริ่มทำ'}
                                 </button>
                                 <button onClick={() => updateStatus(order.order_id, 'Cancelled')} disabled={busy===order.order_id}
                                   style={{ padding:'10px 16px', borderRadius:10, border:'1px solid #e8b895', fontSize:13, fontWeight:700, cursor:'pointer', background:'#fff0e8', color:'#6b3a0d' }}>
@@ -641,7 +662,7 @@ export default function EntrepreneurDashboard() {
                               <>
                                 <button onClick={() => updateStatus(order.order_id, 'Cooking')} disabled={busy===order.order_id}
                                   style={{ flex:1, padding:'10px 0', borderRadius:10, border:'none', fontSize:13, fontWeight:700, cursor:'pointer', background:'#e0ecfd', color:'#1a3a6e' }}>
-                                  {busy===order.order_id ? '⏳...' : '👨‍🍳 รับออเดอร์ / กำลังเตรียม'}
+                                  {busy===order.order_id ? '...' : 'รับออเดอร์ / กำลังเตรียม'}
                                 </button>
                                 <button onClick={() => updateStatus(order.order_id, 'Cancelled')} disabled={busy===order.order_id}
                                   style={{ padding:'10px 16px', borderRadius:10, border:'1px solid #e8b895', fontSize:13, fontWeight:700, cursor:'pointer', background:'#fff0e8', color:'#6b3a0d' }}>
@@ -652,12 +673,12 @@ export default function EntrepreneurDashboard() {
                             {order.status === 'Cooking' && (
                               <button onClick={() => updateStatus(order.order_id, 'Completed')} disabled={busy===order.order_id}
                                 style={{ flex:1, padding:'10px 0', borderRadius:10, border:'none', fontSize:13, fontWeight:700, cursor:'pointer', background:'#e0ecfd', color:'#166634' }}>
-                                {busy===order.order_id ? '⏳...' : '✅ เสร็จสิ้น / ส่งของให้ลูกค้า'}
+                                {busy===order.order_id ? '...' : 'เสร็จสิ้น / ส่งของให้ลูกค้า'}
                               </button>
                             )}
                             {(order.status === 'Completed' || order.status === 'Cancelled') && (
                               <div style={{ fontSize:13, color:'#94a3b8', padding:'10px 0' }}>
-                                {order.status === 'Completed' ? '✅ ออเดอร์นี้เสร็จสิ้นแล้ว' : '❌ ออเดอร์ถูกยกเลิก'}
+                                {order.status === 'Completed' ? 'ออเดอร์นี้เสร็จสิ้นแล้ว' : 'ออเดอร์ถูกยกเลิก'}
                               </div>
                             )}
                           </div>
@@ -725,7 +746,7 @@ export default function EntrepreneurDashboard() {
                 onBlur={e => e.target.style.borderColor = '#e2e8f0'}
               />
               {productSearch && (
-                <button onClick={() => setProductSearch('')} style={{ position:'absolute', right:10, top:'50%', transform:'translateY(-50%)', background:'none', border:'none', color:'#94a3b8', cursor:'pointer', fontSize:15, lineHeight:1 }}>✕</button>
+                <button onClick={() => setProductSearch('')} style={{ position:'absolute', right:10, top:'50%', transform:'translateY(-50%)', background:'none', border:'none', color:'#94a3b8', cursor:'pointer', fontSize:15, lineHeight:1, display:'flex', alignItems:'center' }}><FaXmark /></button>
               )}
             </div>
 
@@ -734,10 +755,10 @@ export default function EntrepreneurDashboard() {
               <div id="product-form-top" style={{ background:'#fff', borderRadius:20, border:'1.5px solid #e2e8f0', padding:'28px', marginBottom:24, boxShadow:'0 6px 24px rgba(0,0,0,0.08)' }}>
                 <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:22 }}>
                   <h3 style={{ margin:0, fontSize:17, fontWeight:800, color:'#0f172a' }}>
-                    {editId ? '✏️ แก้ไขสินค้า' : '➕ เพิ่มสินค้าใหม่'}
+                    {editId ? 'แก้ไขสินค้า' : 'เพิ่มสินค้าใหม่'}
                   </h3>
                   <button onClick={() => { setShowForm(false); setEditId(null); setForm(emptyForm); setImgPreview(''); }}
-                    style={{ width:32, height:32, borderRadius:8, border:'1px solid #e2e8f0', background:'#f8fafc', color:'#64748b', cursor:'pointer', fontSize:16, display:'flex', alignItems:'center', justifyContent:'center' }}>✕</button>
+                    style={{ width:32, height:32, borderRadius:8, border:'1px solid #e2e8f0', background:'#f8fafc', color:'#64748b', cursor:'pointer', fontSize:16, display:'flex', alignItems:'center', justifyContent:'center' }}><FaXmark /></button>
                 </div>
 
                 {/* ─ ชื่อ + ราคา + หน่วย ─ */}
@@ -825,13 +846,13 @@ export default function EntrepreneurDashboard() {
                             <button type="button"
                               onClick={() => setForm(f => ({ ...f, sizes:f.sizes.filter((_,j)=>j!==i) }))}
                               style={{ width:36, height:36, borderRadius:8, border:'1px solid #fca5a5', background:'#fff5f5', color:'#ef4444', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', fontSize:15 }}>
-                              🗑
+                              <FaTrashCan />
                             </button>
                           </div>
                         </div>
                       ))}
                       <p style={{ margin:'4px 0 0', fontSize:11, color:'#94a3b8' }}>
-                        💡 ราคาเพิ่ม/ลด = ราคาของขนาดนั้น เทียบกับราคาหลัก เช่น +10 หมายถึงราคาหลัก+10฿, -5 หมายถึงหลัก-5฿
+                        ราคาเพิ่ม/ลด = ราคาของขนาดนั้น เทียบกับราคาหลัก เช่น +10 หมายถึงราคาหลัก+10฿, -5 หมายถึงหลัก-5฿
                       </p>
                     </div>
                   )}
@@ -846,7 +867,10 @@ export default function EntrepreneurDashboard() {
                         padding:'5px 14px', borderRadius:8, border:'1.5px solid', cursor:'pointer', fontSize:12, fontWeight:600,
                         borderColor: imageMode===m?'#4b8ff4':'#e2e8f0', background: imageMode===m?'#edf3ff':'#fff', color: imageMode===m?'#4b8ff4':'#64748b',
                       }}>
-                        {m==='url' ? '🔗 ลิงก์ URL' : '📤 อัปโหลดจากเครื่อง'}
+                        <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}>
+                          {m==='url' ? <FaLink /> : <FaUpload />}
+                          {m==='url' ? 'ลิงก์ URL' : 'อัปโหลดจากเครื่อง'}
+                        </span>
                       </button>
                     ))}
                   </div>
@@ -874,17 +898,17 @@ export default function EntrepreneurDashboard() {
                     style={{ width:44, height:24, borderRadius:12, border:'none', cursor:'pointer', position:'relative', transition:'all 0.2s', background: form.is_available ? '#22c55e' : '#ef4444' }}>
                     <div style={{ position:'absolute', top:3, left: form.is_available ? 23 : 3, width:18, height:18, borderRadius:'50%', background:'#fff', transition:'all 0.2s' }} />
                   </button>
-                  <span style={{ fontSize:13, fontWeight:700, color: form.is_available ? '#16a34a' : '#ef4444' }}>{form.is_available ? '🟢 เปิดขาย' : '🔴 ปิดชั่วคราว'}</span>
+                  <span style={{ fontSize:13, fontWeight:700, color: form.is_available ? '#16a34a' : '#ef4444' }}>{form.is_available ? 'เปิดขาย' : 'ปิดชั่วคราว'}</span>
                 </div>
 
-                {formErr && <p style={{ color:'#6b3a0d', fontSize:13, margin:'0 0 12px', padding:'8px 12px', background:'#fff0e8', borderRadius:8 }}>⚠️ {formErr}</p>}
+                {formErr && <p style={{ color:'#6b3a0d', fontSize:13, margin:'0 0 12px', padding:'8px 12px', background:'#fff0e8', borderRadius:8 }}>{formErr}</p>}
 
                 <div style={{ display:'flex', gap:10 }}>
                   <button onClick={saveProduct} disabled={saving} style={{
                     padding:'10px 24px', borderRadius:10, border:'none', cursor: saving?'not-allowed':'pointer', fontSize:14, fontWeight:700,
                     background: saving?'#94a3b8':'linear-gradient(135deg,#4b8ff4,#4b8ff4)', color:'#fff',
                   }}>
-                    {saving ? '⏳ กำลังบันทึก...' : (editId ? '💾 บันทึกการแก้ไข' : '➕ เพิ่มสินค้า')}
+                    {saving ? 'กำลังบันทึก...' : (editId ? 'บันทึกการแก้ไข' : 'เพิ่มสินค้า')}
                   </button>
                   <button onClick={() => { setShowForm(false); setEditId(null); setForm(emptyForm); setImgPreview(''); }}
                     style={{ padding:'10px 20px', borderRadius:10, border:'1px solid #e2e8f0', background:'#fff', cursor:'pointer', fontSize:14, fontWeight:600, color:'#475569' }}>
@@ -900,12 +924,12 @@ export default function EntrepreneurDashboard() {
               const visProducts = q ? products.filter(p => (p.name || '').toLowerCase().includes(q)) : products;
               return products.length === 0 ? (
               <div style={{ textAlign:'center', padding:'50px 0', background:'#fff', borderRadius:16, border:'1px solid #e2e8f0' }}>
-                <p style={{ fontSize:40, margin:'0 0 10px' }}>🛍️</p>
+                <p style={{ fontSize:40, margin:'0 0 10px', color:'#94a3b8' }}><FaBasketShopping /></p>
                 <p style={{ color:'#94a3b8', margin:0 }}>ยังไม่มีสินค้า กด "+ เพิ่มสินค้า" เพื่อเริ่มต้น</p>
               </div>
             ) : visProducts.length === 0 ? (
               <div style={{ textAlign:'center', padding:'50px 0', background:'#fff', borderRadius:16, border:'1px solid #e2e8f0' }}>
-                <p style={{ fontSize:32, margin:'0 0 10px' }}>🔍</p>
+                <p style={{ fontSize:32, margin:'0 0 10px', color:'#94a3b8' }}><FaMagnifyingGlass /></p>
                 <p style={{ color:'#94a3b8', margin:0 }}>ไม่พบสินค้าที่ตรงกับ "<strong style={{ color:'#0f172a' }}>{productSearch}</strong>"</p>
               </div>
             ) : (
@@ -933,13 +957,14 @@ export default function EntrepreneurDashboard() {
                 style={{ padding:'8px 14px', borderRadius:10, border:'1.5px solid #e2e8f0', fontSize:14, fontFamily:'inherit', outline:'none', background:'#fff', cursor:'pointer' }}
               />
               <button onClick={() => fetchSales(shopId, salesMonth)}
-                style={{ padding:'8px 16px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#4b8ff4,#2d6fd4)', color:'#fff', fontSize:13, fontWeight:700, cursor:'pointer' }}>
-                🔄 โหลด
+                style={{ padding:'8px 16px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#4b8ff4,#2d6fd4)', color:'#fff', fontSize:13, fontWeight:700, cursor:'pointer', display:'flex', alignItems:'center', gap:8 }}>
+                <FaArrowsRotate />
+                <span>โหลด</span>
               </button>
             </div>
 
             {salesLoading && (
-              <div style={{ textAlign:'center', padding:'48px 0', color:'#94a3b8', fontSize:15 }}>⏳ กำลังโหลดข้อมูล...</div>
+              <div style={{ textAlign:'center', padding:'48px 0', color:'#94a3b8', fontSize:15 }}>กำลังโหลดข้อมูล...</div>
             )}
 
             {!salesLoading && salesData && (() => {
@@ -1039,7 +1064,7 @@ export default function EntrepreneurDashboard() {
 
             {!salesLoading && !salesData && (
               <div style={{ textAlign:'center', padding:'48px 0', background:'#fff', borderRadius:16, border:'1px solid #e2e8f0' }}>
-                <p style={{ fontSize:36, margin:'0 0 10px' }}>📊</p>
+                <p style={{ fontSize:36, margin:'0 0 10px', color:'#94a3b8' }}><FaChartColumn /></p>
                 <p style={{ color:'#94a3b8', margin:0 }}>เลือกเดือนแล้วกด โหลด เพื่อดูยอดขาย</p>
               </div>
             )}
@@ -1066,7 +1091,7 @@ export default function EntrepreneurDashboard() {
             {/* สถานะร้าน + toggle */}
             <div style={{ display:'flex', alignItems:'center', padding:'12px 0', borderBottom:'1px solid #f1f5f9', gap:12 }}>
               <span style={{ width:160, flexShrink:0, fontSize:13, fontWeight:700, color:'#64748b' }}>สถานะร้าน</span>
-              <span style={{ fontSize:14, color:'#0f172a' }}>{shop.status === 'Open' ? '🟢 เปิด' : '🔴 ปิด'}</span>
+              <span style={{ fontSize:14, color:'#0f172a' }}>{shop.status === 'Open' ? 'เปิด' : 'ปิด'}</span>
               <button
                 disabled={togglingId === shopId}
                 onClick={async () => {
@@ -1091,11 +1116,14 @@ export default function EntrepreneurDashboard() {
                   opacity: togglingId === shopId ? 0.7 : 1, transition:'all 0.2s',
                 }}
               >
-                {togglingId === shopId ? '...' : shop.status === 'Open' ? '🔴 ปิดร้าน' : '🟢 เปิดร้าน'}
+                {togglingId === shopId ? '...' : shop.status === 'Open' ? 'ปิดร้าน' : 'เปิดร้าน'}
               </button>
             </div>
             <button onClick={() => navigate(`/editshop?shop_id=${shopId}`)} style={{ marginTop:20, padding:'10px 20px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#4b8ff4,#4b8ff4)', color:'#fff', fontSize:14, fontWeight:700, cursor:'pointer' }}>
-              ✏️ แก้ไขข้อมูลร้าน
+              <span style={{ display:'inline-flex', alignItems:'center', gap:8 }}>
+                <FaPenToSquare />
+                <span>แก้ไขข้อมูลร้าน</span>
+              </span>
             </button>
           </div>
         )}
@@ -1129,10 +1157,10 @@ function DashProductCard({ product: p, onEdit, onDelete }) {
             onError={e => { e.target.style.display='none'; }}
             style={{ width:'100%', height:'100%', objectFit:'cover', transition:'transform 0.5s ease', transform: hov ? 'scale(1.06)' : 'scale(1.0)' }} />
         ) : (
-          <div style={{ display:'flex', alignItems:'center', justifyContent:'center', height:'100%', fontSize:40 }}>🛍️</div>
+          <div style={{ display:'flex', alignItems:'center', justifyContent:'center', height:'100%', fontSize:40, color:'#94a3b8' }}><FaBasketShopping /></div>
         )}
         <div style={{ position:'absolute', top:10, left:10, padding:'3px 10px', borderRadius:999, fontSize:11, fontWeight:700, backdropFilter:'blur(4px)', background: p.is_available ? 'rgba(34,197,94,0.9)' : 'rgba(239,68,68,0.85)', color:'#fff' }}>
-          {p.is_available ? '✓ เปิดขาย' : '✕ ปิด'}
+          {p.is_available ? 'เปิดขาย' : 'ปิด'}
         </div>
       </div>
 
@@ -1160,11 +1188,14 @@ function DashProductCard({ product: p, onEdit, onDelete }) {
             style={{ flex:1, padding:'9px 0', borderRadius:10, border:'1.5px solid #4b8ff4', background:'#fff', fontSize:13, fontWeight:600, color:'#4b8ff4', cursor:'pointer', transition:'all 0.15s' }}
             onMouseEnter={e => { e.currentTarget.style.background='#4b8ff4'; e.currentTarget.style.color='#fff'; }}
             onMouseLeave={e => { e.currentTarget.style.background='#fff'; e.currentTarget.style.color='#4b8ff4'; }}>
-            ✏️ แก้ไข
+            <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}>
+              <FaPenToSquare />
+              <span>แก้ไข</span>
+            </span>
           </button>
           <button onClick={onDelete}
             style={{ padding:'9px 14px', borderRadius:10, border:'1.5px solid #e8b895', background:'#fff0e8', fontSize:13, fontWeight:600, color:'#6b3a0d', cursor:'pointer' }}>
-            🗑
+            <FaTrashCan />
           </button>
         </div>
       </div>

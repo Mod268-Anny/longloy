@@ -15,6 +15,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { MdHome, MdStorefront, MdOutlineSportsEsports, MdHelpOutline } from 'react-icons/md';
+import { FaCircleCheck, FaClipboardList, FaCreditCard, FaFlask, FaKey, FaLock, FaRegCircle, FaRegCircleDot, FaShieldHalved, FaTriangleExclamation, FaUser, FaCalendarDays } from 'react-icons/fa6';
 import { createCharge } from './api/checkoutCart';
 import Footer from './Footer';
 import useCartCount from './useCartCount';
@@ -26,7 +27,7 @@ const NAV = [
   { label:'ช่วยเหลือ', icon:<MdHelpOutline size={18}/>,          path:'/help'     },
 ];
 
-const STEPS = ['🛒 ตะกร้า', '💳 ชำระเงิน', '✅ ยืนยัน'];
+const STEPS = ['ตะกร้า', 'ชำระเงิน', 'ยืนยัน'];
 
 function FocusInput({ icon, style, ...props }) {
   const [focused, setFocused] = useState(false);
@@ -83,7 +84,7 @@ function CardPreview({ cardName, cardNumber, expiryMonth, expiryYear }) {
             <div style={{ borderRight:'1px solid rgba(0,0,0,0.15)', height:'100%' }} />
           </div>
         </div>
-        <span style={{ fontSize:20, filter:'drop-shadow(0 2px 4px rgba(0,0,0,0.3))', opacity:0.9 }}>💳</span>
+        <span style={{ fontSize:20, filter:'drop-shadow(0 2px 4px rgba(0,0,0,0.3))', opacity:0.9, display:'flex' }}><FaCreditCard /></span>
       </div>
 
       {/* Card number */}
@@ -205,7 +206,7 @@ export default function Payment() {
   if (!paymentData) {
     return (
       <div style={{ minHeight:'100vh', background:'#f0f4f8', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', fontFamily:"'Inter',system-ui,sans-serif", gap:16 }}>
-        <div style={{ fontSize:48 }}>😕</div>
+        <div style={{ fontSize:48, display:'flex', justifyContent:'center', color:'#94a3b8' }}><FaTriangleExclamation /></div>
         <p style={{ fontSize:16, color:'#64748b', fontWeight:600 }}>ไม่พบข้อมูลการชำระเงิน</p>
         <button onClick={() => navigate('/cart')} style={{ padding:'11px 28px', background:'linear-gradient(135deg,#4b8ff4,#4b8ff4)', color:'#fff', border:'none', borderRadius:12, cursor:'pointer', fontWeight:700, fontSize:14, fontFamily:'inherit', boxShadow:'0 4px 16px rgba(75,143,244,0.3)' }}>
           กลับไปตะกร้าสินค้า
@@ -265,7 +266,7 @@ export default function Payment() {
                   boxShadow: i === 1 ? '0 4px 14px rgba(75,143,244,0.4)' : 'none',
                   transition:'all 0.2s',
                 }}>
-                  {i < 1 ? '✓' : i === 1 ? '●' : '○'}
+                  {i < 1 ? <FaCircleCheck /> : i === 1 ? <FaRegCircleDot /> : <FaRegCircle />}
                 </div>
                 <span style={{ fontSize:11, fontWeight:i===1?700:500, color:i===1?'#4b8ff4':i<1?'#4b8ff4':'#94a3b8', whiteSpace:'nowrap' }}>{s}</span>
               </div>
@@ -282,7 +283,7 @@ export default function Payment() {
         {/* ── Order summary ──────────────────────────────────── */}
         <div style={{ background:'#fff', borderRadius:22, border:'1px solid #e8edf3', boxShadow:'0 4px 20px rgba(0,0,0,0.06)', marginBottom:16, overflow:'hidden' }}>
           <div style={{ padding:'14px 22px', background:'linear-gradient(135deg,#f8fafc,#f0f4f8)', borderBottom:'1px solid #e8edf3', display:'flex', alignItems:'center', gap:8 }}>
-            <span style={{ fontSize:14 }}>🧾</span>
+            <span style={{ fontSize:14, display:'flex' }}><FaClipboardList /></span>
             <p style={{ margin:0, fontSize:12, fontWeight:800, color:'#64748b', letterSpacing:'0.1em', textTransform:'uppercase' }}>สรุปรายการสั่งซื้อ</p>
           </div>
           <div style={{ padding:'18px 22px' }}>
@@ -314,20 +315,20 @@ export default function Payment() {
           onMouseEnter={e => { e.currentTarget.style.background='#edf3ff'; e.currentTarget.style.borderColor='#85b3f7'; }}
           onMouseLeave={e => { e.currentTarget.style.background='none'; e.currentTarget.style.borderColor='#b8d4fb'; }}
         >
-          ✨ กรอกบัตรทดสอบอัตโนมัติ (4242…)
+          กรอกบัตรทดสอบอัตโนมัติ (4242…)
         </button>
 
         {/* ── Error ──────────────────────────────────────────── */}
         {error && (
           <div style={{ marginBottom:16, background:'#fff0e8', border:'2px solid #e8b895', color:'#5c2c08', padding:'12px 16px', borderRadius:14, fontSize:13, fontWeight:600, display:'flex', alignItems:'flex-start', gap:8 }}>
-            <span>❌</span><span>{error}</span>
+            <span style={{ display:'flex', marginTop:1 }}><FaTriangleExclamation /></span><span>{error}</span>
           </div>
         )}
 
         {/* ── Card form ──────────────────────────────────────── */}
         <div style={{ background:'#fff', borderRadius:22, border:'1px solid #e8edf3', boxShadow:'0 4px 20px rgba(0,0,0,0.06)', overflow:'hidden' }}>
           <div style={{ padding:'14px 22px', background:'linear-gradient(135deg,#edf3ff,#f0f4ff)', borderBottom:'1px solid #dde8fc', display:'flex', alignItems:'center', gap:8 }}>
-            <span style={{ fontSize:14 }}>🔒</span>
+            <span style={{ fontSize:14, display:'flex' }}><FaLock /></span>
             <p style={{ margin:0, fontSize:12, fontWeight:800, color:'#4b8ff4', letterSpacing:'0.1em', textTransform:'uppercase' }}>ข้อมูลบัตรเครดิต · SSL Encrypted</p>
           </div>
 
@@ -335,24 +336,24 @@ export default function Payment() {
             {/* Card name */}
             <div>
               <label style={{ fontSize:13, fontWeight:700, color:'#475569', display:'block', marginBottom:7 }}>ชื่อผู้ถือบัตร</label>
-              <FocusInput icon="👤" type="text" value={cardName} onChange={e=>setCardName(e.target.value.toUpperCase())} placeholder="JOHN DOE" disabled={isProcessing} />
+              <FocusInput icon={<FaUser />} type="text" value={cardName} onChange={e=>setCardName(e.target.value.toUpperCase())} placeholder="JOHN DOE" disabled={isProcessing} />
             </div>
 
             {/* Card number */}
             <div>
               <label style={{ fontSize:13, fontWeight:700, color:'#475569', display:'block', marginBottom:7 }}>เลขบัตรเครดิต</label>
-              <FocusInput icon="💳" type="text" value={cardNumber} onChange={handleCardNumberChange} placeholder="1234 5678 9012 3456" style={{ fontFamily:'monospace', letterSpacing:'2px' }} disabled={isProcessing} />
+              <FocusInput icon={<FaCreditCard />} type="text" value={cardNumber} onChange={handleCardNumberChange} placeholder="1234 5678 9012 3456" style={{ fontFamily:'monospace', letterSpacing:'2px' }} disabled={isProcessing} />
             </div>
 
             {/* Expiry + CVV */}
             <div className="rsp-grid-2" style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:14 }}>
               <div>
                 <label style={{ fontSize:13, fontWeight:700, color:'#475569', display:'block', marginBottom:7 }}>หมดอายุ MM/YY</label>
-                <FocusInput icon="📅" type="text" value={expiryMonth&&expiryYear?`${expiryMonth}/${expiryYear}`:expiryMonth} onChange={handleExpiryChange} placeholder="MM/YY" disabled={isProcessing} />
+                <FocusInput icon={<FaCalendarDays />} type="text" value={expiryMonth&&expiryYear?`${expiryMonth}/${expiryYear}`:expiryMonth} onChange={handleExpiryChange} placeholder="MM/YY" disabled={isProcessing} />
               </div>
               <div>
                 <label style={{ fontSize:13, fontWeight:700, color:'#475569', display:'block', marginBottom:7 }}>CVV</label>
-                <FocusInput icon="🔑" type="password" value={cvv} onChange={handleCvvChange} placeholder="•••" disabled={isProcessing} />
+                <FocusInput icon={<FaKey />} type="password" value={cvv} onChange={handleCvvChange} placeholder="•••" disabled={isProcessing} />
               </div>
             </div>
 
@@ -372,12 +373,12 @@ export default function Payment() {
               onMouseEnter={e => { if (!isProcessing) { e.currentTarget.style.transform='translateY(-2px)'; e.currentTarget.style.boxShadow='0 12px 32px rgba(75,143,244,0.5)'; } }}
               onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow=isProcessing?'none':'0 8px 24px rgba(75,143,244,0.42)'; }}
             >
-              {isProcessing ? '⏳ กำลังประมวลผล...' : `🔒 ชำระเงิน ฿${amountTHB}`}
+              {isProcessing ? 'กำลังประมวลผล...' : `ชำระเงิน ฿${amountTHB}`}
             </button>
 
             {/* Security note */}
             <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:6, marginTop:2 }}>
-              <span style={{ fontSize:12 }}>🛡️</span>
+              <span style={{ fontSize:12, display:'flex' }}><FaShieldHalved /></span>
               <span style={{ fontSize:12, color:'#94a3b8', fontWeight:500 }}>ข้อมูลบัตรถูกเข้ารหัส SSL 256-bit</span>
             </div>
           </form>
@@ -386,7 +387,7 @@ export default function Payment() {
         {/* ── Test card info ──────────────────────────────────── */}
         <div style={{ marginTop:16, background:'linear-gradient(135deg,#f0f4ff,#e0f2fe)', border:'1.5px solid #bae6fd', borderRadius:16, padding:'16px 20px' }}>
           <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:10 }}>
-            <span style={{ fontSize:16 }}>🧪</span>
+            <span style={{ fontSize:16, display:'flex' }}><FaFlask /></span>
             <p style={{ margin:0, fontSize:12, fontWeight:800, color:'#1a3a6e', letterSpacing:'0.08em', textTransform:'uppercase' }}>ข้อมูลบัตรทดสอบ</p>
           </div>
           <div style={{ display:'grid', gridTemplateColumns:'auto 1fr', gap:'4px 16px', fontSize:13 }}>

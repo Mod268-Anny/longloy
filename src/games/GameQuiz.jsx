@@ -12,6 +12,7 @@
 // แสดงดาว: 1-3 ดาวตามเปอร์เซ็นต์ที่ได้ (50%, 80%, 100%)
 // ============================================================
 import React, { useState, useEffect } from 'react';
+import { FaTrophy, FaStar, FaClipboardList, FaCircleCheck, FaRotateRight, FaClock, FaBrain, FaCircleXmark } from 'react-icons/fa6';
 import API_URL, { secureLocalFetch } from '../config';
 
 const OPT_LABELS = ['A', 'B', 'C', 'D'];
@@ -45,7 +46,7 @@ function FinishScreen({ score, maxScore, questions, resetAt, submitting }) {
         <div style={{ position:'absolute', bottom:-40, left:-40, width:160, height:160, borderRadius:'50%', background:'rgba(255,255,255,0.05)', pointerEvents:'none' }} />
 
         <div style={{ position:'relative', zIndex:1 }}>
-          <div style={{ fontSize: 64, marginBottom: 8 }}>{perfect ? '🏆' : stars >= 2 ? '🎉' : '👍'}</div>
+          <div style={{ fontSize: 64, marginBottom: 8, display: 'flex', justifyContent: 'center' }}>{perfect ? <FaTrophy /> : stars >= 2 ? <FaStar /> : <FaCircleCheck />}</div>
           <h2 style={{ margin:'0 0 6px', fontSize: 26, fontWeight: 800, color:'#fff' }}>
             {perfect ? 'เยี่ยมมาก! คะแนนเต็ม!' : stars >= 2 ? 'เก่งมาก!' : 'ไม่เป็นไร!'}
           </h2>
@@ -62,7 +63,7 @@ function FinishScreen({ score, maxScore, questions, resetAt, submitting }) {
                 opacity: s <= stars ? 1 : 0.25,
                 transform: s <= stars ? 'scale(1.1)' : 'scale(1)',
                 transition: 'all 0.3s',
-              }}>⭐</div>
+              }}><FaStar /></div>
             ))}
           </div>
 
@@ -81,7 +82,7 @@ function FinishScreen({ score, maxScore, questions, resetAt, submitting }) {
 
       {/* Question summary */}
       <div style={{ background:'#fff8f0', borderRadius:18, padding:'18px 20px', marginBottom:24, border:'1px solid #ede9e3' }}>
-        <p style={{ margin:'0 0 14px', fontWeight:700, fontSize:14, color:'#3d1a05' }}>📋 สรุปผล</p>
+        <p style={{ margin:'0 0 14px', fontWeight:700, fontSize:14, color:'#3d1a05', display:'flex', alignItems:'center', gap:8 }}><FaClipboardList /> สรุปผล</p>
         <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
           {questions.map((q, i) => (
             <div key={q.id} style={{ display:'flex', alignItems:'center', gap:10, fontSize:13, color:'#7a5c40' }}>
@@ -96,10 +97,10 @@ function FinishScreen({ score, maxScore, questions, resetAt, submitting }) {
       </div>
 
       {submitting ? (
-        <div style={{ textAlign:'center', padding:'14px', color:'#b89a7a', fontSize:14, fontWeight:600 }}>⏳ กำลังบันทึกแต้ม...</div>
+        <div style={{ textAlign:'center', padding:'14px', color:'#b89a7a', fontSize:14, fontWeight:600, display:'flex', alignItems:'center', justifyContent:'center', gap:8 }}><FaClock /> กำลังบันทึกแต้ม...</div>
       ) : (
         <div style={{ background:'#fff8f0', borderRadius:16, padding:'16px 20px', border:'1px solid #ede9e3', textAlign:'center' }}>
-          <p style={{ margin:'0 0 4px', fontSize:13, color:'#7a5c40' }}>🔄 ชุดคำถามใหม่จะมาในอีก</p>
+          <p style={{ margin:'0 0 4px', fontSize:13, color:'#7a5c40', display:'flex', alignItems:'center', justifyContent:'center', gap:6 }}><FaRotateRight /> ชุดคำถามใหม่จะมาในอีก</p>
           <p style={{ margin:0, fontSize:28, fontWeight:900, color:'#8d4d11', fontFamily:'monospace' }}>{countdown}</p>
           <p style={{ margin:'4px 0 0', fontSize:12, color:'#b89a7a' }}>รีเซ็ตทุกเที่ยงคืน</p>
         </div>
@@ -135,7 +136,7 @@ function AlreadyPlayedScreen({ score, resetAt }) {
     <div style={{ padding:'8px 0', textAlign:'center', fontFamily:"'Inter',system-ui,sans-serif" }}>
       <div style={{ background:'linear-gradient(135deg,#4a2a0a,#8d4d11)', borderRadius:24, padding:'36px 28px', marginBottom:20, color:'#fff', position:'relative', overflow:'hidden' }}>
         <div style={{ position:'absolute', top:-40, right:-40, width:160, height:160, borderRadius:'50%', background:'rgba(255,255,255,0.08)', pointerEvents:'none' }}/>
-        <div style={{ fontSize:56, marginBottom:10 }}>✅</div>
+        <div style={{ fontSize:56, marginBottom:10, display:'flex', justifyContent:'center' }}><FaCircleCheck /></div>
         <h2 style={{ margin:'0 0 8px', fontSize:22, fontWeight:800 }}>เล่นแล้ววันนี้!</h2>
         <p style={{ margin:'0 0 20px', color:'rgba(255,255,255,0.8)', fontSize:14 }}>คุณได้เล่น Quiz ชุดวันนี้ครบแล้ว</p>
         <div style={{ background:'rgba(255,255,255,0.15)', borderRadius:14, padding:'14px 20px', display:'inline-block' }}>
@@ -237,20 +238,20 @@ export default function GameQuiz() {
 
   if (loadingQ) return (
     <div style={{ padding:32, textAlign:'center', color:'#b89a7a' }}>
-      <div style={{ fontSize:32, marginBottom:8 }}>⏳</div>
+      <div style={{ fontSize:32, marginBottom:8, display:'flex', justifyContent:'center' }}><FaClock /></div>
       <p style={{ fontWeight:600, margin:0 }}>กำลังโหลดคำถามวันนี้...</p>
     </div>
   );
   if (!token) return (
     <div style={{ padding:32, textAlign:'center', color:'#b89a7a' }}>
-      <p style={{ fontSize:28, margin:'0 0 8px' }}>🔒</p>
+      <p style={{ fontSize:28, margin:'0 0 8px', display:'flex', justifyContent:'center' }}><FaCircleCheck /></p>
       <p style={{ fontWeight:600, margin:0 }}>กรุณาเข้าสู่ระบบก่อนเล่น Quiz</p>
     </div>
   );
   if (alreadyPlayed) return <AlreadyPlayedScreen score={todayScore} resetAt={resetAt} />;
   if (fetchError) return (
     <div style={{ padding:32, textAlign:'center', color:'#b89a7a' }}>
-      <p style={{ fontSize:36, margin:'0 0 8px' }}>⚠️</p>
+      <p style={{ fontSize:36, margin:'0 0 8px', display:'flex', justifyContent:'center' }}><FaCircleCheck /></p>
       <p style={{ fontWeight:700, fontSize:15, color:'#5c3a1e', margin:'0 0 6px' }}>{fetchError}</p>
       <button onClick={() => window.location.reload()} style={{ marginTop:12, padding:'9px 20px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#8d4d11,#6b3a0d)', color:'#fff', fontSize:13, fontWeight:700, cursor:'pointer' }}>
         ลองใหม่
@@ -319,7 +320,7 @@ export default function GameQuiz() {
         animation:'fadeSlideIn 0.35s ease',
       }}>
         <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:14 }}>
-          <div style={{ width:32, height:32, borderRadius:10, background:'linear-gradient(135deg,#8d4d11,#6b3a0d)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:16, flexShrink:0 }}>🧠</div>
+          <div style={{ width:32, height:32, borderRadius:10, background:'linear-gradient(135deg,#8d4d11,#6b3a0d)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:16, flexShrink:0 }}><FaBrain /></div>
           <p style={{ margin:0, fontSize:12, fontWeight:700, color:'#8d4d11', letterSpacing:'0.08em', textTransform:'uppercase' }}>ข้อที่ {currentQuestion + 1} · {question.points} แต้ม</p>
         </div>
         <p style={{ margin:0, fontSize:17, fontWeight:700, color:'#3d1a05', lineHeight:1.6 }}>{question.question}</p>
@@ -371,7 +372,7 @@ export default function GameQuiz() {
                 fontSize:13, fontWeight:800, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0,
                 transition:'all 0.25s',
               }}>
-                {isRight ? '✓' : isWrong ? '✗' : OPT_LABELS[index]}
+                {isRight ? <FaCircleCheck /> : isWrong ? <FaCircleXmark /> : OPT_LABELS[index]}
               </div>
               <span style={{ fontSize:15, fontWeight:500, color, flex:1, lineHeight:1.4 }}>{option}</span>
               {isRight && <span style={{ fontSize:12, fontWeight:700, color:'#16a34a', flexShrink:0 }}>+{question.points} แต้ม</span>}
@@ -390,7 +391,7 @@ export default function GameQuiz() {
             border: `1px solid ${isCorrect ? '#bbf7d0' : '#e8b895'}`,
             display:'flex', alignItems:'center', gap:12,
           }}>
-            <span style={{ fontSize:22 }}>{isCorrect ? '🎉' : '😅'}</span>
+            <span style={{ fontSize:22 }}>{isCorrect ? <FaTrophy /> : <FaCircleXmark />}</span>
             <div>
               <p style={{ margin:'0 0 2px', fontWeight:700, fontSize:14, color: isCorrect ? '#166534' : '#4a2008' }}>
                 {isCorrect ? `ถูกต้อง! ได้ ${question.points} แต้ม` : 'ตอบผิดแล้ว'}

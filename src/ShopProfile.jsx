@@ -13,7 +13,7 @@
 // ============================================================
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { FaBasketShopping, FaStar, FaChevronLeft, FaCartPlus } from 'react-icons/fa6';
+import { FaBasketShopping, FaComment, FaLocationDot, FaPenToSquare, FaPhone, FaStar, FaChevronLeft, FaCartPlus } from 'react-icons/fa6';
 import Footer from './Footer';
 import FloatingCart from './FloatingCart';
 import { FaUserCircle } from 'react-icons/fa';
@@ -184,8 +184,8 @@ export default function ShopProfile() {
               </div>
               <h1 className="sp-hero-h1" style={{ margin: "0 0 7px", fontWeight: 900, fontSize: "clamp(1.4rem,3vw,2.1rem)", color: "#fff", textShadow: "0 2px 14px rgba(0,0,0,0.5)", lineHeight: 1.2 }}>{shopName}</h1>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-                {shop?.location     && <span style={{ fontSize: 13, color: "rgba(255,255,255,0.62)" }}>📍 {shop.location}</span>}
-                {shop?.phone_number && <span style={{ fontSize: 13, color: "rgba(255,255,255,0.62)" }}>📞 {shop.phone_number}</span>}
+                {shop?.location     && <span style={{ fontSize: 13, color: "rgba(255,255,255,0.62)", display:'inline-flex', alignItems:'center', gap:6 }}><FaLocationDot />{shop.location}</span>}
+                {shop?.phone_number && <span style={{ fontSize: 13, color: "rgba(255,255,255,0.62)", display:'inline-flex', alignItems:'center', gap:6 }}><FaPhone />{shop.phone_number}</span>}
               </div>
             </div>
           </div>
@@ -202,14 +202,14 @@ export default function ShopProfile() {
               </div>
             </div>
             <div className="sp-stat-pill" style={{ display: "flex", alignItems: "center", gap: 10, background: "linear-gradient(135deg,#faf8f5,#f4f1ec)", border: "1.5px solid #e2ddd6", borderRadius: 14, padding: "10px 18px" }}>
-              <span style={{ fontSize: 18 }}>💬</span>
+              <span style={{ fontSize: 18, display:'flex' }}><FaComment /></span>
               <div>
                 <p className="sp-stat-val" style={{ margin: 0, fontWeight: 900, fontSize: 17, color: "#5c4a38" }}>{reviews.length}</p>
                 <p style={{ margin: 0, fontSize: 11, color: "#8a7060", fontWeight: 600 }}>รีวิวทั้งหมด</p>
               </div>
             </div>
             <div className="sp-stat-pill" style={{ display: "flex", alignItems: "center", gap: 10, background: "linear-gradient(135deg,#faf8f5,#f4f1ec)", border: "1.5px solid #e2ddd6", borderRadius: 14, padding: "10px 18px" }}>
-              <span style={{ fontSize: 18 }}>🛍️</span>
+              <span style={{ fontSize: 18, display:'flex' }}><FaBasketShopping /></span>
               <div>
                 <p className="sp-stat-val" style={{ margin: 0, fontWeight: 900, fontSize: 17, color: "#5c4a38" }}>{products.length}</p>
                 <p style={{ margin: 0, fontSize: 11, color: "#8a7060", fontWeight: 600 }}>สินค้าในร้าน</p>
@@ -241,7 +241,7 @@ export default function ShopProfile() {
           <div className="sp-section" style={{ marginBottom: 28 }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
               <div>
-                <h2 style={{ margin: "0 0 2px", fontWeight: 900, fontSize: 18, color: "#1a0f08", letterSpacing: "-0.01em" }}>🛍️ สินค้าในร้าน</h2>
+                <h2 style={{ margin: "0 0 2px", fontWeight: 900, fontSize: 18, color: "#1a0f08", letterSpacing: "-0.01em", display:'flex', alignItems:'center', gap:8 }}><FaBasketShopping />สินค้าในร้าน</h2>
                 <p style={{ margin: 0, fontSize: 12, color: "#b0a090" }}>{products.length} รายการ</p>
               </div>
               <button onClick={() => navigate(`/shop-product/${shop_id}`)}
@@ -317,7 +317,7 @@ function ProductMiniCard({ product, isAdded, onAdd, onView }) {
             color: "#fff",
             boxShadow: isAdded ? "0 3px 12px rgba(34,197,94,0.3)" : "0 3px 12px rgba(141,77,17,0.3)" }}>
           <FaCartPlus style={{ fontSize: 13 }} />
-          {isAdded ? "✓ เพิ่มแล้ว" : "เพิ่มลงตะกร้า"}
+          {isAdded ? "เพิ่มแล้ว" : "เพิ่มลงตะกร้า"}
         </button>
       </div>
     </div>
@@ -329,7 +329,7 @@ function ReviewForm({ title, value, onChange, hoverStar, setHoverStar, onSubmit,
   return (
     <div style={{ background: "#fff", borderRadius: 20, border: "1px solid #ede9e3", borderLeft: "5px solid #8d4d11", padding: "22px 24px", marginBottom: 20, boxShadow: "0 2px 14px rgba(0,0,0,0.07)" }}>
       <h2 style={{ fontWeight: 900, fontSize: 16, color: "#1a0f08", margin: "0 0 18px", display: "flex", alignItems: "center", gap: 8 }}>
-        <span style={{ background: "#fff8f0", borderRadius: 10, padding: "5px 9px", fontSize: 17 }}>✏️</span> {title}
+        <span style={{ background: "#fff8f0", borderRadius: 10, padding: "5px 9px", fontSize: 17, display:'inline-flex' }}><FaPenToSquare /></span> {title}
       </h2>
       <form onSubmit={onSubmit} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         <input type="text" placeholder="ชื่อของคุณ" value={value.reviewer_name}
@@ -348,7 +348,7 @@ function ReviewForm({ title, value, onChange, hoverStar, setHoverStar, onSubmit,
             <span key={i} role="button" onClick={() => onChange(v => ({ ...v, rating: i }))}
               onMouseEnter={() => setHoverStar(i)} onMouseLeave={() => setHoverStar(0)}
               style={{ cursor: "pointer", fontSize: 30, color: i <= (hoverStar||value.rating) ? "#8d4d11" : "#e2ddd6", transition: "all 0.12s", transform: i <= (hoverStar||value.rating) ? "scale(1.18)" : "scale(1)", display: "inline-block", lineHeight: 1 }}
-            >★</span>
+            ><FaStar /></span>
           ))}
           {value.rating > 0 && <span style={{ fontSize: 12, color: "#b0a090", marginLeft: 4, fontWeight: 600 }}>{value.rating} ดาว</span>}
         </div>
@@ -359,7 +359,7 @@ function ReviewForm({ title, value, onChange, hoverStar, setHoverStar, onSubmit,
           onMouseEnter={e => { if (!submitting) { e.currentTarget.style.transform="translateY(-1px)"; e.currentTarget.style.boxShadow="0 8px 24px rgba(141,77,17,0.42)"; }}}
           onMouseLeave={e => { e.currentTarget.style.transform="none"; e.currentTarget.style.boxShadow=submitting?"none":"0 6px 20px rgba(141,77,17,0.35)"; }}
         >
-          {submitting ? "⏳ กำลังส่ง..." : "ส่งรีวิว ✈️"}
+          {submitting ? "กำลังส่ง..." : "ส่งรีวิว"}
         </button>
       </form>
     </div>

@@ -11,7 +11,7 @@
 // ============================================================
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { FaBasketShopping } from 'react-icons/fa6';
+import { FaBasketShopping, FaTriangleExclamation } from 'react-icons/fa6';
 import { FaUserCircle } from 'react-icons/fa';
 import { MdHome, MdStorefront, MdOutlineSportsEsports, MdHelpOutline } from 'react-icons/md';
 import API_URL, { secureLocalFetch } from './config';
@@ -54,7 +54,7 @@ function AddProduct() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
-  // ✅ State สำหรับฟอร์มเพิ่มสินค้า
+  // State สำหรับฟอร์มเพิ่มสินค้า
   const [formData, setFormData] = useState({
     name: '',
     price: '',
@@ -68,7 +68,7 @@ function AddProduct() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  // ✅ ตรวจสอบสิทธิ์และโหลดข้อมูล
+  // ตรวจสอบสิทธิ์และโหลดข้อมูล
   useEffect(() => {
     const token = localStorage.getItem('token');
 
@@ -117,7 +117,7 @@ function AddProduct() {
       .finally(() => setLoading(false));
   }, [navigate]);
 
-  // ✅ จัดการการเปลี่ยนแปลง input
+  // จัดการการเปลี่ยนแปลง input
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({
@@ -126,14 +126,14 @@ function AddProduct() {
     });
   };
 
-  // ✅ จัดการการส่งฟอร์ม
+  // จัดการการส่งฟอร์ม
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setSuccess('');
     setSubmitting(true);
 
-    // ✅ ตรวจสอบข้อมูล
+    // ตรวจสอบข้อมูล
     if (!formData.name || !formData.price || !formData.description) {
       setError('กรุณากรอกข้อมูลที่จำเป็น (ชื่อ, ราคา, รายละเอียด)');
       setSubmitting(false);
@@ -149,7 +149,7 @@ function AddProduct() {
     try {
       const token = localStorage.getItem('token');
 
-      // ✅ ส่งข้อมูลไปยัง API
+      // ส่งข้อมูลไปยัง API
       const response = await secureLocalFetch(`${API_URL}/products/create`, {
         method: 'POST',
         headers: {
@@ -237,7 +237,7 @@ function AddProduct() {
           width: '100%',
           textAlign: 'center',
         }}>
-          <div style={{ fontSize: '48px', marginBottom: '16px' }}>⚠️</div>
+          <div style={{ fontSize: '48px', marginBottom: '16px', display:'flex', justifyContent:'center' }}><FaTriangleExclamation /></div>
           <p style={{ color: '#475569', fontSize: '15px', marginBottom: '24px', lineHeight: 1.6 }}>
             {error}
           </p>
@@ -362,7 +362,7 @@ function AddProduct() {
           alignItems: 'center',
           gap: '16px',
         }}>
-          <span style={{ fontSize: '36px', lineHeight: 1 }}>🛍️</span>
+          <span style={{ fontSize: '36px', lineHeight: 1, display:'flex', alignItems:'center' }}><FaBasketShopping /></span>
           <div>
             <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 800, letterSpacing: '-0.3px' }}>
               เพิ่มสินค้า

@@ -12,14 +12,15 @@
 // API: GET /admin/users, PUT /admin/users/:id/ban, PUT /admin/users/:id/role
 // ============================================================
 import React, { useState, useEffect } from 'react';
+import { FaShieldHalved, FaStore, FaBriefcase, FaXmark, FaUsers, FaTriangleExclamation, FaMagnifyingGlass, FaPenToSquare } from 'react-icons/fa6';
 import API_URL, { secureLocalFetch } from '../config';
 import ActivityHistory from './ActivityHistory';
 
 /* ─── Role badge ─────────────────────────────────────────────────── */
 const ROLE_STYLE = {
-  Admin:         { bg: "#fff0e8", color: "#6b3a0d", border: "#ffe8d4",  label: "🛡️ Admin" },
-  Entrepreneur:  { bg: "#fff8f0", color: "#5c2c08", border: "#d4880a",  label: "🏪 ผู้ประกอบการ" },
-  Tourist:       { bg: "#edf3ff", color: "#1a3a6e", border: "#b8d4fb",  label: "🧳 นักท่องเที่ยว" },
+  Admin:         { bg: "#fff0e8", color: "#6b3a0d", border: "#ffe8d4",  label: <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><FaShieldHalved /> Admin</span> },
+  Entrepreneur:  { bg: "#fff8f0", color: "#5c2c08", border: "#d4880a",  label: <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><FaStore /> ผู้ประกอบการ</span> },
+  Tourist:       { bg: "#edf3ff", color: "#1a3a6e", border: "#b8d4fb",  label: <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><FaBriefcase /> นักท่องเที่ยว</span> },
 };
 
 function RoleBadge({ role }) {
@@ -36,7 +37,7 @@ function Modal({ show, onClose, title, children, footer }) {
       <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%,-50%)", zIndex: 101, background: "#fff", borderRadius: 20, width: "min(96vw, 520px)", maxHeight: "85vh", overflow: "auto", boxShadow: "0 20px 60px rgba(0,0,0,0.2)" }}>
         <div style={{ padding: "20px 24px 16px", borderBottom: "1px solid #f1f5f9", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <h3 style={{ margin: 0, fontWeight: 700, fontSize: 16, color: "#0f172a" }}>{title}</h3>
-          <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", color: "#94a3b8", fontSize: 20, padding: 4, lineHeight: 1 }}>✕</button>
+          <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", color: "#94a3b8", fontSize: 20, padding: 4, lineHeight: 1 }}><FaXmark /></button>
         </div>
         <div style={{ padding: "20px 24px" }}>{children}</div>
         {footer && <div style={{ padding: "14px 24px 20px", borderTop: "1px solid #f1f5f9", display: "flex", justifyContent: "flex-end", gap: 10 }}>{footer}</div>}
@@ -149,13 +150,13 @@ function UserManagement({ token }) {
       {/* Section header */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16, flexWrap: "wrap", gap: 10 }}>
         <div>
-          <h2 style={{ fontWeight: 800, fontSize: 17, color: "#0f172a", margin: "0 0 2px" }}>👥 จัดการผู้ใช้</h2>
+          <h2 style={{ fontWeight: 800, fontSize: 17, color: "#0f172a", margin: "0 0 2px", display: 'flex', alignItems: 'center', gap: 8 }}><FaUsers /> จัดการผู้ใช้</h2>
           <p style={{ fontSize: 13, color: "#64748b", margin: 0 }}>{users.length} รายการ</p>
         </div>
       </div>
 
       {/* Alerts */}
-      {error   && <div style={{ padding: "10px 14px", borderRadius: 10, background: "#fff0e8", border: "1px solid #ffe8d4", color: "#4a2008", fontSize: 13, marginBottom: 12 }}>⚠️ {error}</div>}
+      {error   && <div style={{ padding: "10px 14px", borderRadius: 10, background: "#fff0e8", border: "1px solid #ffe8d4", color: "#4a2008", fontSize: 13, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}><FaTriangleExclamation /> {error}</div>}
       {success && <div style={{ padding: "10px 14px", borderRadius: 10, background: "#edf3ff", border: "1px solid #b8d4fb", color: "#1a3a6e", fontSize: 13, marginBottom: 12 }}>{success}</div>}
 
       {/* Search bar */}
@@ -180,14 +181,14 @@ function UserManagement({ token }) {
         </select>
         <button onClick={fetchUsers}
           style={{ padding: "8px 16px", borderRadius: 9, border: "none", background: "linear-gradient(135deg,#4b8ff4,#4b8ff4)", color: "#fff", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
-          🔍 ค้นหา
+          <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}><FaMagnifyingGlass /> ค้นหา</span>
         </button>
       </div>
 
       {/* User list */}
       {users.length === 0 ? (
         <div style={{ textAlign: "center", padding: "48px 0", color: "#94a3b8" }}>
-          <p style={{ fontSize: 32, margin: "0 0 8px" }}>👥</p>
+          <p style={{ fontSize: 32, margin: "0 0 8px" }}><FaUsers /></p>
           <p style={{ fontWeight: 600, fontSize: 14 }}>ไม่พบผู้ใช้</p>
         </div>
       ) : (
@@ -283,7 +284,7 @@ function UserManagement({ token }) {
       )}
 
       {/* ── Edit user modal ──────────────────────────────────── */}
-      <Modal show={showEditModal} onClose={() => setShowEditModal(false)} title="✏️ แก้ไขข้อมูลผู้ใช้"
+      <Modal show={showEditModal} onClose={() => setShowEditModal(false)} title={<span style={{ display:'inline-flex', alignItems:'center', gap:8 }}><FaPenToSquare /> แก้ไขข้อมูลผู้ใช้</span>}
         footer={<>
           <button onClick={() => setShowEditModal(false)} style={{ padding: "9px 20px", borderRadius: 9, border: "1px solid #e2e8f0", background: "#fff", color: "#475569", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>ยกเลิก</button>
           <button onClick={handleSave} disabled={saving} style={{ padding: "9px 20px", borderRadius: 9, border: "none", background: "linear-gradient(135deg,#4b8ff4,#4b8ff4)", color: "#fff", fontSize: 13, fontWeight: 700, cursor: saving ? "default" : "pointer", opacity: saving ? 0.7 : 1 }}>{saving ? "กำลังบันทึก..." : "บันทึก"}</button>

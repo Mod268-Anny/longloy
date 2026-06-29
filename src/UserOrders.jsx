@@ -13,6 +13,7 @@
 // ============================================================
 import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaArrowsRotate, FaBan, FaBasketShopping, FaCircleCheck, FaLock, FaMagnifyingGlass, FaMoneyBillWave, FaTriangleExclamation, FaXmark } from 'react-icons/fa6';
 import API_URL, { secureLocalFetch } from './config';
 import Footer from './Footer';
 import Navbar from './Navbar';
@@ -46,7 +47,7 @@ function MiniOrderStepper({ status }) {
           <React.Fragment key={i}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
               <div style={{ width: 22, height: 22, borderRadius: '50%', border: `2px solid ${color}`, background: done ? '#22c55e' : isAct ? '#fff8f0' : '#faf8f5', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, color: done ? '#fff' : color, fontWeight: 800, transition: 'all 0.3s' }}>
-                {done ? '✓' : i + 1}
+                {done ? <FaCircleCheck /> : i + 1}
               </div>
               <span style={{ fontSize: 9, marginTop: 4, color: done ? '#16a34a' : isAct ? '#8d4d11' : '#b0a090', fontWeight: isAct ? 700 : 500, whiteSpace: 'nowrap' }}>{label}</span>
             </div>
@@ -141,7 +142,7 @@ export default function UserOrders() {
   if (tokenStatus === 'missing') return (
     <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: '#f8fafc', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ textAlign: 'center' }}>
-        <div style={{ fontSize: 48, marginBottom: 12 }}>🔐</div>
+        <div style={{ fontSize: 48, marginBottom: 12, display:'flex', justifyContent:'center' }}><FaLock /></div>
         <p style={{ fontWeight: 700, color: '#0f172a', marginBottom: 6 }}>กรุณาเข้าสู่ระบบก่อน</p>
       </div>
     </div>
@@ -160,14 +161,14 @@ export default function UserOrders() {
           </button>
           <button onClick={fetchOrders} disabled={refreshing}
             style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '9px 18px', borderRadius: 12, border: '1px solid #e2e8f0', background: '#fff', color: '#475569', fontSize: 14, fontWeight: 500, cursor: refreshing ? 'not-allowed' : 'pointer', opacity: refreshing ? 0.6 : 1 }}>
-            🔄 {refreshing ? 'กำลังรีเฟรช...' : 'รีเฟรช'}
+            <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}><FaArrowsRotate />{refreshing ? 'กำลังรีเฟรช...' : 'รีเฟรช'}</span>
           </button>
         </div>
 
         {/* Header */}
         <div style={{ marginBottom: 20 }}>
           <p style={{ margin: '0 0 4px', fontSize: 12, fontWeight: 700, color: '#8d4d11', textTransform: 'uppercase', letterSpacing: '0.1em' }}>ประวัติ</p>
-          <h1 style={{ margin: 0, fontSize: 24, fontWeight: 800, color: '#3d1a05' }}>📦 คำสั่งซื้อของฉัน</h1>
+          <h1 style={{ margin: 0, fontSize: 24, fontWeight: 800, color: '#3d1a05', display:'flex', alignItems:'center', gap:10 }}><FaBasketShopping />คำสั่งซื้อของฉัน</h1>
         </div>
 
         {/* Stats */}
@@ -190,7 +191,7 @@ export default function UserOrders() {
         {/* Search + Sort */}
         <div style={{ display: 'flex', gap: 10, marginBottom: 12, alignItems: 'center', flexWrap: 'wrap' }}>
           <div style={{ position: 'relative', flex: 1, minWidth: 200 }}>
-            <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 14, color: '#94a3b8', pointerEvents: 'none' }}>🔍</span>
+            <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 14, color: '#94a3b8', pointerEvents: 'none', display:'flex' }}><FaMagnifyingGlass /></span>
             <input
               value={search}
               onChange={e => { setSearch(e.target.value); setPage(1); }}
@@ -199,7 +200,7 @@ export default function UserOrders() {
             />
             {search && (
               <button onClick={() => { setSearch(''); setPage(1); }}
-                style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: '#94a3b8' }}>✕</button>
+                style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: '#94a3b8', display:'flex' }}><FaXmark /></button>
             )}
           </div>
           <button onClick={() => { setSortDir(d => d === 'desc' ? 'asc' : 'desc'); setPage(1); }}
@@ -231,12 +232,12 @@ export default function UserOrders() {
         {/* Content */}
         {loading ? (
           <div style={{ textAlign: 'center', padding: '60px 0', color: '#94a3b8' }}>
-            <div style={{ fontSize: 40, marginBottom: 12 }}>⏳</div>
+            <div style={{ fontSize: 40, marginBottom: 12 }}>...</div>
             <p style={{ fontWeight: 600 }}>กำลังโหลดคำสั่งซื้อ...</p>
           </div>
         ) : orders.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '60px 24px', background: '#fff', borderRadius: 20, border: '1px solid #f1f5f9' }}>
-            <div style={{ fontSize: 56, marginBottom: 12 }}>📭</div>
+            <div style={{ fontSize: 56, marginBottom: 12, display:'flex', justifyContent:'center', color:'#94a3b8' }}><FaBasketShopping /></div>
             <p style={{ fontWeight: 700, fontSize: 18, marginBottom: 8 }}>ยังไม่มีคำสั่งซื้อ</p>
             <p style={{ color: '#94a3b8', fontSize: 14, marginBottom: 24 }}>มาสั่งซื้อสินค้าจากตลาดลอยน้ำกัน!</p>
             <button onClick={() => navigate('/market')}
@@ -246,7 +247,7 @@ export default function UserOrders() {
           </div>
         ) : filtered.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '48px 24px', background: '#fff', borderRadius: 20, border: '1px solid #f1f5f9' }}>
-            <div style={{ fontSize: 40, marginBottom: 10 }}>🔍</div>
+            <div style={{ fontSize: 40, marginBottom: 10, display:'flex', justifyContent:'center', color:'#94a3b8' }}><FaMagnifyingGlass /></div>
             <p style={{ fontWeight: 700, fontSize: 15, marginBottom: 6 }}>ไม่พบออเดอร์ที่ตรงกัน</p>
             <p style={{ color: '#94a3b8', fontSize: 13 }}>ลองเปลี่ยนคำค้นหาหรือตัวกรอง</p>
           </div>
@@ -276,8 +277,8 @@ export default function UserOrders() {
                             {s.label}
                           </span>
                           {order.payment_method === 'cash'
-                            ? <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 99, background: '#f0fdf4', color: '#15803d', border: '1px solid #86efac' }}>💵 เงินสด</span>
-                            : <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 99, background: '#fff8f0', color: '#6b3a0d', border: '1px solid rgba(141,77,17,0.25)' }}>💳 บัตร</span>
+                            ? <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 99, background: '#f0fdf4', color: '#15803d', border: '1px solid #86efac', display:'inline-flex', alignItems:'center', gap:5 }}><FaMoneyBillWave />เงินสด</span>
+                            : <span style={{ fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 99, background: '#fff8f0', color: '#6b3a0d', border: '1px solid rgba(141,77,17,0.25)' }}>บัตร</span>
                           }
                         </div>
                         <p style={{ margin: '0 0 3px', fontSize: 14, fontWeight: 600, color: '#5c4a38' }}>{order.shop_name || 'ร้านค้า'}</p>
@@ -348,13 +349,13 @@ export default function UserOrders() {
           <div style={{ position: 'absolute', inset: 0, background: 'rgba(15,23,42,0.55)', backdropFilter: 'blur(4px)' }} onClick={() => setCancelModal(null)} />
           <div style={{ position: 'relative', background: '#fff', borderRadius: 24, padding: '28px 24px', maxWidth: 380, width: '100%', boxShadow: '0 24px 64px rgba(0,0,0,0.2)' }}>
             <div style={{ textAlign: 'center', marginBottom: 20 }}>
-              <div style={{ fontSize: 48, marginBottom: 10 }}>🚫</div>
+              <div style={{ fontSize: 48, marginBottom: 10, display:'flex', justifyContent:'center', color:'#ef4444' }}><FaBan /></div>
               <h3 style={{ margin: '0 0 6px', fontSize: 18, fontWeight: 800, color: '#0f172a' }}>ยืนยันยกเลิกออเดอร์?</h3>
               <p style={{ margin: 0, fontSize: 13, color: '#64748b' }}>ออเดอร์ <strong>#{cancelModal.order_id}</strong> จาก <strong>{cancelModal.shop_name || 'ร้านค้า'}</strong></p>
               <p style={{ margin: '6px 0 0', fontSize: 13, color: '#64748b' }}>ยอดรวม <strong style={{ color: '#4b8ff4' }}>{fmt(cancelModal.total_amount)}</strong></p>
             </div>
             <div style={{ background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: 10, padding: '10px 14px', marginBottom: 20, fontSize: 12, color: '#9a3412', fontWeight: 500 }}>
-              ⚠️ การยกเลิกออเดอร์ไม่สามารถเปลี่ยนกลับได้ กรุณาตรวจสอบก่อนยืนยัน
+              การยกเลิกออเดอร์ไม่สามารถเปลี่ยนกลับได้ กรุณาตรวจสอบก่อนยืนยัน
             </div>
             <div style={{ display: 'flex', gap: 10 }}>
               <button onClick={() => setCancelModal(null)}
@@ -363,7 +364,7 @@ export default function UserOrders() {
               </button>
               <button onClick={() => cancelOrder(cancelModal)} disabled={cancelling === cancelModal.order_id}
                 style={{ flex: 1, padding: '12px', borderRadius: 12, border: 'none', background: cancelling === cancelModal.order_id ? '#e2e8f0' : 'linear-gradient(135deg,#ef4444,#dc2626)', color: cancelling === cancelModal.order_id ? '#94a3b8' : '#fff', fontSize: 14, fontWeight: 700, cursor: cancelling === cancelModal.order_id ? 'not-allowed' : 'pointer', boxShadow: cancelling === cancelModal.order_id ? 'none' : '0 4px 14px rgba(239,68,68,0.35)' }}>
-                {cancelling === cancelModal.order_id ? '⏳ กำลังยกเลิก...' : '🚫 ยืนยันยกเลิก'}
+                {cancelling === cancelModal.order_id ? 'กำลังยกเลิก...' : 'ยืนยันยกเลิก'}
               </button>
             </div>
           </div>

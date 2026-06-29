@@ -10,6 +10,7 @@
 // ใช้ใน: AdminDashboard.jsx tab "dashboard"
 // ============================================================
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { FaUsers, FaBriefcase, FaStore, FaCartShopping, FaRotateRight, FaTriangleExclamation, FaMapLocationDot, FaChartLine, FaChartColumn, FaMoneyBillWave, FaBagShopping } from 'react-icons/fa6';
 import {
   AreaChart, Area, BarChart, Bar,
   XAxis, YAxis, CartesianGrid, Tooltip,
@@ -51,10 +52,10 @@ function MarketStatsSection({ token }) {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14, flexWrap: 'wrap', gap: 10 }}>
         <div>
           <p style={{ color: '#f59e0b', fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', margin: '0 0 3px' }}>MARKETS</p>
-          <h3 style={{ margin: 0, fontWeight: 800, fontSize: 16, color: '#0f172a' }}>🏝️ ยอดขายรายตลาดน้ำ</h3>
+          <h3 style={{ margin: 0, fontWeight: 800, fontSize: 16, color: '#0f172a', display: 'flex', alignItems: 'center', gap: 8 }}><FaMapLocationDot /> ยอดขายรายตลาดน้ำ</h3>
         </div>
-        <button onClick={load} style={{ padding: '5px 12px', borderRadius: 8, border: '1px solid #e2e8f0', background: '#fff', fontSize: 12, fontWeight: 600, color: '#475569', cursor: 'pointer' }}>
-          🔄 รีเฟรช
+        <button onClick={load} style={{ padding: '5px 12px', borderRadius: 8, border: '1px solid #e2e8f0', background: '#fff', fontSize: 12, fontWeight: 600, color: '#475569', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
+          <FaRotateRight /> รีเฟรช
         </button>
       </div>
 
@@ -62,8 +63,8 @@ function MarketStatsSection({ token }) {
       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 16 }}>
         <button
           onClick={() => setSelected('all')}
-          style={{ padding: '5px 12px', borderRadius: 20, border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 700, background: selected === 'all' ? 'linear-gradient(135deg,#f59e0b,#f97316)' : '#f1f5f9', color: selected === 'all' ? '#fff' : '#475569', boxShadow: selected === 'all' ? '0 2px 8px rgba(245,158,11,0.3)' : 'none', transition: 'all 0.2s' }}>
-          🗺️ ทั้งหมด
+          style={{ padding: '5px 12px', borderRadius: 20, border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 700, background: selected === 'all' ? 'linear-gradient(135deg,#f59e0b,#f97316)' : '#f1f5f9', color: selected === 'all' ? '#fff' : '#475569', boxShadow: selected === 'all' ? '0 2px 8px rgba(245,158,11,0.3)' : 'none', transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: 6 }}>
+          <FaMapLocationDot /> ทั้งหมด
         </button>
         {marketNames.map((name, i) => (
           <button key={name} onClick={() => setSelected(name)}
@@ -76,7 +77,7 @@ function MarketStatsSection({ token }) {
       {/* Total badge */}
       {selected === 'all' && !loading && data && (
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: 10, padding: '7px 14px', marginBottom: 14 }}>
-          <span style={{ fontSize: 16 }}>🛒</span>
+          <span style={{ fontSize: 16, display: 'flex', alignItems: 'center' }}><FaCartShopping /></span>
           <span style={{ fontSize: 13, fontWeight: 700, color: '#92400e' }}>
             คำสั่งซื้อรวมทุกตลาด:{' '}
             <span style={{ fontSize: 17, color: '#f59e0b' }}>{data.total?.toLocaleString() ?? '—'}</span>
@@ -92,7 +93,7 @@ function MarketStatsSection({ token }) {
           ))}
         </div>
       ) : !data ? (
-        <div style={{ textAlign: 'center', padding: '24px 0', color: '#94a3b8', fontSize: 13 }}>⚠️ โหลดข้อมูลไม่สำเร็จ</div>
+        <div style={{ textAlign: 'center', padding: '24px 0', color: '#94a3b8', fontSize: 13, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}><FaTriangleExclamation /> โหลดข้อมูลไม่สำเร็จ</div>
       ) : displayList.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '24px 0', color: '#94a3b8', fontSize: 13 }}>ไม่พบข้อมูลตลาดนี้</div>
       ) : (
@@ -129,13 +130,13 @@ const C = {
 };
 
 const USER_SERIES = [
-  { key: 'ผู้ใช้ทั้งหมด', color: C.users,      stat: 'totalUsers',  label: 'ผู้ใช้ทั้งหมด', icon: '👥' },
-  { key: 'นักท่องเที่ยว', color: C.tourists,    stat: 'tourists',    label: 'นักท่องเที่ยว', icon: '🧳' },
-  { key: 'ผู้ประกอบการ',  color: C.businesses,  stat: 'businesses',  label: 'ผู้ประกอบการ',  icon: '🏪' },
+  { key: 'ผู้ใช้ทั้งหมด', color: C.users,      stat: 'totalUsers',  label: 'ผู้ใช้ทั้งหมด', icon: <FaUsers size={16} /> },
+  { key: 'นักท่องเที่ยว', color: C.tourists,    stat: 'tourists',    label: 'นักท่องเที่ยว', icon: <FaBriefcase size={16} /> },
+  { key: 'ผู้ประกอบการ',  color: C.businesses,  stat: 'businesses',  label: 'ผู้ประกอบการ',  icon: <FaStore size={16} /> },
 ];
 
 const ORDER_SERIES = [
-  { key: 'คำสั่งซื้อ', color: C.orders,  stat: 'orders',  label: 'คำสั่งซื้อ', icon: '🛒' },
+  { key: 'คำสั่งซื้อ', color: C.orders,  stat: 'orders',  label: 'คำสั่งซื้อ', icon: <FaCartShopping size={16} /> },
 ];
 
 const PERIOD_ORDER_SERIES = [
@@ -297,8 +298,8 @@ export default function RealtimeStatsChart({ token }) {
           <p style={{ color: '#4b8ff4', fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', margin: '0 0 3px' }}>
             {isLive ? 'REALTIME' : 'STATISTICS'}
           </p>
-          <h3 style={{ margin: 0, fontWeight: 800, fontSize: 17, color: '#0f172a' }}>
-            📊 สถิติ{isLive ? 'เรียลไทม์' : { '1d': '1 วัน', '1m': '1 เดือน', '1y': '1 ปี' }[period]}
+          <h3 style={{ margin: 0, fontWeight: 800, fontSize: 17, color: '#0f172a', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <FaChartColumn /> สถิติ{isLive ? 'เรียลไทม์' : { '1d': '1 วัน', '1m': '1 เดือน', '1y': '1 ปี' }[period]}
           </h3>
           <p style={{ margin: '2px 0 0', fontSize: 12, color: '#94a3b8' }}>
             {isLive ? 'อัปเดตอัตโนมัติผ่าน Socket.io' : { '1d': 'วันนี้ · รายชั่วโมง · รีเซตเที่ยงคืน', '1m': 'เดือนนี้ · รายวัน · รีเซตต้นเดือน', '1y': 'ปีนี้ · รายเดือน · รีเซตต้นปี' }[period]}
@@ -323,12 +324,12 @@ export default function RealtimeStatsChart({ token }) {
 
           {/* Chart type */}
           <div style={{ display: 'flex', borderRadius: 8, overflow: 'hidden', border: '1.5px solid #e2e8f0' }}>
-            {[['area', '📈'], ['bar', '📊']].map(([type, emoji]) => (
+            {[['area', <FaChartLine />], ['bar', <FaChartColumn />]].map(([type, icon]) => (
               <button key={type} onClick={() => setChartType(type)} style={{
                 padding: '5px 12px', border: 'none', cursor: 'pointer', fontSize: 13,
                 background: chartType === type ? 'linear-gradient(135deg,#4b8ff4,#4b8ff4)' : '#fff',
                 color: chartType === type ? '#fff' : '#64748b', fontWeight: 600, transition: 'all 0.2s',
-              }}>{emoji}</button>
+              }}>{icon}</button>
             ))}
           </div>
         </div>
@@ -356,11 +357,11 @@ export default function RealtimeStatsChart({ token }) {
         <>
           {/* === PERIOD: Summary cards === */}
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 20 }}>
-            <MiniCard label="คำสั่งซื้อรวม"  value={periodTotalOrders}             color={C.orders}     icon="🛒" loading={periodLoad} />
-            <MiniCard label="ยอดขายรวม"     value={Math.round(periodTotalRevenue)} color={C.revenue}    icon="💰" loading={periodLoad} prefix="฿" />
-            <MiniCard label="ผู้ใช้ทั้งหมด"  value={stats?.totalUsers}             color={C.users}      icon="👥" loading={loading} />
-            <MiniCard label="นักท่องเที่ยว"  value={stats?.tourists}               color={C.tourists}   icon="🧳" loading={loading} />
-            <MiniCard label="ผู้ประกอบการ"   value={stats?.businesses}             color={C.businesses} icon="🏪" loading={loading} />
+            <MiniCard label="คำสั่งซื้อรวม"  value={periodTotalOrders}             color={C.orders}     icon={<FaBagShopping />} loading={periodLoad} />
+            <MiniCard label="ยอดขายรวม"     value={Math.round(periodTotalRevenue)} color={C.revenue}    icon={<FaMoneyBillWave />} loading={periodLoad} prefix="฿" />
+            <MiniCard label="ผู้ใช้ทั้งหมด"  value={stats?.totalUsers}             color={C.users}      icon={<FaUsers />} loading={loading} />
+            <MiniCard label="นักท่องเที่ยว"  value={stats?.tourists}               color={C.tourists}   icon={<FaBriefcase />} loading={loading} />
+            <MiniCard label="ผู้ประกอบการ"   value={stats?.businesses}             color={C.businesses} icon={<FaStore />} loading={loading} />
           </div>
 
           {/* === PERIOD Chart 1: Orders === */}

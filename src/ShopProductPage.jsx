@@ -16,7 +16,7 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import {
   FaBasketShopping,
-  FaMagnifyingGlass, FaStar, FaCartPlus, FaChevronLeft, FaChevronDown,
+  FaArrowsRotate, FaCircleCheck, FaLocationDot, FaLock, FaMagnifyingGlass, FaStar, FaCartPlus, FaChevronLeft, FaChevronDown, FaStore, FaTriangleExclamation,
 } from "react-icons/fa6";
 import Footer from "./Footer";
 import FloatingCart from './FloatingCart';
@@ -298,7 +298,7 @@ export default function ShopProductPage() {
               {/* Market */}
               {shop?.market_name && (
                 <div style={{ display: "flex", alignItems: "center", gap: 5, color: "rgba(255,255,255,0.52)", fontSize: 13 }}>
-                  <span>📍</span><span>{shop.market_name}</span>
+                  <FaLocationDot /><span>{shop.market_name}</span>
                 </div>
               )}
             </div>
@@ -324,7 +324,7 @@ export default function ShopProductPage() {
             boxShadow: "0 2px 12px rgba(239,68,68,0.1)",
           }}>
             <div style={{ width: 40, height: 40, borderRadius: 12, background: "#fef2f2", border: "1.5px solid #fecaca", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-              <span style={{ fontSize: 20 }}>🔒</span>
+              <span style={{ fontSize: 20, display: 'flex' }}><FaLock /></span>
             </div>
             <div>
               <p style={{ margin: 0, fontWeight: 700, fontSize: 15, color: "#dc2626" }}>ร้านนี้ปิดให้บริการชั่วคราว</p>
@@ -356,8 +356,8 @@ export default function ShopProductPage() {
                 <option value="default">เรียงตาม</option>
                 <option value="price_low">ราคาต่ำ → สูง</option>
                 <option value="price_high">ราคาสูง → ต่ำ</option>
-                <option value="rating_high">⭐ สูงสุดก่อน</option>
-                <option value="rating_low">⭐ ต่ำสุดก่อน</option>
+                <option value="rating_high">คะแนนสูงสุดก่อน</option>
+                <option value="rating_low">คะแนนต่ำสุดก่อน</option>
                 <option value="name_az">ชื่อ A → Z</option>
               </select>
               <FaChevronDown style={{ position: "absolute", right: 9, top: "50%", transform: "translateY(-50%)", fontSize: 9, color: "#94a3b8", pointerEvents: "none" }} />
@@ -384,7 +384,7 @@ export default function ShopProductPage() {
               <select value={minRating} onChange={e => setMinRating(parseInt(e.target.value))}
                 style={{ appearance: "none", padding: "8px 30px 8px 13px", borderRadius: 10, border: "1.5px solid #e8edf3", background: minRating > 0 ? "#fff8f0" : "#fff", fontSize: 13, fontWeight: 500, color: minRating > 0 ? "#8d4d11" : "#475569", cursor: "pointer", outline: "none", transition: "all 0.15s" }}>
                 <option value={0}>ทุกระดับดาว</option>
-                {[1,2,3,4,5].map(n => <option key={n} value={n}>★ {n}+ ขึ้นไป</option>)}
+                {[1,2,3,4,5].map(n => <option key={n} value={n}>{n}+ ขึ้นไป</option>)}
               </select>
               <FaChevronDown style={{ position: "absolute", right: 9, top: "50%", transform: "translateY(-50%)", fontSize: 9, color: "#94a3b8", pointerEvents: "none" }} />
             </div>
@@ -395,7 +395,7 @@ export default function ShopProductPage() {
               onMouseEnter={e => { e.currentTarget.style.borderColor = "#8d4d11"; e.currentTarget.style.color = "#8d4d11"; e.currentTarget.style.background = "#fff8f0"; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = "#e8edf3"; e.currentTarget.style.color = "#64748b"; e.currentTarget.style.background = "#fff"; }}
             >
-              ↺ รีเซ็ต
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><FaArrowsRotate /><span>รีเซ็ต</span></span>
             </button>
           </div>
         </div>
@@ -403,7 +403,7 @@ export default function ShopProductPage() {
         {/* Closed shop banner */}
         {!shopLoading && shop?.status !== 'Open' && (
           <div style={{ marginBottom: 20, padding: "16px 20px", borderRadius: 14, background: "#fef2f2", border: "1.5px solid rgba(239,68,68,0.3)", display: "flex", alignItems: "center", gap: 12 }}>
-            <span style={{ fontSize: 28 }}>🔒</span>
+            <span style={{ fontSize: 28, display: 'flex' }}><FaLock /></span>
             <div>
               <p style={{ margin: 0, fontWeight: 700, fontSize: 15, color: "#dc2626" }}>ร้านนี้ปิดให้บริการชั่วคราว</p>
               <p style={{ margin: "2px 0 0", fontSize: 13, color: "#ef4444" }}>ไม่สามารถสั่งซื้อสินค้าได้ในขณะนี้</p>
@@ -442,17 +442,17 @@ export default function ShopProductPage() {
           </div>
         ) : error ? (
           <div style={{ textAlign: "center", padding: "80px 0", color: "#8d4d11" }}>
-            <p style={{ fontSize: 36, marginBottom: 8 }}>⚠️</p>
+            <p style={{ fontSize: 36, marginBottom: 8, display: 'flex', justifyContent: 'center' }}><FaTriangleExclamation /></p>
             <p style={{ fontWeight: 600, fontSize: 16 }}>{error}</p>
           </div>
         ) : products.length === 0 ? (
           <div style={{ textAlign: "center", padding: "80px 0", color: "#94a3b8" }}>
-            <p style={{ fontSize: 40, marginBottom: 12 }}>🏪</p>
+            <p style={{ fontSize: 40, marginBottom: 12, display: 'flex', justifyContent: 'center' }}><FaStore /></p>
             <p style={{ fontWeight: 600, fontSize: 16 }}>ร้านนี้ยังไม่มีสินค้า</p>
           </div>
         ) : filtered.length === 0 ? (
           <div style={{ textAlign: "center", padding: "80px 0", color: "#94a3b8" }}>
-            <p style={{ fontSize: 40, marginBottom: 12 }}>🔍</p>
+            <p style={{ fontSize: 40, marginBottom: 12, display: 'flex', justifyContent: 'center' }}><FaMagnifyingGlass /></p>
             <p style={{ fontWeight: 600, fontSize: 16 }}>ไม่พบสินค้าตามเงื่อนไข</p>
             <button onClick={resetFilters} style={{ marginTop: 16, padding: "9px 24px", borderRadius: 10, border: "1px solid #e2e8f0", background: "#fff", fontSize: 13, fontWeight: 500, cursor: "pointer", color: "#475569" }}>
               ล้างตัวกรอง
@@ -586,7 +586,7 @@ function ProductCard({ product, avg, reviewCount, isAdded, shopClosed, productCl
           }}
         >
           <FaCartPlus style={{ fontSize: 14 }} />
-          {isClosed ? "ไม่พร้อมจำหน่าย" : isAdded ? "✓ เพิ่มลงตะกร้าแล้ว" : "เพิ่มลงตะกร้า"}
+          {isClosed ? "ไม่พร้อมจำหน่าย" : isAdded ? "เพิ่มลงตะกร้าแล้ว" : "เพิ่มลงตะกร้า"}
         </button>
       </div>
     </div>

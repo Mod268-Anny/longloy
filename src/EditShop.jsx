@@ -11,7 +11,7 @@
 // ============================================================
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { FaBasketShopping } from 'react-icons/fa6';
+import { FaBasketShopping, FaLink, FaUpload, FaXmark } from 'react-icons/fa6';
 import { FaUserCircle } from 'react-icons/fa';
 import { MdHome, MdStorefront, MdOutlineSportsEsports, MdHelpOutline } from 'react-icons/md';
 import API_URL, { secureLocalFetch } from './config';
@@ -429,7 +429,10 @@ export default function EditShop() {
                     background: shopImgMode === m ? '#ede9fe' : '#fff',
                     color: shopImgMode === m ? '#4b8ff4' : '#64748b',
                   }}>
-                    {m === 'url' ? '🔗 ลิงก์ URL' : '📤 อัปโหลดจากเครื่อง'}
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                      {m === 'url' ? <FaLink /> : <FaUpload />}
+                      {m === 'url' ? 'ลิงก์ URL' : 'อัปโหลดจากเครื่อง'}
+                    </span>
                   </button>
                 ))}
               </div>
@@ -456,7 +459,7 @@ export default function EditShop() {
                     alt="shop preview" onError={e => { e.target.style.display = 'none'; }}
                     style={{ width: 120, height: 80, objectFit: 'cover', borderRadius: 10, border: '1px solid #e2e8f0', display: 'block' }} />
                   <button type="button" onClick={() => { setShopImgPreview(''); setShop(s => ({ ...s, image_url: '' })); }}
-                    style={{ position: 'absolute', top: -6, right: -6, width: 20, height: 20, borderRadius: '50%', border: 'none', background: '#8d4d11', color: '#fff', fontSize: 11, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+                    style={{ position: 'absolute', top: -6, right: -6, width: 20, height: 20, borderRadius: '50%', border: 'none', background: '#8d4d11', color: '#fff', fontSize: 11, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><FaXmark /></button>
                 </div>
               )}
             </div>
@@ -520,7 +523,7 @@ export default function EditShop() {
                           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                         />
                       ) : (
-                        <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}>🛍️</div>
+                        <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22 }}><FaBasketShopping /></div>
                       )}
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
@@ -667,7 +670,10 @@ export default function EditShop() {
                     background: prodImgMode === m ? '#ede9fe' : '#fff',
                     color: prodImgMode === m ? '#4b8ff4' : '#64748b',
                   }}>
-                    {m === 'url' ? '🔗 ลิงก์ URL' : '📤 อัปโหลดจากเครื่อง'}
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                      {m === 'url' ? <FaLink /> : <FaUpload />}
+                      {m === 'url' ? 'ลิงก์ URL' : 'อัปโหลดจากเครื่อง'}
+                    </span>
                   </button>
                 ))}
               </div>
@@ -695,7 +701,7 @@ export default function EditShop() {
                     style={{ width: 90, height: 90, objectFit: 'cover', borderRadius: 10, border: '1px solid #e2e8f0', display: 'block' }} />
                   <button type="button"
                     onClick={() => { setProdImgPreview(''); setEditProductFields(f => ({ ...f, image_url: '' })); }}
-                    style={{ position: 'absolute', top: -6, right: -6, width: 20, height: 20, borderRadius: '50%', border: 'none', background: '#8d4d11', color: '#fff', fontSize: 11, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+                    style={{ position: 'absolute', top: -6, right: -6, width: 20, height: 20, borderRadius: '50%', border: 'none', background: '#8d4d11', color: '#fff', fontSize: 11, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><FaXmark /></button>
                 </div>
               )}
             </div>

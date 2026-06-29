@@ -15,6 +15,7 @@
 // ============================================================
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaBullseye, FaTrophy, FaStore, FaCircleCheck, FaStar, FaGift, FaCircleXmark, FaRotateRight, FaTriangleExclamation, FaSpinner, FaLock, FaLightbulb } from 'react-icons/fa6';
 import API_URL, { secureLocalFetch } from '../config';
 
 const token = () => localStorage.getItem('token') || '';
@@ -53,7 +54,7 @@ function ProgressBar({ current, target, type }) {
         <div style={{ height: '100%', borderRadius: 99, width: `${pct * 100}%`, background: c.bar, transition: 'width 0.6s ease' }} />
       </div>
       {pct >= 1 && (
-        <div style={{ marginTop: 6, fontSize: 12, fontWeight: 700, color: '#166534' }}>🎯 ถึงเป้าหมายแล้ว!</div>
+        <div style={{ marginTop: 6, fontSize: 12, fontWeight: 700, color: '#166534', display: 'inline-flex', alignItems: 'center', gap: 6 }}><FaBullseye /> ถึงเป้าหมายแล้ว!</div>
       )}
     </div>
   );
@@ -91,7 +92,7 @@ function QuestCard({ quest, onClaim, claiming }) {
           background: 'linear-gradient(90deg,#22c55e,#16a34a)',
           color: '#fff', fontSize: 11, fontWeight: 800,
           textAlign: 'center', padding: '5px 0', letterSpacing: '0.06em',
-        }}>🏆 บรรลุเป้าหมายแล้ว!</div>
+        }}><span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}><FaTrophy /> บรรลุเป้าหมายแล้ว!</span></div>
       )}
 
       {/* Claimed ribbon */}
@@ -109,13 +110,13 @@ function QuestCard({ quest, onClaim, claiming }) {
           width: 48, height: 48, borderRadius: 14, flexShrink: 0,
           background: quest.reward_claimed ? '#f4f2ef' : c.bg,
           display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22,
-        }}>{quest.icon || '🎯'}</div>
+        }}>{quest.icon || <FaBullseye />}</div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontWeight: 800, fontSize: 15, color: '#3d1a05', marginBottom: 3 }}>{quest.name}</div>
           <div style={{ fontSize: 12, color: '#7a5c40', lineHeight: 1.5 }}>{quest.description}</div>
           {quest.quest_type === 'buy_from_shop' && quest.shop_name && (
             <div style={{ display:'inline-flex', alignItems:'center', gap:4, marginTop:5, padding:'2px 10px', borderRadius:99, background:'#f0fdf4', border:'1px solid #86efac', fontSize:11, fontWeight:700, color:'#15803d' }}>
-              🏪 {quest.shop_name}
+              <FaStore /> {quest.shop_name}
             </div>
           )}
         </div>
@@ -127,7 +128,7 @@ function QuestCard({ quest, onClaim, claiming }) {
           color: quest.reward_claimed ? '#b89a7a' : c.text,
           display: 'flex', alignItems: 'center', gap: 4,
         }}>
-          ⭐ {quest.points_reward}
+          <FaStar /> {quest.points_reward}
         </div>
       </div>
 
@@ -136,8 +137,8 @@ function QuestCard({ quest, onClaim, claiming }) {
 
       {/* Action */}
       {quest.reward_claimed ? (
-        <div style={{ textAlign: 'center', fontSize: 13, color: '#b89a7a', fontWeight: 600, padding: '6px 0' }}>
-          ✅ รับรางวัลแล้ว
+        <div style={{ textAlign: 'center', fontSize: 13, color: '#b89a7a', fontWeight: 600, padding: '6px 0', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6, width: '100%' }}>
+          <FaCircleCheck /> รับรางวัลแล้ว
         </div>
       ) : quest.can_claim ? (
         <button
@@ -154,7 +155,7 @@ function QuestCard({ quest, onClaim, claiming }) {
             letterSpacing: '0.01em',
           }}
         >
-          {claiming === quest.quest_id ? '⏳ กำลังรับรางวัล...' : `🎁 รับ ${quest.points_reward} แต้ม!`}
+          {claiming === quest.quest_id ? 'กำลังรับรางวัล...' : <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}><FaGift /> รับ {quest.points_reward} แต้ม!</span>}
         </button>
       ) : (
         <button
@@ -226,7 +227,7 @@ export default function GameBuyProduct({ onPointsChanged }) {
       });
       const data = await res.json();
       if (res.ok) {
-        showToast(`🎉 ${data.message} · แต้มรวม ${data.total_points?.toLocaleString()}`);
+        showToast(<span style={{ display:'inline-flex', alignItems:'center', gap:8 }}><FaGift /> {data.message} · แต้มรวม {data.total_points?.toLocaleString()}</span>);
         setPoints(data.total_points ?? points);
         onPointsChanged?.(data.total_points);
         await fetchAll();
@@ -267,7 +268,7 @@ export default function GameBuyProduct({ onPointsChanged }) {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
         <div>
-          <h2 style={{ margin: 0, fontWeight: 800, fontSize: 20, color: '#3d1a05' }}>🛍️ เควสซื้อของ</h2>
+          <h2 style={{ margin: 0, fontWeight: 800, fontSize: 20, color: '#3d1a05', display:'flex', alignItems:'center', gap:8 }}><FaStore /> เควสซื้อของ</h2>
           <p style={{ margin: '4px 0 0', fontSize: 13, color: '#7a5c40' }}>ซื้อสินค้าจริงเพื่อรับแต้ม — ติดตามความคืบหน้าได้ที่นี่</p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -276,7 +277,7 @@ export default function GameBuyProduct({ onPointsChanged }) {
           </div>
           <button onClick={fetchAll} disabled={loading}
             style={{ padding: '8px 14px', borderRadius: 10, border: '1px solid #ede9e3', background: '#fff', cursor: loading ? 'not-allowed' : 'pointer', fontSize: 13, fontWeight: 600, color: '#6b3a0d' }}>
-            {loading ? '⏳' : '🔄'} รีเฟรช
+            {loading ? <FaSpinner /> : <FaRotateRight />} รีเฟรช
           </button>
         </div>
       </div>
@@ -299,7 +300,7 @@ export default function GameBuyProduct({ onPointsChanged }) {
 
       {error && (
         <div style={{ padding: '12px 16px', borderRadius: 10, background: '#fff0e8', border: '1px solid #e8b895', color: '#4a2008', fontSize: 13, marginBottom: 16 }}>
-          ⚠️ {error}
+          <span style={{ display:'inline-flex', alignItems:'center', gap:8 }}><FaTriangleExclamation /> {error}</span>
         </div>
       )}
 
@@ -313,7 +314,7 @@ export default function GameBuyProduct({ onPointsChanged }) {
         </div>
       ) : quests.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '60px 0', color: '#b89a7a' }}>
-          <p style={{ fontSize: 40, margin: '0 0 10px' }}>🎯</p>
+          <p style={{ fontSize: 40, margin: '0 0 10px' }}><FaBullseye /></p>
           <p style={{ fontWeight: 600 }}>ยังไม่มีเควสในระบบ</p>
         </div>
       ) : (
@@ -322,7 +323,7 @@ export default function GameBuyProduct({ onPointsChanged }) {
           {available > 0 && (
             <div style={{ marginBottom: 24 }}>
               <p style={{ margin: '0 0 12px', fontSize: 12, fontWeight: 700, color: '#16a34a', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                🎁 รับรางวัลได้เลย!
+                <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}><FaGift /> รับรางวัลได้เลย!</span>
               </p>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(280px,1fr))', gap: 14 }}>
                 {quests.filter(q => q.can_claim).map(q => (
@@ -350,7 +351,7 @@ export default function GameBuyProduct({ onPointsChanged }) {
           {completed > 0 && (
             <div>
               <p style={{ margin: '0 0 12px', fontSize: 12, fontWeight: 700, color: '#b89a7a', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                ✅ รับรางวัลแล้ว
+                <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}><FaCircleCheck /> รับรางวัลแล้ว</span>
               </p>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(280px,1fr))', gap: 14 }}>
                 {quests.filter(q => q.reward_claimed).map(q => (
@@ -364,9 +365,9 @@ export default function GameBuyProduct({ onPointsChanged }) {
 
       {/* Hint */}
       <div style={{ marginTop: 28, padding: '14px 18px', borderRadius: 14, background: '#fff8f0', border: '1px solid #ede9e3', fontSize: 13, color: '#7a5c40', lineHeight: 1.7 }}>
-        <strong style={{ color: '#3d1a05' }}>💡 วิธีทำเควส</strong><br />
+        <strong style={{ color: '#3d1a05', display:'inline-flex', alignItems:'center', gap:6 }}><FaLightbulb /> วิธีทำเควส</strong><br />
         ไปที่ <strong>ตลาดน้ำ → ร้านค้า → สั่งซื้อสินค้า</strong> แล้วชำระเงิน เมื่อออเดอร์เสร็จสิ้น ความคืบหน้าจะอัปเดตอัตโนมัติ<br />
-        กด <strong>🔄 รีเฟรช</strong> เพื่อดูความคืบหน้าล่าสุด
+        กด <strong><FaRotateRight /> รีเฟรช</strong> เพื่อดูความคืบหน้าล่าสุด
       </div>
     </div>
   );

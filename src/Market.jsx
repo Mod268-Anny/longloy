@@ -11,7 +11,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
-  FaLocationDot, FaStar, FaChevronDown, FaCalendarDays,
+  FaLocationDot, FaStar, FaChevronDown, FaCalendarDays, FaWater, FaXmark,
 } from 'react-icons/fa6';
 import Footer from './Footer';
 import FloatingCart from './FloatingCart';
@@ -188,7 +188,7 @@ if ((marketRatings[m.market_id]?.avg || 0) < minRating) return false;
                 style={{ appearance: "none", padding: "9px 38px 9px 16px", borderRadius: 10, border: "1.5px solid #e2e8f0", background: "#fff", fontSize: 13, fontWeight: 500, color: "#374151", cursor: "pointer", outline: "none", boxShadow: "0 1px 3px rgba(0,0,0,0.04)", transition: "border-color 0.15s, box-shadow 0.15s" }}
               >
                 <option value={0}>ทุกระดับคะแนน</option>
-                {[1,2,3,4].map(n => <option key={n} value={n}>★ {n}+ ขึ้นไป</option>)}
+                {[1,2,3,4].map(n => <option key={n} value={n}>{n}+ ขึ้นไป</option>)}
               </select>
               <FaChevronDown style={{ position: "absolute", right: 13, top: "50%", transform: "translateY(-50%)", fontSize: 10, color: "#94a3b8", pointerEvents: "none" }} />
             </div>
@@ -211,9 +211,9 @@ if ((marketRatings[m.market_id]?.avg || 0) < minRating) return false;
           </div>
         ) : filtered.length === 0 ? (
           <div style={{ textAlign: "center", padding: "80px 0", color: "#94a3b8" }}>
-            <p style={{ fontSize: 40, marginBottom: 12 }}>🌊</p>
+            <p style={{ fontSize: 40, marginBottom: 12, display:'flex', justifyContent:'center' }}><FaWater /></p>
             <p style={{ fontWeight: 600, fontSize: 16 }}>ไม่พบตลาดน้ำที่ตรงกับเงื่อนไข</p>
-            <button onClick={() => { setSearchTerm(''); setMinRating(0); setSortBy('default'); }}
+            <button onClick={() => { setMinRating(0); setSortBy('default'); }}
               style={{ marginTop: 16, padding: "9px 24px", borderRadius: 10, border: "1px solid #e2e8f0", background: "#fff", fontSize: 13, fontWeight: 500, cursor: "pointer", color: "#475569" }}
             >ล้างตัวกรอง</button>
           </div>
@@ -308,7 +308,7 @@ function MarketCard({ market, ratingObj = { avg: 0, count: 0 }, onReview, onShop
             {ratingObj.count > 0 ? `(${ratingObj.count})` : "ยังไม่มีรีวิว"}
           </span>
           {market.shop_count > 0 && (
-            <span style={{ fontSize: 12, color: "#94a3b8", marginLeft: "auto", whiteSpace: "nowrap" }}>🏪 {market.shop_count} ร้าน</span>
+            <span style={{ fontSize: 12, color: "#94a3b8", marginLeft: "auto", whiteSpace: "nowrap", display:'inline-flex', alignItems:'center', gap:5 }}><MdStorefront size={12} />{market.shop_count} ร้าน</span>
           )}
         </div>
 

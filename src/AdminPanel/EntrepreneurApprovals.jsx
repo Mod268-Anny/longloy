@@ -11,6 +11,7 @@
 // ใช้ใน: AdminDashboard.jsx tab "entrepreneurs"
 // ============================================================
 import React, { useState, useEffect, useRef } from 'react';
+import { FaClock, FaStore, FaUser, FaRotateRight, FaTriangleExclamation, FaCircleCheck, FaTag, FaPhone, FaLocationDot, FaCircleXmark } from 'react-icons/fa6';
 import API_URL, { secureLocalFetch } from '../config';
 
 /* ── tiny helpers ─────────────────────────────────────────────────── */
@@ -59,7 +60,7 @@ export default function EntrepreneurApprovals({ token, view = 'pending' }) {
     })
       .then(r => r.json())
       .then(d => {
-        if (d.success) { setOk(`${lbl}แล้ว ✓`); load(); setTimeout(() => setOk(''), 3000); }
+        if (d.success) { setOk(`${lbl}แล้ว`); load(); setTimeout(() => setOk(''), 3000); }
         else setErr(d.error || 'เกิดข้อผิดพลาด');
       })
       .catch(() => setErr('เกิดข้อผิดพลาด'));
@@ -81,25 +82,25 @@ export default function EntrepreneurApprovals({ token, view = 'pending' }) {
       {/* Header row */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20, gap: 12 }}>
         <div>
-          <h2 style={{ margin: "0 0 2px", fontWeight: 800, fontSize: 17, color: "#0f172a" }}>
-            {view === 'pending' ? '⏳ คำขออนุมัติ' : '🏪 ผู้ประกอบการทั้งหมด'}
+          <h2 style={{ margin: "0 0 2px", fontWeight: 800, fontSize: 17, color: "#0f172a", display: 'flex', alignItems: 'center', gap: 8 }}>
+            {view === 'pending' ? <><FaClock /> คำขออนุมัติ</> : <><FaStore /> ผู้ประกอบการทั้งหมด</>}
           </h2>
           <p style={{ margin: 0, fontSize: 13, color: "#64748b" }}>{list.length} รายการ</p>
         </div>
         <button onClick={load}
-          style={{ padding: "7px 16px", borderRadius: 9, border: "1px solid #e2e8f0", background: "#fff", color: "#475569", fontSize: 13, cursor: "pointer" }}>
-          ↺ รีเฟรช
+          style={{ padding: "7px 16px", borderRadius: 9, border: "1px solid #e2e8f0", background: "#fff", color: "#475569", fontSize: 13, cursor: "pointer", display: 'flex', alignItems: 'center', gap: 6 }}>
+          <FaRotateRight /> รีเฟรช
         </button>
       </div>
 
       {/* Alerts */}
-      {err && <div style={{ padding: "11px 16px", borderRadius: 10, background: "#fff0e8", border: "1px solid #ffe8d4", color: "#4a2008", fontSize: 13, marginBottom: 14 }}>⚠️ {err}</div>}
-      {ok  && <div style={{ padding: "11px 16px", borderRadius: 10, background: "#edf3ff", border: "1px solid #b8d4fb", color: "#1a3a6e", fontSize: 13, marginBottom: 14 }}>{ok}</div>}
+      {err && <div style={{ padding: "11px 16px", borderRadius: 10, background: "#fff0e8", border: "1px solid #ffe8d4", color: "#4a2008", fontSize: 13, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}><FaTriangleExclamation /> {err}</div>}
+      {ok  && <div style={{ padding: "11px 16px", borderRadius: 10, background: "#edf3ff", border: "1px solid #b8d4fb", color: "#1a3a6e", fontSize: 13, marginBottom: 14, display: 'flex', alignItems: 'center', gap: 8 }}><FaCircleCheck /> {ok}</div>}
 
       {/* Empty */}
       {!list.length ? (
         <div style={{ textAlign: "center", padding: "56px 0", color: "#94a3b8" }}>
-          <div style={{ fontSize: 40, marginBottom: 10 }}>🏪</div>
+          <div style={{ fontSize: 40, marginBottom: 10, display: 'flex', justifyContent: 'center' }}><FaStore /></div>
           <p style={{ fontWeight: 600, margin: 0 }}>{view === 'pending' ? 'ไม่มีคำขอที่รอการอนุมัติ' : 'ยังไม่มีผู้ประกอบการ'}</p>
         </div>
       ) : (
@@ -134,15 +135,15 @@ export default function EntrepreneurApprovals({ token, view = 'pending' }) {
                   <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: 10 }}>
                     <div style={{ minWidth: 0, flex: 1 }}>
                       <p style={{ margin: "0 0 4px", fontWeight: 700, fontSize: 15, color: "#0f172a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                        🏪 {e.shop_name || "ไม่ระบุชื่อร้าน"}
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><FaStore /> {e.shop_name || "ไม่ระบุชื่อร้าน"}</span>
                       </p>
                       <p style={{ margin: 0, fontSize: 13, color: "#64748b" }}>
-                        👤 {e.first_name && e.last_name ? `${e.first_name} ${e.last_name}` : `ผู้ใช้ ID: ${e.user_id}`}
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><FaUser /> {e.first_name && e.last_name ? `${e.first_name} ${e.last_name}` : `ผู้ใช้ ID: ${e.user_id}`}</span>
                       </p>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
                       <Chip
-                        label={verified ? "✓ อนุมัติแล้ว" : "⏳ รอการอนุมัติ"}
+                        label={verified ? "อนุมัติแล้ว" : "รอการอนุมัติ"}
                         color={verified ? "#1a3a6e" : "#5c2c08"}
                         bg={verified ? "#edf3ff" : "#fff8f0"}
                         border={verified ? "#85b3f7" : "#d4880a"}
@@ -153,10 +154,10 @@ export default function EntrepreneurApprovals({ token, view = 'pending' }) {
 
                   {/* Bottom: meta pills */}
                   <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-                    <Meta icon="🏷️" text={e.category} />
-                    <Meta icon="📞" text={e.phone_number} />
-                    <Meta icon="🕐" text={e.open_time && e.close_time ? `${e.open_time} – ${e.close_time}` : null} />
-                    <Meta icon="📍" text={e.location} />
+                    <Meta icon={<FaTag />} text={e.category} />
+                    <Meta icon={<FaPhone />} text={e.phone_number} />
+                    <Meta icon={<FaClock />} text={e.open_time && e.close_time ? `${e.open_time} – ${e.close_time}` : null} />
+                    <Meta icon={<FaLocationDot />} text={e.location} />
                   </div>
                 </div>
 
@@ -194,12 +195,12 @@ export default function EntrepreneurApprovals({ token, view = 'pending' }) {
                         <button
                           onClick={ev => { ev.stopPropagation(); doAction(e.entrepreneurs_id, 'verify'); }}
                           style={{ padding: "9px 22px", borderRadius: 10, border: "none", background: "linear-gradient(135deg,#4b8ff4,#2d6fd4)", color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer", boxShadow: "0 3px 12px rgba(75,143,244,0.25)" }}>
-                          ✓ อนุมัติ
+                          <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}><FaCircleCheck /> อนุมัติ</span>
                         </button>
                         <button
                           onClick={ev => { ev.stopPropagation(); doAction(e.entrepreneurs_id, 'reject'); }}
                           style={{ padding: "9px 22px", borderRadius: 10, border: "1.5px solid #e8b895", background: "#fff0e8", color: "#6b3a0d", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
-                          ✕ ปฏิเสธ
+                          <span style={{ display:'inline-flex', alignItems:'center', gap:6 }}><FaCircleXmark /> ปฏิเสธ</span>
                         </button>
                       </div>
                     )}
