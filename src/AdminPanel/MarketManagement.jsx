@@ -129,7 +129,15 @@ function MarketManagement() {
         body: JSON.stringify(payload),
       });
 
-      const data = await response.json();
+      let data;
+      const contentType = response.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        data = await response.json();
+      } else {
+        const text = await response.text();
+        if (!response.ok) throw new Error(text || `Request failed: ${response.status}`);
+        data = {};
+      }
       if (!response.ok) throw new Error(data.error || 'แก้ไขสินค้าไม่สำเร็จ');
       setMessage('แก้ไขสินค้าสำเร็จ');
       setEditingProduct(null);
@@ -160,7 +168,15 @@ function MarketManagement() {
         body: JSON.stringify(payload),
       });
 
-      const data = await response.json();
+      let data;
+      const contentType = response.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        data = await response.json();
+      } else {
+        const text = await response.text();
+        if (!response.ok) throw new Error(text || `Request failed: ${response.status}`);
+        data = {};
+      }
       if (!response.ok) throw new Error(data.error || 'แก้ไขร้านค้าไม่สำเร็จ');
       setMessage('แก้ไขร้านค้าสำเร็จ');
       setEditingShop(null);
