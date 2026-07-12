@@ -81,6 +81,7 @@ function MarketManagement() {
   };
 
   const handleProductEdit = (product, shop) => {
+    console.debug('MarketManagement: handleProductEdit', product, shop);
     resetMessages();
     setEditingProduct({ ...product, shop_name: shop.shop_name });
     setEditingShop(null);
@@ -94,6 +95,7 @@ function MarketManagement() {
   };
 
   const handleShopEdit = (shop) => {
+    console.debug('MarketManagement: handleShopEdit', shop);
     resetMessages();
     setEditingShop(shop);
     setEditingProduct(null);
@@ -171,14 +173,17 @@ function MarketManagement() {
   };
 
   const promptDeleteProduct = (product) => {
+    console.debug('MarketManagement: promptDeleteProduct', product);
     setDeleteTarget({ type: 'product', id: product.product_id, name: product.name, image_url: product.image_url });
   };
 
   const promptDeleteShop = (shop) => {
+    console.debug('MarketManagement: promptDeleteShop', shop);
     setDeleteTarget({ type: 'shop', id: shop.shop_id, name: shop.shop_name, image_url: shop.image_url });
   };
 
   const performDelete = async () => {
+    console.debug('MarketManagement: performDelete target=', deleteTarget);
     if (!deleteTarget) return;
     resetMessages();
     try {
@@ -191,6 +196,7 @@ function MarketManagement() {
         url = `${API_URL}/admin/shops/${deleteTarget.id}`;
       }
 
+      console.debug('MarketManagement: performDelete calling', method, url, 'token=', !!token);
       const response = await secureLocalFetch(url, {
         method,
         headers: { Authorization: `Bearer ${token}` },
@@ -201,6 +207,7 @@ function MarketManagement() {
       setDeleteTarget(null);
       await loadData();
     } catch (err) {
+      console.error('MarketManagement performDelete error:', err);
       setError(err.message || 'ลบไม่สำเร็จ');
     }
   };
