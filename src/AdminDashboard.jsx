@@ -15,7 +15,7 @@
 // ============================================================
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaChartColumn, FaUsers, FaClipboardList, FaGamepad, FaTicketSimple, FaShieldHalved, FaTriangleExclamation } from 'react-icons/fa6';
+import { FaChartColumn, FaUsers, FaClipboardList, FaGamepad, FaTicketSimple, FaShieldHalved, FaTriangleExclamation, FaStore } from 'react-icons/fa6';
 import Footer from './Footer';
 import API_URL, { secureLocalFetch } from './config';
 import UserManagement from './AdminPanel/UserManagement';
@@ -23,8 +23,8 @@ import EntrepreneurApprovals from './AdminPanel/EntrepreneurApprovals';
 import DashboardStats from './AdminPanel/DashboardStats';
 import RealtimeStatsChart from './RealtimeStatsChart';
 import GameContent from './AdminPanel/GameContent';
-
 import CouponManagement from './AdminPanel/CouponManagement';
+import MarketManagement from './AdminPanel/MarketManagement';
 
 const TABS = [
   { key: "dashboard",        icon: <FaChartColumn size={16} />, label: "สถิติ" },
@@ -32,6 +32,7 @@ const TABS = [
   { key: "entrepreneurs",    icon: <FaClipboardList size={16} />, label: "อนุมัติผู้ประกอบการ" },
   { key: "all-entrepreneurs",icon: <FaUsers size={16} />, label: "ผู้ประกอบการทั้งหมด" },
   { key: "game-content",     icon: <FaGamepad size={16} />, label: "เนื้อหาเกม" },
+  { key: "market-management",icon: <FaStore size={16} />, label: "ตลาด/ร้านค้า" },
   { key: "coupons",          icon: <FaTicketSimple size={16} />, label: "จัดการคูปอง" },
 ];
 
@@ -137,6 +138,7 @@ function AdminDashboard() {
           {activeTab === "entrepreneurs"     && <EntrepreneurApprovals token={token} view="pending" />}
           {activeTab === "all-entrepreneurs" && <EntrepreneurApprovals token={token} view="all" />}
           {activeTab === "game-content"      && <GameContent token={token} />}
+          {activeTab === "market-management" && <MarketManagement token={token} />}
           {activeTab === "coupons"           && <CouponManagement token={token} />}
         </div>
       </main>

@@ -48,20 +48,35 @@ app.use((req, res, next) => {
   }
   next();
 });
-app.use(cors({
+const corsOptions = {
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
-    if (
-      origin === 'http://localhost:5173' ||
-      /^https:\/\/longloy[a-z0-9\-]*\.vercel\.app$/.test(origin)
-    ) {
+
+    const allowedHosts = [
+      /^http:\/\/localhost(:\d+)?$/,
+      /^http:\/\/127\.0\.0\.1(:\d+)?$/,
+      /^http:\/\/192\.168\.(\d{1,3})\.(\d{1,3})(:\d+)?$/,
+      /^http:\/\/10\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})(:\d+)?$/,
+      /^http:\/\/172\.(1[6-9]|2\d|3[0-1])\.(\d{1,3})\.(\d{1,3})(:\d+)?$/,
+      /^https:\/\/longloy[a-z0-9\-]*\.vercel\.app$/,
+      /^https:\/\/.*\.ngrok-free\.dev$/,
+      /^https:\/\/.*\.ngrok-free\.app$/,
+    ];
+
+    const isAllowed = allowedHosts.some((pattern) => pattern.test(origin));
+    if (isAllowed) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(null, true);
     }
   },
-  credentials: true
-}));
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'ngrok-skip-browser-warning'],
+};
+
+app.use(cors(corsOptions));
+app.options(/(.*)/, cors(corsOptions));
 app.use(express.json({ limit: '50mb' }));
 app.use('/uploads', express.static('uploads'));
 
@@ -2653,10 +2668,15 @@ app.put('/products/update/:product_id', verifyToken, express.json(), async (req,
   const { product_id } = req.params;
   const { name, price, image_url, is_available, unit, description, sizes } = req.body;
   try {
-    const rows = await queryAsync(
-      `SELECT p.product_id FROM tbl_products p JOIN tbl_shops s ON p.shop_id = s.shop_id JOIN tbl_entrepreneurs e ON s.entrepreneur_id = e.entrepreneurs_id WHERE p.product_id = ? AND e.user_id = ?`,
-      [product_id, user_id]
-    );
+    const userRows = await queryAsync('SELECT role FROM tbl_users WHERE user_id = ? LIMIT 1', [user_id]);
+    const isAdmin = userRows?.[0]?.role === 'Admin';
+
+    const rows = isAdmin
+      ? await queryAsync('SELECT product_id FROM tbl_products WHERE product_id = ?', [product_id])
+      : await queryAsync(
+          `SELECT p.product_id FROM tbl_products p JOIN tbl_shops s ON p.shop_id = s.shop_id JOIN tbl_entrepreneurs e ON s.entrepreneur_id = e.entrepreneurs_id WHERE p.product_id = ? AND e.user_id = ?`,
+          [product_id, user_id]
+        );
     if (!rows.length) return res.status(403).json({ error: 'Not authorized' });
 
     const upd = []; const prm = [];
@@ -2689,7 +2709,113 @@ app.put('/products/update/:product_id', verifyToken, express.json(), async (req,
   }
 });
 
-// ── Get entrepreneur's shops + summary ────────────────────────
+// ── Admin shop management ───────────────────────────────────
+app.put('/admin/shops/:shop_id', verifyToken, express.json(), async (req, res) => {
+  const user_id = req.user_id;
+  const { shop_id } = req.params;
+  const { shop_name, description, phone_number, location, market_id, status, image_url } = req.body;
+
+  try {
+    const userRows = await queryAsync('SELECT role FROM tbl_users WHERE user_id = ? LIMIT 1', [user_id]);
+    if (userRows?.[0]?.role !== 'Admin') {
+      return res.status(403).json({ error: 'ต้องเป็นแอดมินเพื่อแก้ไขร้านค้า' });
+    }
+
+    const shopRows = await queryAsync('SELECT entrepreneur_id FROM tbl_shops WHERE shop_id = ? LIMIT 1', [shop_id]);
+    if (!shopRows.length) return res.status(404).json({ error: 'ไม่พบร้านค้านี้' });
+
+    const entrepreneur_id = shopRows[0].entrepreneur_id;
+
+    const entrepreneurUpdates = [];
+    const entrepreneurParams = [];
+
+    if (shop_name !== undefined) {
+      entrepreneurUpdates.push('shop_name = ?');
+      entrepreneurParams.push(shop_name);
+    }
+    if (description !== undefined) {
+      entrepreneurUpdates.push('description = ?');
+      entrepreneurParams.push(description);
+    }
+    if (phone_number !== undefined) {
+      entrepreneurUpdates.push('phone_number = ?');
+      entrepreneurParams.push(phone_number);
+    }
+    if (location !== undefined) {
+      entrepreneurUpdates.push('location = ?');
+      entrepreneurParams.push(location);
+    }
+    if (market_id !== undefined) {
+      entrepreneurUpdates.push('market_id = ?');
+      entrepreneurParams.push(Number(market_id));
+    }
+
+    if (entrepreneurUpdates.length) {
+      entrepreneurParams.push(entrepreneur_id);
+      await queryAsync(`UPDATE tbl_entrepreneurs SET ${entrepreneurUpdates.join(', ')} WHERE entrepreneurs_id = ?`, entrepreneurParams);
+    }
+
+    const shopUpdates = [];
+    const shopParams = [];
+
+    if (shop_name !== undefined) {
+      shopUpdates.push('shop_name = ?');
+      shopParams.push(shop_name);
+    }
+    if (description !== undefined) {
+      shopUpdates.push('description = ?');
+      shopParams.push(description);
+    }
+    if (image_url !== undefined) {
+      shopUpdates.push('image_url = ?');
+      shopParams.push(image_url);
+    }
+    if (market_id !== undefined) {
+      shopUpdates.push('market_id = ?');
+      shopParams.push(Number(market_id));
+    }
+    if (status !== undefined) {
+      shopUpdates.push('status = ?');
+      shopParams.push(status);
+    }
+
+    if (shopUpdates.length) {
+      shopParams.push(shop_id);
+      await queryAsync(`UPDATE tbl_shops SET ${shopUpdates.join(', ')} WHERE shop_id = ?`, shopParams);
+    }
+
+    res.json({ success: true, message: 'อัปเดตร้านค้าสำเร็จ' });
+  } catch (err) {
+    console.error('Admin update shop error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.delete('/admin/shops/:shop_id', verifyToken, async (req, res) => {
+  const user_id = req.user_id;
+  const { shop_id } = req.params;
+
+  try {
+    const userRows = await queryAsync('SELECT role FROM tbl_users WHERE user_id = ? LIMIT 1', [user_id]);
+    if (userRows?.[0]?.role !== 'Admin') {
+      return res.status(403).json({ error: 'ต้องเป็นแอดมินเพื่อลบร้านค้า' });
+    }
+
+    const shopRows = await queryAsync('SELECT shop_id FROM tbl_shops WHERE shop_id = ? LIMIT 1', [shop_id]);
+    if (!shopRows.length) return res.status(404).json({ error: 'ไม่พบร้านค้านี้' });
+
+    await queryAsync('SET FOREIGN_KEY_CHECKS = 0');
+    await queryAsync('DELETE FROM tbl_cart_items WHERE product_id IN (SELECT product_id FROM tbl_products WHERE shop_id = ?)', [shop_id]);
+    await queryAsync('DELETE FROM tbl_products WHERE shop_id = ?', [shop_id]);
+    await queryAsync('DELETE FROM tbl_shops WHERE shop_id = ?', [shop_id]);
+    await queryAsync('SET FOREIGN_KEY_CHECKS = 1');
+
+    res.json({ success: true, message: 'ลบร้านค้าสำเร็จ' });
+  } catch (err) {
+    console.error('Admin delete shop error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
 
 app.delete('/products/:product_id', verifyToken, (req, res) => {
   const user_id = req.user_id;
