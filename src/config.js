@@ -9,8 +9,9 @@
 // 3. ngrok → ใช้ relative URL (Vite proxy จัดการให้)
 // 4. มือถือบน local network → http://<IP>:3000
 const API_URL = (() => {
-  if (import.meta.env.VITE_API_URL) {
-    return import.meta.env.VITE_API_URL;
+  const envApiUrl = (import.meta.env.VITE_API_URL || '').trim();
+  if (envApiUrl) {
+    return envApiUrl.replace(/\/$/, '');
   }
 
   const hostname = window.location.hostname;
@@ -23,7 +24,7 @@ const API_URL = (() => {
     return '';
   }
 
-  return `http://${hostname}:3000`;
+  return '';
 })()
 
 // ── ระบุ targetAddressSpace สำหรับ Private Network Access ────

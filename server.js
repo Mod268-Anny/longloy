@@ -125,6 +125,15 @@ db.on('error', (err) => {
 // ── JWT Secret + Omise Payment Gateway Config ────────────────
 const SECRET_KEY = "SUPER_SECRET_LONGLOY_APP";
 
+function isAdminRole(role) {
+  if (role === null || role === undefined) return false;
+  if (typeof role === 'string') {
+    const normalized = role.trim().toLowerCase();
+    return ['admin', 'administrator', 'superadmin', 'super_admin'].includes(normalized);
+  }
+  return false;
+}
+
 // Omise payment gateway configuration
 const OMISE_PUBLIC_KEY = 'pkey_test_67jj2870yfw03vwqb6h';
 const OMISE_SECRET_KEY = 'skey_test_67jj287i8hgjiibrigj';
@@ -2669,7 +2678,7 @@ app.put('/products/update/:product_id', verifyToken, express.json(), async (req,
   const { name, price, image_url, is_available, unit, description, sizes } = req.body;
   try {
     const userRows = await queryAsync('SELECT role FROM tbl_users WHERE user_id = ? LIMIT 1', [user_id]);
-    const isAdmin = userRows?.[0]?.role === 'Admin';
+    const isAdmin = isAdminRole(userRows?.[0]?.role);
 
     const rows = isAdmin
       ? await queryAsync('SELECT product_id FROM tbl_products WHERE product_id = ?', [product_id])
@@ -2717,7 +2726,7 @@ app.put('/admin/shops/:shop_id', verifyToken, express.json(), async (req, res) =
 
   try {
     const userRows = await queryAsync('SELECT role FROM tbl_users WHERE user_id = ? LIMIT 1', [user_id]);
-    if (userRows?.[0]?.role !== 'Admin') {
+    if (!isAdminRole(userRows?.[0]?.role)) {
       return res.status(403).json({ error: 'ต้องเป็นแอดมินเพื่อแก้ไขร้านค้า' });
     }
 
@@ -2797,7 +2806,7 @@ app.delete('/admin/shops/:shop_id', verifyToken, async (req, res) => {
 
   try {
     const userRows = await queryAsync('SELECT role FROM tbl_users WHERE user_id = ? LIMIT 1', [user_id]);
-    if (userRows?.[0]?.role !== 'Admin') {
+    if (!isAdminRole(userRows?.[0]?.role)) {
       return res.status(403).json({ error: 'ต้องเป็นแอดมินเพื่อลบร้านค้า' });
     }
 
@@ -2868,7 +2877,7 @@ app.delete('/products/:product_id', verifyToken, (req, res) => {
     if (err) return res.status(500).json({ error: 'Database error: ' + err.message });
     const role = userRows?.[0]?.role;
 
-    if (role === 'Admin') {
+    if (isAdminRole(role)) {
       return doDelete();
     }
 
@@ -3578,7 +3587,7 @@ function verifyAdmin(req, res, next) {
       if (!result || result.length === 0) return res.status(404).json({ error: 'User not found' });
       
       // ถ้า role ไม่ใช่ Admin ให้ปฏิเสธการเข้าถึง
-      if (result[0].role !== 'Admin') {
+      if (!isAdminRole(result[0].role)) {
         return res.status(403).json({ error: 'Access denied: Admin only' });
       }
       
