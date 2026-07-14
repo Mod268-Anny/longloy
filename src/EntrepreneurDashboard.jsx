@@ -230,6 +230,11 @@ export default function EntrepreneurDashboard() {
     if (!form.price || isNaN(form.price)) { setFormErr('กรุณากรอกราคา'); return; }
     const validSizes = (form.sizes || []).filter(s => s.size_name?.trim());
     if (validSizes.length > 5) { setFormErr('ขนาดสินค้าได้สูงสุด 5 รายการ'); return; }
+    if (!token()) {
+      setFormErr('กรุณาเข้าสู่ระบบก่อนบันทึกสินค้า');
+      navigate('/login');
+      return;
+    }
     setSaving(true); setFormErr('');
     try {
       const body = {
@@ -241,16 +246,17 @@ export default function EntrepreneurDashboard() {
       };
       let res;
       if (editId) {
-        res = await fetch(`${API_URL}/products/update/${editId}`, {
+        res = await secureLocalFetch(`${API_URL}/products/update/${editId}`, {
           method:'PUT', headers: authH(), body: JSON.stringify(body),
         });
       } else {
-        res = await fetch(`${API_URL}/products/add`, {
+        res = await secureLocalFetch(`${API_URL}/products/add`, {
           method:'POST', headers: authH(), body: JSON.stringify({ ...body, shop_id: shopId }),
         });
       }
+      const data = await res.json().catch(() => ({}));
       if (res.ok) { fetchProducts(); setShowForm(false); setEditId(null); setForm(emptyForm); setImgPreview(''); }
-      else { const d = await res.json(); setFormErr(d.error || 'บันทึกไม่สำเร็จ'); }
+      else { setFormErr(data.error || 'บันทึกไม่สำเร็จ'); }
     } catch { setFormErr('เชื่อมต่อเซิร์ฟเวอร์ไม่ได้'); }
     finally { setSaving(false); }
   };
@@ -258,7 +264,11 @@ export default function EntrepreneurDashboard() {
   /* ── delete product ──────────────────────────────────────────── */
   const deleteProduct = async (pid) => {
     if (!window.confirm('ยืนยันลบสินค้านี้?')) return;
-    await fetch(`${API_URL}/products/${pid}`, { method:'DELETE', headers: authH() });
+    if (!token()) {
+      navigate('/login');
+      return;
+    }
+    await secureLocalFetch(`${API_URL}/products/${pid}`, { method:'DELETE', headers: authH() });
     fetchProducts();
   };
 

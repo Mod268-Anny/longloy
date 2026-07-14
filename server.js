@@ -2733,13 +2733,29 @@ app.put('/products/update/:product_id', verifyToken, express.json(), async (req,
     const userRows = await queryAsync('SELECT role FROM tbl_users WHERE user_id = ? LIMIT 1', [user_id]);
     const isAdmin = userRows?.[0]?.role === 'Admin';
 
-    const rows = isAdmin
-      ? await queryAsync('SELECT product_id FROM tbl_products WHERE product_id = ?', [product_id])
-      : await queryAsync(
-          `SELECT p.product_id FROM tbl_products p JOIN tbl_shops s ON p.shop_id = s.shop_id JOIN tbl_entrepreneurs e ON s.entrepreneur_id = e.entrepreneurs_id WHERE p.product_id = ? AND e.user_id = ?`,
-          [product_id, user_id]
-        );
-    if (!rows.length) return res.status(403).json({ error: 'Not authorized' });
+    if (!isAdmin) {
+      const ownedShopRows = await queryAsync(
+        `SELECT s.shop_id
+         FROM tbl_shops s
+         JOIN tbl_entrepreneurs e ON s.entrepreneur_id = e.entrepreneurs_id
+         WHERE e.user_id = ?`,
+        [user_id]
+      );
+      const ownedShopIds = new Set(ownedShopRows.map(row => Number(row.shop_id)));
+
+      const productRows = await queryAsync('SELECT shop_id FROM tbl_products WHERE product_id = ? LIMIT 1', [product_id]);
+      if (!productRows.length) {
+        return res.status(404).json({ error: 'ไม่พบสินค้านี้' });
+      }
+
+      const productShopId = Number(productRows[0].shop_id);
+      if (!ownedShopIds.has(productShopId)) {
+        return res.status(403).json({ error: 'คุณไม่มีสิทธิ์แก้ไขสินค้านี้' });
+      }
+    } else {
+      const rows = await queryAsync('SELECT product_id FROM tbl_products WHERE product_id = ? LIMIT 1', [product_id]);
+      if (!rows.length) return res.status(404).json({ error: 'ไม่พบสินค้านี้' });
+    }
 
     const upd = []; const prm = [];
     if (name !== undefined)         { upd.push('name = ?');         prm.push(name); }

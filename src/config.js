@@ -73,17 +73,29 @@ export const secureLocalFetch = async (url, options = {}) => {
     res = await fetch(url, mergedOptions);
   }
 
-  // ถ้า server ตอบ 403 พร้อม banned: true → ล้าง token แล้ว redirect ออก
-  if (res.status === 403) {
+  // ถ้า server ตอบ 401/403 โดยไม่ผ่าน auth → ล้าง token แล้ว redirect ออก
+  if (res.status === 401 || res.status === 403) {
     try {
       const data = await res.clone().json();
-      if (data.banned) {
+      if (data?.banned) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         alert('บัญชีของคุณถูกระงับการใช้งาน กรุณาติดต่อแอดมิน');
         window.location.href = '/';
+      } else if (data?.error || res.status === 401) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        if (!window.location.pathname.includes('/login')) {
+          window.location.href = '/login';
+        }
       }
-    } catch (_) {}
+    } catch (_) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      if (!window.location.pathname.includes('/login')) {
+        window.location.href = '/login';
+      }
+    }
   }
 
   return res;
