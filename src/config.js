@@ -5,7 +5,7 @@
 
 // ── ตรวจ environment อัตโนมัติ ────────────────────────────
 // 1. Production บน Vercel → ใช้ VITE_API_URL จาก env variable
-// 2. localhost → http://localhost:3000
+// 2. localhost / 127.0.0.1 / ::1 → ใช้ relative URL เพื่อให้ Vite proxy จัดการ
 // 3. ngrok → ใช้ relative URL (Vite proxy จัดการให้)
 // 4. มือถือบน local network → http://<IP>:3000
 const API_URL = (() => {
@@ -14,10 +14,15 @@ const API_URL = (() => {
     return envApiUrl.replace(/\/$/, '');
   }
 
+  const envApiBase = (import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_BASE || '').trim();
+  if (envApiBase) {
+    return envApiBase.replace(/\/$/, '');
+  }
+
   const hostname = window.location.hostname;
 
-  if (hostname === 'localhost' || hostname === '127.0.0.1') {
-    return 'http://localhost:3000';
+  if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1') {
+    return '';
   }
 
   if (hostname.includes('ngrok-free.dev') || hostname.includes('ngrok-free.app')) {
@@ -33,7 +38,7 @@ const getTargetAddressSpace = () => {
   const hostname = window.location.hostname;
 
   if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1') {
-    return 'local';
+    return 'loopback';
   }
 
   if (hostname.endsWith('.local') ||
@@ -52,7 +57,7 @@ const getTargetAddressSpace = () => {
 //   - เติม ngrok-skip-browser-warning header เมื่อเปิดผ่าน ngrok
 //   - auto-logout + redirect ไป / เมื่อ server ตอบ 403 banned: true
 export const secureLocalFetch = async (url, options = {}) => {
-  const isLocalNetworkRequest = url.includes('localhost:3000') || url.includes('127.0.0.1:3000');
+  const isLocalNetworkRequest = /localhost:3000|127\.0\.0\.1:3000|^https?:\/\/localhost|^https?:\/\/127\.0\.0\.1/.test(url);
   const isNgrok = window.location.hostname.includes('ngrok-free.dev') || window.location.hostname.includes('ngrok-free.app');
 
   const mergedOptions = isNgrok
@@ -62,7 +67,8 @@ export const secureLocalFetch = async (url, options = {}) => {
   let res;
   if (isLocalNetworkRequest) {
     const targetAddressSpace = getTargetAddressSpace();
-    res = await fetch(url, targetAddressSpace ? { ...mergedOptions, targetAddressSpace } : mergedOptions);
+    const isLoopbackTarget = /localhost|127\.0\.0\.1|::1/.test(url);
+    res = await fetch(url, targetAddressSpace && !isLoopbackTarget ? { ...mergedOptions, targetAddressSpace } : mergedOptions);
   } else {
     res = await fetch(url, mergedOptions);
   }

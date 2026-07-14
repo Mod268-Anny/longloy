@@ -34,7 +34,56 @@ const { Server } = require('socket.io');
 
 // Ensure uploads directory exists
 const UPLOADS_DIR = path.join(__dirname, 'uploads');
+const DIST_DIR = path.join(__dirname, 'dist');
 if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+
+const parseDatabaseUrl = (value) => {
+  if (!value) return null;
+
+  try {
+    const parsed = new URL(value);
+    const dbName = parsed.pathname.replace(/^\//, '');
+    return {
+      host: parsed.hostname,
+      port: Number(parsed.port || 3306),
+      user: decodeURIComponent(parsed.username),
+      password: decodeURIComponent(parsed.password),
+      database: dbName || 'floating_LongLoy',
+    };
+  } catch (err) {
+    console.warn('⚠️ Invalid database URL format:', err.message);
+    return null;
+  }
+};
+
+const getDbConfig = () => {
+  const connectionString = process.env.DATABASE_URL || process.env.MYSQL_URL || '';
+  const parsedConnection = parseDatabaseUrl(connectionString);
+
+  if (parsedConnection) {
+    return {
+      ...parsedConnection,
+      charset: 'utf8mb4',
+      waitForConnections: true,
+      connectionLimit: 10,
+      queueLimit: 0,
+      enableKeepAlive: true,
+    };
+  }
+
+  return {
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME || 'floating_LongLoy',
+    port: Number(process.env.DB_PORT) || 3306,
+    charset: 'utf8mb4',
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0,
+    enableKeepAlive: true,
+  };
+};
 
 const app = express();
 // Debug: log every incoming request
@@ -80,18 +129,31 @@ app.options(/(.*)/, cors(corsOptions));
 app.use(express.json({ limit: '50mb' }));
 app.use('/uploads', express.static('uploads'));
 
-const db = mysql.createPool({
-  host:     process.env.DB_HOST     || 'localhost',
-  user:     process.env.DB_USER     || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME     || 'floating_LongLoy',
-  port:     Number(process.env.DB_PORT) || 3306,
-  charset: 'utf8mb4',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-  enableKeepAlive: true
-});
+if (fs.existsSync(DIST_DIR)) {
+  app.use(express.static(DIST_DIR));
+
+  const isApiRoute = (reqPath) => {
+    const prefixes = [
+      '/login', '/register', '/profile', '/user', '/user-orders', '/orders', '/shops',
+      '/shop-orders', '/shop-sales', '/shop-reviews', '/floating-markets', '/products',
+      '/product-reviews', '/product-detail', '/rewards', '/payments', '/market-reviews',
+      '/cart', '/coupons', '/entrepreneur', '/add-entrepreneur', '/edit-shop',
+      '/edit-product', '/my-shop', '/quiz', '/quests', '/upload-image', '/admin'
+    ];
+
+    return prefixes.some((prefix) => reqPath === prefix || reqPath.startsWith(`${prefix}/`));
+  };
+
+  app.get(/.*/, (req, res, next) => {
+    if (req.path.startsWith('/uploads') || req.path.startsWith('/socket.io') || req.path.includes('.') || isApiRoute(req.path)) {
+      return next();
+    }
+
+    res.sendFile(path.join(DIST_DIR, 'index.html'));
+  });
+}
+
+const db = mysql.createPool(getDbConfig());
 
 // Test database connection
 db.getConnection((err, connection) => {
@@ -123,16 +185,7 @@ db.on('error', (err) => {
 });
 
 // ── JWT Secret + Omise Payment Gateway Config ────────────────
-const SECRET_KEY = "SUPER_SECRET_LONGLOY_APP";
-
-function isAdminRole(role) {
-  if (role === null || role === undefined) return false;
-  if (typeof role === 'string') {
-    const normalized = role.trim().toLowerCase();
-    return ['admin', 'administrator', 'superadmin', 'super_admin'].includes(normalized);
-  }
-  return false;
-}
+const SECRET_KEY = process.env.JWT_SECRET || "SUPER_SECRET_LONGLOY_APP";
 
 // Omise payment gateway configuration
 const OMISE_PUBLIC_KEY = 'pkey_test_67jj2870yfw03vwqb6h';
@@ -2678,7 +2731,7 @@ app.put('/products/update/:product_id', verifyToken, express.json(), async (req,
   const { name, price, image_url, is_available, unit, description, sizes } = req.body;
   try {
     const userRows = await queryAsync('SELECT role FROM tbl_users WHERE user_id = ? LIMIT 1', [user_id]);
-    const isAdmin = isAdminRole(userRows?.[0]?.role);
+    const isAdmin = userRows?.[0]?.role === 'Admin';
 
     const rows = isAdmin
       ? await queryAsync('SELECT product_id FROM tbl_products WHERE product_id = ?', [product_id])
@@ -2726,7 +2779,7 @@ app.put('/admin/shops/:shop_id', verifyToken, express.json(), async (req, res) =
 
   try {
     const userRows = await queryAsync('SELECT role FROM tbl_users WHERE user_id = ? LIMIT 1', [user_id]);
-    if (!isAdminRole(userRows?.[0]?.role)) {
+    if (userRows?.[0]?.role !== 'Admin') {
       return res.status(403).json({ error: 'ต้องเป็นแอดมินเพื่อแก้ไขร้านค้า' });
     }
 
@@ -2806,7 +2859,7 @@ app.delete('/admin/shops/:shop_id', verifyToken, async (req, res) => {
 
   try {
     const userRows = await queryAsync('SELECT role FROM tbl_users WHERE user_id = ? LIMIT 1', [user_id]);
-    if (!isAdminRole(userRows?.[0]?.role)) {
+    if (userRows?.[0]?.role !== 'Admin') {
       return res.status(403).json({ error: 'ต้องเป็นแอดมินเพื่อลบร้านค้า' });
     }
 
@@ -2877,7 +2930,7 @@ app.delete('/products/:product_id', verifyToken, (req, res) => {
     if (err) return res.status(500).json({ error: 'Database error: ' + err.message });
     const role = userRows?.[0]?.role;
 
-    if (isAdminRole(role)) {
+    if (role === 'Admin') {
       return doDelete();
     }
 
@@ -3587,7 +3640,7 @@ function verifyAdmin(req, res, next) {
       if (!result || result.length === 0) return res.status(404).json({ error: 'User not found' });
       
       // ถ้า role ไม่ใช่ Admin ให้ปฏิเสธการเข้าถึง
-      if (!isAdminRole(result[0].role)) {
+      if (result[0].role !== 'Admin') {
         return res.status(403).json({ error: 'Access denied: Admin only' });
       }
       
@@ -4925,16 +4978,35 @@ app.get('/admin/coupon-usage', verifyAdmin, (req, res) => {
 // ══ END ADMIN COUPON / REWARD MANAGEMENT ════════════════════════════════════
 
 // ── เริ่ม server — ฟัง PORT จาก env (Railway ใช้ process.env.PORT) ──────────
-const PORT = process.env.PORT || 3000;
-httpServer.listen(PORT, () => {
-  console.log('');
-  console.log('════════════════════════════════════════');
-  console.log('  🚀 LongLoy Server Started');
-  console.log('════════════════════════════════════════');
-  console.log(`  📍 URL: http://localhost:${PORT}`);
-  console.log('  🌐 CORS Enabled');
-  console.log('  📦 Static folder: /uploads');
-  console.log('  🔴 Socket.io Ready');
-  console.log('════════════════════════════════════════');
-  console.log('');
-});
+const DEFAULT_PORT = Number(process.env.PORT) || 3000;
+
+const startServer = (port) => {
+  const onError = (err) => {
+    if (err.code === 'EADDRINUSE') {
+      const nextPort = port + 1;
+      console.warn(`⚠️ Port ${port} is busy, trying ${nextPort}...`);
+      httpServer.off('error', onError);
+      startServer(nextPort);
+      return;
+    }
+
+    console.error('❌ Failed to start server:', err);
+    process.exit(1);
+  };
+
+  httpServer.once('error', onError);
+  httpServer.listen(port, '0.0.0.0', () => {
+    console.log('');
+    console.log('════════════════════════════════════════');
+    console.log('  🚀 LongLoy Server Started');
+    console.log('════════════════════════════════════════');
+    console.log(`  📍 URL: http://localhost:${port}`);
+    console.log('  🌐 CORS Enabled');
+    console.log('  📦 Static folder: /uploads');
+    console.log('  🔴 Socket.io Ready');
+    console.log('════════════════════════════════════════');
+    console.log('');
+  });
+};
+
+startServer(DEFAULT_PORT);
