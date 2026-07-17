@@ -135,9 +135,9 @@ export default function CouponManagement({ token }) {
   const remove = async (id) => {
     setDeleting(id);
     try {
-      await secureLocalFetch(`${API_URL}/admin/rewards/${id}`, { method: 'DELETE', headers });
-      flash('ลบสำเร็จ');
-      load();
+      const res = await secureLocalFetch(`${API_URL}/admin/rewards/${id}`, { method: 'DELETE', headers });
+      if (!res.ok) { const d = await res.json(); flash(d.error || 'ลบไม่สำเร็จ', false); }
+      else { flash('ลบสำเร็จ'); load(); }
     } catch { flash('ลบไม่สำเร็จ', false); }
     setDeleting(null);
   };
