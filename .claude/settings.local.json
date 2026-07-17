@@ -9,7 +9,19 @@
       "Bash(node --input-type=module --eval \"import\\('./src/EntrepreneurDashboard.jsx'\\)\")",
       "Bash(node -e \"require\\('./server.js'\\)\")",
       "Bash(node -e ' *)",
-      "Bash(curl -s http://localhost:3000/shops/by-market/102)"
+      "Bash(curl -s http://localhost:3000/shops/by-market/102)",
+      "Bash(git check-ignore *)",
+      "Bash(railway whoami *)",
+      "Bash(vercel whoami *)",
+      "Bash(railway variable *)",
+      "Bash(railway deployment *)",
+      "Bash(echo \"tracked?=$?\")",
+      "Bash(npx eslint *)",
+      "Bash(curl -s -u \"632429747444132:vhrNDi1OKDRJB2oxIhz2m1IfARA\" \"https://api.cloudinary.com/v1_1/ycpbeldj/resources/image?max_results=3&prefix=longloy\")",
+      "Bash(python3 -m json.tool)",
+      "Bash(curl -s -u \"632429747444132:vhrNDi1OKDRJB2oxIhz2m1IfARA\" \"https://api.cloudinary.com/v1_1/ycpbeldj/resources/image/upload?max_results=3\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" \"https://res.cloudinary.com/ycpbeldj/image/upload/v1784287190/longloy/product_1784287189731.jpg\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" \"https://res.cloudinary.com/ycpbeldj/image/upload/c_fill,g_auto,h_500,w_500/f_auto/q_auto/longloy/product_1784287189731\")"
     ]
   }
 }

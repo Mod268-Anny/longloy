@@ -46,6 +46,12 @@ cloudinary.config({
 
 const hasCloudinaryConfig = () => !!process.env.CLOUDINARY_CLOUD_NAME && !!process.env.CLOUDINARY_API_KEY && !!process.env.CLOUDINARY_API_SECRET;
 
+if (hasCloudinaryConfig()) {
+  console.log('✅ Cloudinary configured — uploads will persist across deploys');
+} else {
+  console.warn('⚠️ CLOUDINARY_* env vars missing — uploads will fall back to local disk and WILL BE LOST on the next deploy/restart');
+}
+
 async function uploadImageToStorage(image, prefix = 'img') {
   if (hasCloudinaryConfig()) {
     try {

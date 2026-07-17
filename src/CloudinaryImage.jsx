@@ -5,14 +5,28 @@ import { autoGravity } from '@cloudinary/url-gen/qualifiers/gravity';
 import { AdvancedImage } from '@cloudinary/react';
 import { resolveImg } from './config';
 
-const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'demo';
-const cld = new Cloudinary({ cloud: { cloudName } });
+const envCloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || '';
+
+// Cloudinary URLs are https://res.cloudinary.com/<cloud_name>/image/upload/...
+// Reading the cloud name back out of the URL means images still render correctly
+// even if VITE_CLOUDINARY_CLOUD_NAME is missing/stale on the frontend deploy.
+function extractCloudName(trimmedUrl) {
+  try {
+    const url = new URL(trimmedUrl);
+    if (url.hostname === 'res.cloudinary.com') {
+      return url.pathname.replace(/^\/+/, '').split('/')[0] || null;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
 
 function normalizePublicId(value) {
-  if (!value || typeof value !== 'string') return null;
+  if (!value || typeof value !== 'string') return { publicId: null, cloudName: null };
 
   const trimmed = value.trim();
-  if (!trimmed) return null;
+  if (!trimmed) return { publicId: null, cloudName: null };
 
   if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
     try {
@@ -24,23 +38,23 @@ function normalizePublicId(value) {
         const tail = parts.slice(uploadIndex + 1);
         const withoutVersion = tail[0]?.startsWith('v') ? tail.slice(1) : tail;
         const publicPath = withoutVersion.join('/');
-        return publicPath.replace(/\.[^/.]+$/, '');
+        return { publicId: publicPath.replace(/\.[^/.]+$/, ''), cloudName: extractCloudName(trimmed) };
       }
-      return null;
+      return { publicId: null, cloudName: null };
     } catch {
-      return null;
+      return { publicId: null, cloudName: null };
     }
   }
 
   if (trimmed.startsWith('/uploads/') || trimmed.startsWith('/images/') || trimmed.startsWith('/') || trimmed.startsWith('data:')) {
-    return null;
+    return { publicId: null, cloudName: null };
   }
 
   if (trimmed.startsWith('blob:')) {
-    return null;
+    return { publicId: null, cloudName: null };
   }
 
-  return trimmed;
+  return { publicId: trimmed, cloudName: null };
 }
 
 export default function CloudinaryImage({
@@ -56,14 +70,15 @@ export default function CloudinaryImage({
   const resolvedSrc = useMemo(() => {
     const rawValue = publicId || src;
     if (!rawValue) return '';
-    const resolvedPublicId = normalizePublicId(rawValue);
+    const { publicId: resolvedPublicId } = normalizePublicId(rawValue);
     return resolvedPublicId ? '' : resolveImg(rawValue, '');
   }, [publicId, src]);
 
   const image = useMemo(() => {
-    const resolvedPublicId = normalizePublicId(publicId || src);
+    const { publicId: resolvedPublicId, cloudName } = normalizePublicId(publicId || src);
     if (!resolvedPublicId) return null;
 
+    const cld = new Cloudinary({ cloud: { cloudName: cloudName || envCloudName || 'demo' } });
     const img = cld.image(resolvedPublicId).format('auto').quality('auto');
 
     if (width && height) {
