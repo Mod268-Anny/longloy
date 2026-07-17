@@ -1088,18 +1088,21 @@ app.get('/floating-markets/top3-weekly', (req, res) => {
 // ============================================================
 
 // Get all shops by market_id
+// By default only shows shops whose entrepreneur has been approved (is_verified = 1) —
+// pass ?all=1 (used by the admin panel) to also include shops still pending approval.
 app.get('/shops/by-market/:market_id', (req, res) => {
   const { market_id } = req.params;
+  const includeUnapproved = req.query.all === '1';
   console.log('🏪 GET /shops/by-market/:market_id - market_id:', market_id);
   const sql = `
     SELECT s.shop_id, s.market_id, s.entrepreneur_id, s.image_url, s.status,
            s.latitude, s.longitude,
            COALESCE(s.shop_name, e.shop_name) AS shop_name, e.shop_number, e.category,
            e.phone_number, e.description,
-           e.open_time, e.close_time
+           e.open_time, e.close_time, e.is_verified
     FROM tbl_shops s
     LEFT JOIN tbl_entrepreneurs e ON s.entrepreneur_id = e.entrepreneurs_id
-    WHERE s.market_id = ?
+    WHERE s.market_id = ? ${includeUnapproved ? '' : 'AND e.is_verified = 1'}
     ORDER BY s.shop_id
   `;
   db.query(sql, [market_id], (err, results) => {

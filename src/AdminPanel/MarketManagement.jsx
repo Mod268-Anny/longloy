@@ -53,7 +53,7 @@ function MarketManagement() {
       const marketsData = await marketsRes.json();
 
       const detailPromises = (marketsData || []).map(async (market) => {
-        const shopsRes = await secureLocalFetch(`${API_URL}/shops/by-market/${market.market_id}`);
+        const shopsRes = await secureLocalFetch(`${API_URL}/shops/by-market/${market.market_id}?all=1`);
         const shopsData = await shopsRes.json();
 
         const shopsWithProducts = await Promise.all((shopsData || []).map(async (shop) => {

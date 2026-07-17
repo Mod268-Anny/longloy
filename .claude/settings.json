@@ -37,7 +37,10 @@
       "Bash(git restore *)",
       "Bash(curl -s -X POST http://localhost:8893/add-entrepreneur -H 'Authorization: Bearer __CMDSUB_OUTPUT__' -H 'Content-Type: application/json' -d '{\"shop_name\":\"__test_shop_9\",\"category\":\"A\",\"phone_number\":\"0800000000\",\"location\":\"loc\",\"open_time\":\"10:00:00\",\"close_time\":\"20:00:00\",\"full_name\":\"Full Name\",\"id_card_number\":\"1000000000099\",\"bank_account_no\":\"123\",\"bank_name\":\"Bank\",\"market_id\":101}')",
       "Bash(curl -s -X POST http://localhost:8893/add-entrepreneur -H 'Authorization: Bearer __CMDSUB_OUTPUT__' -H 'Content-Type: application/json' -d '{\"shop_name\":\"__test_shop_10\",\"category\":\"A\",\"phone_number\":\"0800000000\",\"location\":\"loc\",\"open_time\":\"10:00:00\",\"close_time\":\"20:00:00\",\"full_name\":\"Full Name\",\"id_card_number\":\"1000000000100\",\"bank_account_no\":\"123\",\"bank_name\":\"Bank\",\"market_id\":101}')",
-      "Bash(npx eslint *)"
+      "Bash(npx eslint *)",
+      "Bash(curl -s \"http://localhost:8894/shops/by-market/101\")",
+      "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\);process.stdin.on\\('end',\\(\\)=>{const rows=JSON.parse\\(d\\);console.log\\('total:',rows.length,'contains test shop:',rows.some\\(r=>r.shop_name==='__test_unapproved_shop'\\)\\)}\\)\")",
+      "Bash(curl -s \"http://localhost:8894/shops/by-market/101?all=1\")"
     ],
     "additionalDirectories": [
       "/tmp",
