@@ -184,7 +184,16 @@ if (fs.existsSync(DIST_DIR)) {
   };
 
   app.get(/.*/, (req, res, next) => {
-    if (req.path.startsWith('/uploads') || req.path.startsWith('/socket.io') || req.path.includes('.') || isApiRoute(req.path)) {
+    if (req.path.startsWith('/uploads') || req.path.startsWith('/socket.io') || req.path.includes('.')) {
+      return next();
+    }
+
+    // Browser page loads (refresh, typed URL, link click) send an Accept header
+    // that prefers text/html; the frontend's own fetch/XHR calls never set that,
+    // so this tells apart "user reloaded a page" from "app is calling an API"
+    // even when a page route and an API route share the same path (e.g. /profile, /admin).
+    const wantsHtml = (req.headers.accept || '').includes('text/html');
+    if (!wantsHtml && isApiRoute(req.path)) {
       return next();
     }
 

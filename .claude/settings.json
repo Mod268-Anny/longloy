@@ -31,7 +31,9 @@
       "Bash(curl -sS \"https://longloy-eight.vercel.app/homepage\")",
       "Bash(curl -sS \"https://longloy-eight.vercel.app/assets/index-CXPAKSvd.js\" -o /tmp/bundle.js -w \"HTTP %{http_code}, size %{size_download} bytes\\\\n\")",
       "Bash(grep -o \"VITE_API[A-Z_]*\" /tmp/bundle.js | sort -u *)",
-      "Bash(vercel --version)"
+      "Bash(vercel --version)",
+      "Bash(lsof -iTCP -sTCP:LISTEN -P)",
+      "Bash(lsof -iTCP:8891 -sTCP:LISTEN)"
     ],
     "additionalDirectories": [
       "/tmp",
