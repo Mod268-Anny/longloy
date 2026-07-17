@@ -410,6 +410,21 @@ const initializeTables = () => {
           }
         }
       );
+      // Allow reward_id to be NULL so deleting a reward can preserve redemption
+      // history instead of failing on the tbl_redemption_history_ibfk_2 FK constraint
+      db.query(
+        `SELECT IS_NULLABLE FROM INFORMATION_SCHEMA.COLUMNS
+         WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'tbl_redemption_history' AND COLUMN_NAME = 'reward_id'`,
+        (err4, rows) => {
+          if (err4 || !rows || !rows.length) return;
+          if (rows[0].IS_NULLABLE === 'NO') {
+            db.query(`ALTER TABLE tbl_redemption_history MODIFY COLUMN reward_id INT NULL`, (err5) => {
+              if (err5) console.error('❌ Failed to make reward_id nullable:', err5.message);
+              else console.log('✅ tbl_redemption_history.reward_id is now nullable');
+            });
+          }
+        }
+      );
     }
   });
 
@@ -4998,11 +5013,31 @@ app.put('/admin/rewards/:id', verifyAdmin, (req, res) => {
   });
 });
 
-// DELETE /admin/rewards/:id — delete reward
+// DELETE /admin/rewards/:id — delete reward (nullify FK ref in redemption history first, then delete)
 app.delete('/admin/rewards/:id', verifyAdmin, (req, res) => {
-  db.query('DELETE FROM tbl_rewards WHERE reward_id=?', [req.params.id], (err) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json({ message: 'Deleted' });
+  const reward_id = req.params.id;
+  db.getConnection((connErr, conn) => {
+    if (connErr) return res.status(500).json({ error: connErr.message });
+    conn.beginTransaction(txErr => {
+      if (txErr) { conn.release(); return res.status(500).json({ error: txErr.message }); }
+
+      const rollback = (e) => conn.rollback(() => { conn.release(); res.status(500).json({ error: e.message }); });
+
+      // รักษาประวัติการแลกคะแนนไว้ แค่ตัด FK ออก
+      conn.query('UPDATE tbl_redemption_history SET reward_id = NULL WHERE reward_id = ?', [reward_id], (e1) => {
+        if (e1) return rollback(e1);
+
+        conn.query('DELETE FROM tbl_rewards WHERE reward_id = ?', [reward_id], (e2) => {
+          if (e2) return rollback(e2);
+
+          conn.commit(commitErr => {
+            conn.release();
+            if (commitErr) return res.status(500).json({ error: commitErr.message });
+            res.json({ message: 'Deleted' });
+          });
+        });
+      });
+    });
   });
 });
 
