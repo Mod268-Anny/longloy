@@ -533,7 +533,7 @@ export default function ShopProductPage() {
 function ProductCard({ product, avg, reviewCount, isAdded, shopClosed, productClosed, onAdd, onView }) {
   const [hov, setHov] = useState(false);
   const isClosed = shopClosed || productClosed;
-  const badge = product.market_name || product.shop_name || "ร้านค้า";
+  const badge = product.market_name || product.shop_name || "สินค้า";
   return (
     <div
       onMouseEnter={() => setHov(true)}

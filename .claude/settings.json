@@ -33,7 +33,11 @@
       "Bash(grep -o \"VITE_API[A-Z_]*\" /tmp/bundle.js | sort -u *)",
       "Bash(vercel --version)",
       "Bash(lsof -iTCP -sTCP:LISTEN -P)",
-      "Bash(lsof -iTCP:8891 -sTCP:LISTEN)"
+      "Bash(lsof -iTCP:8891 -sTCP:LISTEN)",
+      "Bash(git restore *)",
+      "Bash(curl -s -X POST http://localhost:8893/add-entrepreneur -H 'Authorization: Bearer __CMDSUB_OUTPUT__' -H 'Content-Type: application/json' -d '{\"shop_name\":\"__test_shop_9\",\"category\":\"A\",\"phone_number\":\"0800000000\",\"location\":\"loc\",\"open_time\":\"10:00:00\",\"close_time\":\"20:00:00\",\"full_name\":\"Full Name\",\"id_card_number\":\"1000000000099\",\"bank_account_no\":\"123\",\"bank_name\":\"Bank\",\"market_id\":101}')",
+      "Bash(curl -s -X POST http://localhost:8893/add-entrepreneur -H 'Authorization: Bearer __CMDSUB_OUTPUT__' -H 'Content-Type: application/json' -d '{\"shop_name\":\"__test_shop_10\",\"category\":\"A\",\"phone_number\":\"0800000000\",\"location\":\"loc\",\"open_time\":\"10:00:00\",\"close_time\":\"20:00:00\",\"full_name\":\"Full Name\",\"id_card_number\":\"1000000000100\",\"bank_account_no\":\"123\",\"bank_name\":\"Bank\",\"market_id\":101}')",
+      "Bash(npx eslint *)"
     ],
     "additionalDirectories": [
       "/tmp",

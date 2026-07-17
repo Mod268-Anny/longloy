@@ -1245,6 +1245,18 @@ app.post('/add-entrepreneur', verifyToken, (req, res) => {
 
   const categoryStr = Array.isArray(category) ? category.filter(Boolean).join(',') : category;
 
+  const MAX_SHOPS_PER_USER = 10;
+
+  // จำกัดจำนวนร้านค้าต่อคน
+  db.query(
+    `SELECT COUNT(*) AS cnt FROM tbl_entrepreneurs WHERE user_id = ?`,
+    [user_id],
+    (limitErr, limitRows) => {
+      if (limitErr) return res.status(500).json({ error: 'Database error' });
+      if (limitRows[0].cnt >= MAX_SHOPS_PER_USER) {
+        return res.status(409).json({ error: `คุณมีร้านค้าครบ ${MAX_SHOPS_PER_USER} ร้านแล้ว ไม่สามารถเพิ่มร้านค้าใหม่ได้` });
+      }
+
   // ตรวจสอบชื่อร้านซ้ำก่อน insert
   db.query(
     `SELECT COUNT(*) AS cnt FROM tbl_shops s
@@ -1290,6 +1302,8 @@ app.post('/add-entrepreneur', verifyToken, (req, res) => {
           }
         );
       });
+    }
+  );
     }
   );
 });

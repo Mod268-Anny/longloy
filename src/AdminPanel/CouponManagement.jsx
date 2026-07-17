@@ -20,7 +20,24 @@ const EMPTY = {
   discount_amount: '', max_redemptions: '', expiration_date: '', is_active: true,
 };
 
-function Badge({ active }) {
+function isExpired(expiration_date) {
+  if (!expiration_date) return false;
+  return new Date(expiration_date) < new Date();
+}
+
+function Badge({ active, expired }) {
+  if (expired) {
+    return (
+      <span style={{
+        display: 'inline-flex', alignItems: 'center', gap: 4,
+        padding: '3px 10px', borderRadius: 999, fontSize: 11, fontWeight: 700,
+        background: 'rgba(239,68,68,0.12)', color: '#dc2626', border: '1px solid rgba(239,68,68,0.3)',
+      }}>
+        <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#ef4444', display: 'inline-block' }} />
+        หมดอายุ
+      </span>
+    );
+  }
   return (
     <span style={{
       display: 'inline-flex', alignItems: 'center', gap: 4,
@@ -248,7 +265,7 @@ export default function CouponManagement({ token }) {
                 <div style={{ flex: 1, minWidth: 200 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
                     <span style={{ fontWeight: 700, fontSize: 15, color: '#0f172a' }}>{r.name}</span>
-                    <Badge active={!!r.is_active} />
+                    <Badge active={!!r.is_active} expired={isExpired(r.expiration_date)} />
                   </div>
                   <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                     <span style={{ background: 'linear-gradient(135deg,#8d4d11,#6b3a0d)', color: '#fff', fontWeight: 800, fontSize: 12, padding: '2px 10px', borderRadius: 999 }}>
@@ -257,7 +274,11 @@ export default function CouponManagement({ token }) {
                     <span style={{ fontSize: 12, color: '#4b8ff4', fontWeight: 700 }}>⭐ {r.points_required} แต้ม</span>
                     {r.discount_amount > 0 && <span style={{ fontSize: 12, color: '#16a34a', fontWeight: 700 }}>-฿{r.discount_amount}</span>}
                     <span style={{ fontSize: 12, color: '#64748b' }}>ใช้แล้ว {r.total_redeemed}/{r.max_redemptions ?? '∞'}</span>
-                    {r.expiration_date && <span style={{ fontSize: 12, color: '#94a3b8' }}>หมดอายุ {new Date(r.expiration_date).toLocaleDateString('th-TH')}</span>}
+                    {r.expiration_date && (
+                      <span style={{ fontSize: 12, color: isExpired(r.expiration_date) ? '#dc2626' : '#94a3b8', fontWeight: isExpired(r.expiration_date) ? 700 : 400 }}>
+                        หมดอายุ {new Date(r.expiration_date).toLocaleDateString('th-TH')}
+                      </span>
+                    )}
                   </div>
                 </div>
                 {/* Actions */}
