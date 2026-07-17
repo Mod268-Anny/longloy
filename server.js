@@ -2922,32 +2922,6 @@ app.put('/admin/shops/:shop_id', verifyToken, express.json(), async (req, res) =
   }
 });
 
-app.delete('/admin/shops/:shop_id', verifyToken, async (req, res) => {
-  const user_id = req.user_id;
-  const { shop_id } = req.params;
-
-  try {
-    const userRows = await queryAsync('SELECT role FROM tbl_users WHERE user_id = ? LIMIT 1', [user_id]);
-    if (userRows?.[0]?.role !== 'Admin') {
-      return res.status(403).json({ error: 'ต้องเป็นแอดมินเพื่อลบร้านค้า' });
-    }
-
-    const shopRows = await queryAsync('SELECT shop_id FROM tbl_shops WHERE shop_id = ? LIMIT 1', [shop_id]);
-    if (!shopRows.length) return res.status(404).json({ error: 'ไม่พบร้านค้านี้' });
-
-    await queryAsync('SET FOREIGN_KEY_CHECKS = 0');
-    await queryAsync('DELETE FROM tbl_cart_items WHERE product_id IN (SELECT product_id FROM tbl_products WHERE shop_id = ?)', [shop_id]);
-    await queryAsync('DELETE FROM tbl_products WHERE shop_id = ?', [shop_id]);
-    await queryAsync('DELETE FROM tbl_shops WHERE shop_id = ?', [shop_id]);
-    await queryAsync('SET FOREIGN_KEY_CHECKS = 1');
-
-    res.json({ success: true, message: 'ลบร้านค้าสำเร็จ' });
-  } catch (err) {
-    console.error('Admin delete shop error:', err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
 app.delete('/products/:product_id', verifyToken, (req, res) => {
   const user_id = req.user_id;
   const { product_id } = req.params;
