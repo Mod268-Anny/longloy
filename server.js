@@ -127,7 +127,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.options(/(.*)/, cors(corsOptions));
 app.use(express.json({ limit: '50mb' }));
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static(UPLOADS_DIR));
 
 if (fs.existsSync(DIST_DIR)) {
   app.use(express.static(DIST_DIR));
@@ -882,9 +882,24 @@ app.get('/profile', verifyToken, (req, res) => {
 
 app.post('/register', async (req, res) => {
   const { name, lastname, tel, email, password } = req.body;
-  if (!password || !password.trim()) {
-    return res.status(400).json({ error: 'Password is required' });
+  
+  // Character limit validation (สมเหตุสมผล)
+  if (!name || name.length > 20) {
+    return res.status(400).json({ error: 'ชื่อต้องไม่เกิน 20 ตัวอักษร' });
   }
+  if (!lastname || lastname.length > 20) {
+    return res.status(400).json({ error: 'นามสกุลต้องไม่เกิน 20 ตัวอักษร' });
+  }
+  if (!tel || tel.length > 10) {
+    return res.status(400).json({ error: 'เบอร์โทรต้องไม่เกิน 10 ตัวอักษร' });
+  }
+  if (!email || email.length > 50) {
+    return res.status(400).json({ error: 'อีเมลต้องไม่เกิน 50 ตัวอักษร' });
+  }
+  if (!password || password.length > 20 || !password.trim()) {
+    return res.status(400).json({ error: 'รหัสผ่านต้องไม่เกิน 20 ตัวอักษร' });
+  }
+  
   const checkSql = "SELECT user_id FROM tbl_users WHERE email = ?";
   db.query(checkSql, [email], async (err, result) => {
     if (err) return res.status(500).json({ error: 'Database error' });
@@ -3649,19 +3664,24 @@ function verifyAdmin(req, res, next) {
     if (err) return res.status(403).json({ error: 'Invalid token' });
     if (!decoded || !decoded.user_id) return res.status(403).json({ error: 'Invalid token structure' });
     
-    // 4️⃣ ตรวจสอบว่าผู้ใช้เป็น Admin หรือไม่
-    const sql = 'SELECT role FROM tbl_users WHERE user_id = ?';
+    // 4️⃣ ตรวจสอบว่าผู้ใช้เป็น Admin และบัญชียัง active อยู่
+    const sql = 'SELECT role, is_active FROM tbl_users WHERE user_id = ?';
     db.query(sql, [decoded.user_id], (err, result) => {
       if (err) return res.status(500).json({ error: 'Database error' });
       if (!result || result.length === 0) return res.status(404).json({ error: 'User not found' });
+      
+      if (!result[0].is_active) {
+        return res.status(403).json({ error: 'บัญชีนี้ถูกระงับการใช้งาน', banned: true });
+      }
       
       // ถ้า role ไม่ใช่ Admin ให้ปฏิเสธการเข้าถึง
       if (result[0].role !== 'Admin') {
         return res.status(403).json({ error: 'Access denied: Admin only' });
       }
       
-      // 5️⃣ ทุกอย่างผ่าน ให้บันทึก user_id และเรียก next() เพื่อต่อไป
+      // 5️⃣ ทุกอย่างผ่าน ให้บันทึก user_id, role และ req.user แล้วเรียก next()
       req.user_id = decoded.user_id;
+      req.user = { user_id: decoded.user_id, role: result[0].role };
       next();
     });
   });

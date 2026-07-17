@@ -207,17 +207,7 @@ function LoginPage() {
           </button>
         </form>
 
-        <div style={{ display:'flex', alignItems:'center', marginBottom: 16 }}>
-          <div style={{ flex:1, height:1, background:'#e2e8f0' }} />
-          <span style={{ padding:'0 12px', fontSize:12, color:'#94a3b8' }}>หรือเข้าด้วย</span>
-          <div style={{ flex:1, height:1, background:'#e2e8f0' }} />
-        </div>
-
-        <div style={{ display:'flex', justifyContent:'center', gap:12, marginBottom:24 }}>
-          <SocialBtn icon="fab fa-google"   color="#EA4335" />
-          <SocialBtn icon="fab fa-facebook" color="#1877F2" />
-          <SocialBtn icon="fab fa-apple"    color="#000" />
-        </div>
+        {/* Social login removed per UX request */}
 
         <p style={{ textAlign:'center', fontSize:13, color:'#64748b', margin:0 }}>
           ยังไม่มีบัญชี? <Link to="/register" style={{ color:'#4b8ff4', fontWeight:700, textDecoration:'none' }}>สมัครสมาชิก</Link>
@@ -247,11 +237,16 @@ function RegisterPage() {
   const passwordPattern = /^[A-Z].*[!@#$%^&*(),.?":{}|<>]/;
 
   const fieldErrors = {
-    name:           !name.trim()           ? 'กรุณากรอกชื่อ' : '',
-    lastname:       !lastname.trim()       ? 'กรุณากรอกนามสกุล' : '',
-    tel:            !tel.trim()            ? 'กรุณากรอกเบอร์โทรศัพท์' : '',
-    email:          !email.trim()          ? 'กรุณากรอก Email' : '',
+    name:           !name.trim()           ? 'กรุณากรอกชื่อ' 
+                  : name.length > 20       ? 'ชื่อต้องไม่เกิน 20 ตัวอักษร' : '',
+    lastname:       !lastname.trim()       ? 'กรุณากรอกนามสกุล' 
+                  : lastname.length > 20   ? 'นามสกุลต้องไม่เกิน 20 ตัวอักษร' : '',
+    tel:            !tel.trim()            ? 'กรุณากรอกเบอร์โทรศัพท์' 
+                  : tel.length > 10        ? 'เบอร์โทรต้องไม่เกิน 10 ตัวอักษร' : '',
+    email:          !email.trim()          ? 'กรุณากรอก Email' 
+                  : email.length > 50      ? 'อีเมลต้องไม่เกิน 50 ตัวอักษร' : '',
     password:       !password.trim()       ? 'กรุณากรอกรหัสผ่าน'
+                  : password.length > 20   ? 'รหัสผ่านต้องไม่เกิน 20 ตัวอักษร'
                   : !passwordPattern.test(password) ? 'ต้องขึ้นต้นตัวพิมพ์ใหญ่ + อักขระพิเศษ' : '',
     repeatPassword: !repeatPassword.trim() ? 'กรุณายืนยันรหัสผ่าน'
                   : password !== repeatPassword    ? 'รหัสผ่านไม่ตรงกัน' : '',
@@ -305,13 +300,13 @@ function RegisterPage() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 0 }}>
             <div style={{ marginBottom: 14 }}>
               <label style={{ display: 'block', marginBottom: 5, fontWeight: 600, color: '#334155', fontSize: 13 }}>ชื่อ *</label>
-              <input placeholder="ชื่อจริง" value={name} onChange={ev => setName(ev.target.value)}
+              <input placeholder="ชื่อจริง" maxLength={20} value={name} onChange={ev => setName(ev.target.value)}
                 className={c_('name')} />
               <FieldErr msg={e_('name')} />
             </div>
             <div style={{ marginBottom: 14 }}>
               <label style={{ display: 'block', marginBottom: 5, fontWeight: 600, color: '#334155', fontSize: 13 }}>นามสกุล *</label>
-              <input placeholder="นามสกุล" value={lastname} onChange={ev => setLastname(ev.target.value)}
+              <input placeholder="นามสกุล" maxLength={20} value={lastname} onChange={ev => setLastname(ev.target.value)}
                 className={c_('lastname')} />
               <FieldErr msg={e_('lastname')} />
             </div>
@@ -319,14 +314,14 @@ function RegisterPage() {
 
           <div style={{ marginBottom: 14 }}>
             <label style={{ display: 'block', marginBottom: 5, fontWeight: 600, color: '#334155', fontSize: 13 }}>เบอร์โทรศัพท์ *</label>
-            <input type="tel" placeholder="08X-XXX-XXXX" value={tel} onChange={ev => setTel(ev.target.value)}
+            <input type="tel" placeholder="08X-XXX-XXXX" maxLength={10} value={tel} onChange={ev => setTel(ev.target.value)}
               className={c_('tel')} />
             <FieldErr msg={e_('tel')} />
           </div>
 
           <div style={{ marginBottom: 14 }}>
             <label style={{ display: 'block', marginBottom: 5, fontWeight: 600, color: '#334155', fontSize: 13 }}>Email *</label>
-            <input type="email" placeholder="example@email.com" value={email} onChange={ev => setEmail(ev.target.value)}
+            <input type="email" placeholder="example@email.com" maxLength={50} value={email} onChange={ev => setEmail(ev.target.value)}
               className={c_('email')} />
             <FieldErr msg={e_('email')} />
           </div>
@@ -334,7 +329,7 @@ function RegisterPage() {
           <div style={{ marginBottom: 14 }}>
             <label style={{ display: 'block', marginBottom: 5, fontWeight: 600, color: '#334155', fontSize: 13 }}>Password *</label>
             <div style={{ position: 'relative' }}>
-              <input type={showPassword ? 'text' : 'password'} placeholder="ตัวพิมพ์ใหญ่+อักขระพิเศษ" value={password}
+              <input type={showPassword ? 'text' : 'password'} placeholder="ตัวพิมพ์ใหญ่+อักขระพิเศษ" maxLength={20} value={password}
                 onChange={e => setPassword(e.target.value)}
                 className={c_('password')} style={{ paddingRight: 42 }} />
               <button type="button" onClick={() => setShowPassword(v => !v)}
@@ -348,7 +343,7 @@ function RegisterPage() {
           <div style={{ marginBottom: 14 }}>
             <label style={{ display: 'block', marginBottom: 5, fontWeight: 600, color: '#334155', fontSize: 13 }}>ยืนยัน Password *</label>
             <div style={{ position: 'relative' }}>
-              <input type={showRepeat ? 'text' : 'password'} placeholder="กรอกรหัสผ่านอีกครั้ง" value={repeatPassword}
+              <input type={showRepeat ? 'text' : 'password'} placeholder="กรอกรหัสผ่านอีกครั้ง" maxLength={20} value={repeatPassword}
                 onChange={e => setRepeatPassword(e.target.value)}
                 className={c_('repeatPassword')} style={{ paddingRight: 42 }} />
               <button type="button" onClick={() => setShowRepeat(v => !v)}
@@ -376,17 +371,7 @@ function RegisterPage() {
           </button>
         </form>
 
-        <div style={{ display:'flex', alignItems:'center', marginBottom: 14 }}>
-          <div style={{ flex:1, height:1, background:'#e2e8f0' }} />
-          <span style={{ padding:'0 12px', fontSize:12, color:'#94a3b8' }}>หรือเข้าด้วย</span>
-          <div style={{ flex:1, height:1, background:'#e2e8f0' }} />
-        </div>
-
-        <div style={{ display:'flex', justifyContent:'center', gap:12, marginBottom: 20 }}>
-          <SocialBtn icon="fab fa-google"   color="#EA4335" />
-          <SocialBtn icon="fab fa-facebook" color="#1877F2" />
-          <SocialBtn icon="fab fa-apple"    color="#000" />
-        </div>
+        {/* Social login removed per UX request */}
 
         <p style={{ textAlign:'center', fontSize:13, color:'#64748b', margin:0 }}>
           มีบัญชีแล้ว? <Link to="/login" style={{ color:'#4b8ff4', fontWeight:700, textDecoration:'none' }}>เข้าสู่ระบบ</Link>

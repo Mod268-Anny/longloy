@@ -173,7 +173,7 @@ export default function ShopPage() {
           onMouseEnter={e => e.currentTarget.style.background="rgba(255,255,255,0.15)"}
           onMouseLeave={e => e.currentTarget.style.background="rgba(255,255,255,0.08)"}
         >
-          <FaChevronLeft style={{ fontSize: 11 }} /> กลับหน้าตลาดน้ำ
+          <FaChevronLeft style={{ fontSize: 11 }} /> กลับ
         </button>
 
         <div style={{ position: "relative", zIndex: 1, maxWidth: 1280, margin: "0 auto", padding: "16px 32px 0" }}>

@@ -193,31 +193,31 @@ export default function ShopProfile() {
 
         {/* Stats bar */}
         <div style={{ background: "#fff", borderBottom: "1px solid #ede9e3", boxShadow: "0 2px 10px rgba(0,0,0,0.06)" }}>
-          <div className="sp-stats-bar" style={{ maxWidth: 860, margin: "0 auto", padding: "14px 28px", display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
-            <div className="sp-stat-pill" style={{ display: "flex", alignItems: "center", gap: 10, background: "linear-gradient(135deg,#fff8f0,#fef3e6)", border: "1.5px solid rgba(141,77,17,0.18)", borderRadius: 14, padding: "10px 18px" }}>
-              <FaStar style={{ color: "#8d4d11", fontSize: 18 }} />
-              <div>
+          <div className="sp-stats-bar" style={{ maxWidth: 860, margin: "0 auto", padding: "14px 18px", display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
+            <div className="sp-stat-pill" style={{ flex: "1 1 160px", minWidth: 0, display: "flex", alignItems: "center", gap: 10, background: "linear-gradient(135deg,#fff8f0,#fef3e6)", border: "1.5px solid rgba(141,77,17,0.18)", borderRadius: 14, padding: "10px 18px" }}>
+              <FaStar style={{ color: "#8d4d11", fontSize: 18, flexShrink: 0 }} />
+              <div style={{ minWidth: 0 }}>
                 <p className="sp-stat-val" style={{ margin: 0, fontWeight: 900, fontSize: 17, color: "#6b3a0d" }}>{avgRating > 0 ? avgRating.toFixed(1) : "—"}</p>
-                <p style={{ margin: 0, fontSize: 11, color: "#b47a45", fontWeight: 600 }}>คะแนนเฉลี่ย</p>
+                <p style={{ margin: 0, fontSize: 11, color: "#b47a45", fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>คะแนนเฉลี่ย</p>
               </div>
             </div>
-            <div className="sp-stat-pill" style={{ display: "flex", alignItems: "center", gap: 10, background: "linear-gradient(135deg,#faf8f5,#f4f1ec)", border: "1.5px solid #e2ddd6", borderRadius: 14, padding: "10px 18px" }}>
-              <span style={{ fontSize: 18, display:'flex' }}><FaComment /></span>
-              <div>
+            <div className="sp-stat-pill" style={{ flex: "1 1 160px", minWidth: 0, display: "flex", alignItems: "center", gap: 10, background: "linear-gradient(135deg,#faf8f5,#f4f1ec)", border: "1.5px solid #e2ddd6", borderRadius: 14, padding: "10px 18px" }}>
+              <span style={{ fontSize: 18, display:'flex', flexShrink: 0 }}><FaComment /></span>
+              <div style={{ minWidth: 0 }}>
                 <p className="sp-stat-val" style={{ margin: 0, fontWeight: 900, fontSize: 17, color: "#5c4a38" }}>{reviews.length}</p>
-                <p style={{ margin: 0, fontSize: 11, color: "#8a7060", fontWeight: 600 }}>รีวิวทั้งหมด</p>
+                <p style={{ margin: 0, fontSize: 11, color: "#8a7060", fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>รีวิวทั้งหมด</p>
               </div>
             </div>
-            <div className="sp-stat-pill" style={{ display: "flex", alignItems: "center", gap: 10, background: "linear-gradient(135deg,#faf8f5,#f4f1ec)", border: "1.5px solid #e2ddd6", borderRadius: 14, padding: "10px 18px" }}>
-              <span style={{ fontSize: 18, display:'flex' }}><FaBasketShopping /></span>
-              <div>
+            <div className="sp-stat-pill" style={{ flex: "1 1 160px", minWidth: 0, display: "flex", alignItems: "center", gap: 10, background: "linear-gradient(135deg,#faf8f5,#f4f1ec)", border: "1.5px solid #e2ddd6", borderRadius: 14, padding: "10px 18px" }}>
+              <span style={{ fontSize: 18, display:'flex', flexShrink: 0 }}><FaBasketShopping /></span>
+              <div style={{ minWidth: 0 }}>
                 <p className="sp-stat-val" style={{ margin: 0, fontWeight: 900, fontSize: 17, color: "#5c4a38" }}>{products.length}</p>
-                <p style={{ margin: 0, fontSize: 11, color: "#8a7060", fontWeight: 600 }}>สินค้าในร้าน</p>
+                <p style={{ margin: 0, fontSize: 11, color: "#8a7060", fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>สินค้าในร้าน</p>
               </div>
             </div>
             {/* View all products CTA */}
             <button onClick={() => navigate(`/shop-product/${shop_id}`)}
-              style={{ marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: 7, padding: "10px 20px", borderRadius: 12, border: "none", background: "linear-gradient(135deg,#8d4d11,#6b3a0d)", color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", boxShadow: "0 4px 16px rgba(141,77,17,0.3)", transition: "all 0.2s", whiteSpace: "nowrap" }}
+              style={{ flex: "1 1 100%", minWidth: 0, display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 7, padding: "10px 20px", borderRadius: 12, border: "none", background: "linear-gradient(135deg,#8d4d11,#6b3a0d)", color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", boxShadow: "0 4px 16px rgba(141,77,17,0.3)", transition: "all 0.2s", whiteSpace: "nowrap" }}
               onMouseEnter={e => { e.currentTarget.style.transform="translateY(-1px)"; e.currentTarget.style.boxShadow="0 6px 20px rgba(141,77,17,0.4)"; }}
               onMouseLeave={e => { e.currentTarget.style.transform="none"; e.currentTarget.style.boxShadow="0 4px 16px rgba(141,77,17,0.3)"; }}
             >
@@ -287,38 +287,46 @@ export default function ShopProfile() {
 /* ─── ProductMiniCard ────────────────────────────────────────────── */
 function ProductMiniCard({ product, isAdded, onAdd, onView }) {
   const [hov, setHov] = useState(false);
+  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 640 : false);
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth <= 640);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
   return (
     <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-      style={{ background: "#fff", borderRadius: 20, overflow: "hidden",
-        boxShadow: hov ? "0 20px 48px rgba(0,0,0,0.13)" : "0 2px 12px rgba(0,0,0,0.07)",
-        transform: hov ? "translateY(-6px)" : "none",
-        transition: "all 0.28s cubic-bezier(0.4,0,0.2,1)",
-        display: "flex", flexDirection: "column",
-        border: "1px solid #ede9e3",
+      style={{ background: '#fff', borderRadius: 20, overflow: 'hidden',
+        boxShadow: hov ? '0 20px 48px rgba(0,0,0,0.13)' : '0 2px 12px rgba(0,0,0,0.07)',
+        transform: hov ? 'translateY(-6px)' : 'none',
+        transition: 'all 0.28s cubic-bezier(0.4,0,0.2,1)',
+        display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: 'center',
+        border: '1px solid #ede9e3',
       }}>
-      <div className="product-img" onClick={onView} style={{ background: "#faf8f5", position: "relative", overflow: "hidden", flexShrink: 0, cursor: "pointer" }}>
-        <img src={imgSrc(product.image_url)} alt={product.name}
-          onError={e => { e.target.onerror=null; e.target.src='https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=200&q=80'; }}
-          style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.5s ease", transform: hov ? "scale(1.06)" : "scale(1.0)" }} />
-        <div style={{ position: "absolute", bottom: 8, left: 10 }}>
-          <span style={{ background: "linear-gradient(135deg,#6b3a0d,#8d4d11)", color: "#fff", fontWeight: 800, fontSize: 13, padding: "4px 11px", borderRadius: 999, boxShadow: "0 2px 8px rgba(0,0,0,0.25)" }}>
+      <div style={{ padding: isMobile ? '12px 14px' : '16px 18px', flex: 1 }}>
+        <p onClick={onView} style={{ margin: 0, fontWeight: 800, fontSize: 15, color: '#1a0f08', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', lineHeight: 1.4, cursor: 'pointer' }}
+          onMouseEnter={e => e.currentTarget.style.color = '#8d4d11'}
+          onMouseLeave={e => e.currentTarget.style.color = '#1a0f08'}
+        >{product.name}</p>
+
+        <p style={{ margin: '8px 0 0', color: '#94a3b8', fontSize: 13 }}>{product.description || ''}</p>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 12 }}>
+          <div style={{ background: 'linear-gradient(135deg,#6b3a0d,#8d4d11)', color: '#fff', fontWeight: 800, fontSize: 13, padding: '6px 12px', borderRadius: 12, boxShadow: '0 6px 18px rgba(141,77,17,0.12)' }}>
             ฿{Number(product.price||0).toLocaleString()}
-          </span>
+          </div>
+
+          <button onClick={onAdd}
+            style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '10px 16px', borderRadius: 999, border: 'none', fontSize: 13, fontWeight: 800, cursor: 'pointer', transition: 'all 0.18s',
+              background: isAdded ? 'linear-gradient(135deg,#22c55e,#16a34a)' : 'linear-gradient(135deg,#ff7a66,#ffb199)', color: '#fff', boxShadow: isAdded ? '0 8px 26px rgba(34,197,94,0.18)' : '0 10px 30px rgba(255,122,102,0.12)'}}>
+            <FaCartPlus style={{ fontSize: 14 }} /> {isAdded ? 'เพิ่มแล้ว' : 'ซื้อ'}
+          </button>
         </div>
       </div>
-      <div style={{ padding: "12px 14px 14px", flex: 1, display: "flex", flexDirection: "column", gap: 8 }}>
-        <p onClick={onView} style={{ margin: 0, fontWeight: 700, fontSize: 14, color: "#1a0f08", overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", lineHeight: 1.4, cursor: "pointer" }}
-          onMouseEnter={e => e.currentTarget.style.color="#8d4d11"}
-          onMouseLeave={e => e.currentTarget.style.color="#1a0f08"}
-        >{product.name}</p>
-        <button onClick={onAdd}
-          style={{ marginTop: "auto", width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "10px", borderRadius: 12, border: "none", fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all 0.2s",
-            background: isAdded ? "linear-gradient(135deg,#22c55e,#16a34a)" : "linear-gradient(135deg,#8d4d11,#6b3a0d)",
-            color: "#fff",
-            boxShadow: isAdded ? "0 3px 12px rgba(34,197,94,0.3)" : "0 3px 12px rgba(141,77,17,0.3)" }}>
-          <FaCartPlus style={{ fontSize: 13 }} />
-          {isAdded ? "เพิ่มแล้ว" : "เพิ่มลงตะกร้า"}
-        </button>
+
+      <div className="product-img" onClick={onView} style={{ background: '#faf8f5', position: 'relative', overflow: 'hidden', flexShrink: 0, cursor: 'pointer', width: isMobile ? '100%' : 120, height: isMobile ? 160 : 120, borderRadius: isMobile ? '0 0 12px 12px' : '0 12px 12px 0' }}>
+        <img src={imgSrc(product.image_url)} alt={product.name}
+          onError={e => { e.target.onerror=null; e.target.src='https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=200&q=80'; }}
+          style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease', transform: hov ? 'scale(1.06)' : 'scale(1.0)' }} />
       </div>
     </div>
   );

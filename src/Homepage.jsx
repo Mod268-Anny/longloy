@@ -802,8 +802,8 @@ function GameCard({ game, onClick }) {
     >
       {/* bg circle */}
       <div style={{ position: "absolute", right: -16, bottom: -16, width: 96, height: 96, borderRadius: "50%", background: "rgba(255,255,255,0.1)" }} />
-      <div style={{ width: 48, height: 48, borderRadius: 14, background: "rgba(255,255,255,0.2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24, marginBottom: 14, transition: "transform 0.2s", transform: hov ? "scale(1.15)" : "scale(1)" }}>
-        {game.emoji}
+      <div style={{ width: 48, height: 48, borderRadius: 14, background: "rgba(255,255,255,0.2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24, marginBottom: 14, transition: "transform 0.2s", transform: hov ? "scale(1.15)" : "scale(1)", color: "#fff" }}>
+        {game.icon}
       </div>
       <p style={{ margin: "0 0 6px", fontWeight: 700, fontSize: 15, color: "#fff" }}>{game.label}</p>
       <p style={{ margin: "0 0 16px", fontSize: 12, color: "rgba(255,255,255,0.8)", lineHeight: 1.5 }}>{game.sub}</p>
