@@ -349,13 +349,6 @@ function ProductMiniCard({ product, isAdded, onAdd, onView }) {
         }}>
           {badge}
         </span>
-        <button onClick={e => { e.stopPropagation(); onAdd(); }} aria-label="เพิ่มลงตะกร้า" style={{
-          position: 'absolute', bottom: 14, right: 14, width: 40, height: 40, borderRadius: '50%',
-          border: 'none', cursor: 'pointer', background: 'linear-gradient(135deg,#8d4d11,#6b3a0d)',
-          color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: hov ? '0 8px 20px rgba(141,77,17,0.28)' : '0 2px 8px rgba(141,77,17,0.2)',
-        }}>
-          <FaCartPlus style={{ fontSize: 14 }} />
-        </button>
       </div>
       <div style={{ padding: '14px 16px 16px', display: 'flex', flexDirection: 'column', flex: 1 }}>
         <p onClick={onView} style={{
@@ -372,7 +365,13 @@ function ProductMiniCard({ product, isAdded, onAdd, onView }) {
           <p style={{ margin: 0, fontWeight: 800, fontSize: 17, color: '#0f172a' }}>
             ฿{Number(product.price || 0).toLocaleString()}
           </p>
-          <div style={{ minWidth: 34, minHeight: 34 }} />
+          <button onClick={e => { e.stopPropagation(); onAdd(); }} aria-label="เพิ่มลงตะกร้า" style={{
+            flexShrink: 0, width: 34, height: 34, borderRadius: '50%',
+            border: 'none', cursor: 'pointer', background: 'linear-gradient(135deg,#8d4d11,#6b3a0d)',
+            color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: hov ? '0 8px 20px rgba(141,77,17,0.28)' : '0 2px 8px rgba(141,77,17,0.2)',
+          }}>
+            <FaCartPlus style={{ fontSize: 14 }} />
+          </button>
         </div>
       </div>
     </div>

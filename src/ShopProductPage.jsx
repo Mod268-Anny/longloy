@@ -565,20 +565,12 @@ function ProductCard({ product, avg, reviewCount, isAdded, shopClosed, productCl
         }}>
           {badge}
         </span>
-        {productClosed ? (
+        {productClosed && (
           <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.35)", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <span style={{ background: "#ef4444", color: "#fff", fontSize: 12, fontWeight: 800, padding: "6px 16px", borderRadius: 999 }}>
               ปิดการขาย
             </span>
           </div>
-        ) : (
-          <button onClick={e => { e.stopPropagation(); if (!isClosed) onAdd(); }} aria-label="เพิ่มลงตะกร้า" style={{
-            position: "absolute", bottom: 14, right: 14, width: 40, height: 40, borderRadius: "50%",
-            border: "none", cursor: isClosed ? 'not-allowed' : 'pointer', background: "linear-gradient(135deg,#8d4d11,#6b3a0d)",
-            color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: hov ? "0 8px 20px rgba(141,77,17,0.28)" : "0 2px 8px rgba(141,77,17,0.2)",
-          }}>
-            <FaCartPlus style={{ fontSize: 14 }} />
-          </button>
         )}
       </div>
 
@@ -597,7 +589,15 @@ function ProductCard({ product, avg, reviewCount, isAdded, shopClosed, productCl
           <p style={{ margin: 0, fontWeight: 800, fontSize: 17, color: "#0f172a" }}>
             ฿{Number(product.price || 0).toLocaleString()}
           </p>
-          <div style={{ minWidth: 34, minHeight: 34 }} />
+          {!productClosed && (
+            <button onClick={e => { e.stopPropagation(); if (!isClosed) onAdd(); }} aria-label="เพิ่มลงตะกร้า" style={{
+              flexShrink: 0, width: 34, height: 34, borderRadius: "50%",
+              border: "none", cursor: isClosed ? 'not-allowed' : 'pointer', background: "linear-gradient(135deg,#8d4d11,#6b3a0d)",
+              color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: hov && !isClosed ? "0 8px 20px rgba(141,77,17,0.28)" : "0 2px 8px rgba(141,77,17,0.2)",
+            }}>
+              <FaCartPlus style={{ fontSize: 14 }} />
+            </button>
+          )}
         </div>
       </div>
     </div>

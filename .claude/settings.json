@@ -1,0 +1,41 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(railway deployment *)",
+      "Bash(python3 -c ' *)",
+      "Bash(git fetch *)",
+      "Bash(gh repo *)",
+      "Bash(railway variable *)",
+      "Bash(python3 /tmp/verify_new_key.py)",
+      "Bash(railway --help)",
+      "Bash(railway connect *)",
+      "Bash(mysql --version)",
+      "Bash(railway ssh *)",
+      "Bash(railway ssh --service longloy --environment production -- node -e ' *)",
+      "Bash(railway upgrade *)",
+      "Bash(node -e ' *)",
+      "Read(//tmp/**)",
+      "Read(//private/tmp/**)",
+      "Bash(curl -s -H 'Authorization: Bearer __CMDSUB_OUTPUT__' __TRACKED_VAR__/profile)",
+      "Bash(curl -s -H 'Authorization: Bearer __CMDSUB_OUTPUT__' __TRACKED_VAR__/my-shop)",
+      "Bash(curl -s -X POST __TRACKED_VAR__/edit-shop -H 'Authorization: Bearer __CMDSUB_OUTPUT__' -H 'Content-Type: application/json' -d '{\"shop_id\":224,\"shop_name\":\"DIAG_TEST_SHOP\",\"phone_number\":\"0000000000\",\"description\":\"diagnostic test row\",\"location\":\"test\",\"image_url\":\"__TRACKED_VAR__\"}')",
+      "Bash(rm -f /tmp/diag_token.txt)",
+      "Bash(curl -s \"https://longloy-production.up.railway.app/shops/by-market/101\")",
+      "Bash(python3 /tmp/collect_urls.py)",
+      "Bash(railway restart *)",
+      "Bash(curl -sS -o /dev/null -w \"HTTP %{http_code} in %{time_total}s\\\\n\" \"https://longloy-production.up.railway.app/floating-markets/search?q=\")",
+      "Bash(curl -sS \"https://longloy-production.up.railway.app/floating-markets/search?q=\")",
+      "Bash(curl -sS -o /dev/null -w \"HTTP %{http_code}\\\\n\" \"https://longloy-production.up.railway.app/floating-markets/all\")",
+      "Bash(curl -sS -o /dev/null -w \"HTTP %{http_code}\\\\n\" \"https://longloy-eight.vercel.app/homepage\")",
+      "Bash(curl -sS -o /dev/null -w \"HTTP %{http_code}\\\\n\" -X OPTIONS -H \"Origin: https://longloy-eight.vercel.app\" -H \"Access-Control-Request-Method: GET\" \"https://longloy-production.up.railway.app/floating-markets/search\")",
+      "Bash(curl -sS \"https://longloy-eight.vercel.app/homepage\")",
+      "Bash(curl -sS \"https://longloy-eight.vercel.app/assets/index-CXPAKSvd.js\" -o /tmp/bundle.js -w \"HTTP %{http_code}, size %{size_download} bytes\\\\n\")",
+      "Bash(grep -o \"VITE_API[A-Z_]*\" /tmp/bundle.js | sort -u *)",
+      "Bash(vercel --version)"
+    ],
+    "additionalDirectories": [
+      "/tmp",
+      "/private/tmp"
+    ]
+  }
+}
