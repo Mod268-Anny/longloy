@@ -13,7 +13,7 @@
 // หมายเหตุ: ใช้ได้เฉพาะบนมือถือที่รองรับ DeviceMotionEvent
 // ============================================================
 import React from 'react';
-import { FaCircleCheck, FaCircleXmark, FaTriangleExclamation, FaCircleStop, FaPersonWalking, FaTrophy } from 'react-icons/fa6';
+import { FaCircleCheck, FaCircleXmark, FaTriangleExclamation, FaCircleStop, FaPersonWalking, FaTrophy, FaPlay, FaGift, FaPlus, FaFloppyDisk, FaLightbulb, FaDesktop } from 'react-icons/fa6';
 import API_URL, { secureLocalFetch } from '../config';
 
 export default function GameStepCounter() {
@@ -321,7 +321,7 @@ export default function GameStepCounter() {
           })}
           {rewarded && (
             <div style={{ background:"linear-gradient(135deg,#14532d,#15803d)", borderRadius:14, padding:"14px 18px", display:"flex", alignItems:"center", justifyContent:"space-between", gap:12 }}>
-              <span style={{ fontSize:13, fontWeight:700, color:"#fff" }}>🏆 ได้รับ <strong>{rewardPoints}</strong> แต้ม!</span>
+              <span style={{ fontSize:13, fontWeight:700, color:"#fff", display:"inline-flex", alignItems:"center", gap:6 }}><FaTrophy /> ได้รับ <strong>{rewardPoints}</strong> แต้ม!</span>
               <button onClick={() => setRewarded(false)} style={{ background:"rgba(255,255,255,0.18)", border:"none", borderRadius:8, padding:"5px 12px", color:"#fff", fontSize:12, fontWeight:700, cursor:"pointer" }}>ปิด</button>
             </div>
           )}
@@ -347,8 +347,8 @@ export default function GameStepCounter() {
               {steps.toLocaleString()}
             </span>
             <span style={{ fontSize:16, color:"#b89a7a", fontWeight:700, marginTop:8 }}>ก้าว</span>
-            <span style={{ fontSize:12, color:"#c0a882", fontWeight:600, marginTop:4 }}>
-              {goal100 ? "🏆 ถึงเป้าแล้ว!" : `เป้า ${STEP_GOAL.toLocaleString()}`}
+            <span style={{ fontSize:12, color:"#c0a882", fontWeight:600, marginTop:4, display:"inline-flex", alignItems:"center", gap:5 }}>
+              {goal100 ? <><FaTrophy /> ถึงเป้าแล้ว!</> : `เป้า ${STEP_GOAL.toLocaleString()}`}
             </span>
           </div>
         </div>
@@ -371,7 +371,7 @@ export default function GameStepCounter() {
           display:"flex", alignItems:"center", justifyContent:"center", gap:10,
           boxShadow: isTracking ? "0 6px 20px rgba(239,68,68,0.35)" : "0 6px 24px rgba(141,77,17,0.35)",
         }}>
-          {isTracking ? "⏹ หยุดนับก้าว" : "▶ เริ่มนับก้าว"}
+          {isTracking ? <><FaCircleStop /> หยุดนับก้าว</> : <><FaPlay /> เริ่มนับก้าว</>}
         </button>
       </div>
 
@@ -400,7 +400,7 @@ export default function GameStepCounter() {
             display:"flex", alignItems:"center", justifyContent:"center", gap:10,
             opacity: exchangeLoading ? 0.7 : 1,
           }}>
-          🎁 {exchangeLoading ? "กำลังแลก..." : steps > 0 ? `แลกก้าวเป็นแต้ม · ${steps.toLocaleString()} ก้าว` : "แลกก้าวเป็นแต้ม"}
+          <FaGift /> {exchangeLoading ? "กำลังแลก..." : steps > 0 ? `แลกก้าวเป็นแต้ม · ${steps.toLocaleString()} ก้าว` : "แลกก้าวเป็นแต้ม"}
         </button>
       </div>
 
@@ -408,19 +408,19 @@ export default function GameStepCounter() {
       <div style={{ display:"flex", gap:10, padding:"10px 18px 0" }}>
         {!isMobile && (
           <button onClick={handleManualAddStep}
-            style={{ flex:1, padding:"12px", borderRadius:14, border:"1.5px solid #ede9e3", background:"#fff", color:"#6b3a0d", fontSize:13, fontWeight:700, cursor:"pointer" }}>
-            ➕ ทดสอบ
+            style={{ flex:1, padding:"12px", borderRadius:14, border:"1.5px solid #ede9e3", background:"#fff", color:"#6b3a0d", fontSize:13, fontWeight:700, cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", gap:6 }}>
+            <FaPlus /> ทดสอบ
           </button>
         )}
         <button onClick={handleSaveStepsToDatabase}
-          style={{ flex:1, padding:"12px", borderRadius:14, border:"1.5px solid #ede9e3", background:"#fff", color:"#6b3a0d", fontSize:13, fontWeight:700, cursor:"pointer" }}>
-          💾 บันทึกก้าว
+          style={{ flex:1, padding:"12px", borderRadius:14, border:"1.5px solid #ede9e3", background:"#fff", color:"#6b3a0d", fontSize:13, fontWeight:700, cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", gap:6 }}>
+          <FaFloppyDisk /> บันทึกก้าว
         </button>
       </div>
 
       {/* ── How-to ─────────────────────────────────────────────── */}
       <div style={{ margin:"14px 18px 0", background:"#fff", borderRadius:20, padding:"20px", border:"1px solid #ede9e3" }}>
-        <p style={{ margin:"0 0 14px", fontWeight:800, fontSize:14, color:"#3d1a05" }}>💡 วิธีใช้งาน</p>
+        <p style={{ margin:"0 0 14px", fontWeight:800, fontSize:14, color:"#3d1a05", display:"flex", alignItems:"center", gap:7 }}><FaLightbulb /> วิธีใช้งาน</p>
         {[
           { n:1, t:"เริ่มนับก้าว", d:"กดปุ่มด้านบน" },
           { n:2, t:"สั่นโทรศัพท์", d:"ทุกครั้งที่สั่น = 1 ก้าว" },
@@ -433,8 +433,8 @@ export default function GameStepCounter() {
           </div>
         ))}
         {!isMobile && (
-          <div style={{ marginTop:12, padding:"9px 14px", background:"#fff8f0", borderRadius:10, fontSize:12, color:"#5c2c08", fontWeight:600, border:"1px solid rgba(141,77,17,0.12)" }}>
-            💻 บนเดสก์ท็อป: ใช้ปุ่ม "ทดสอบ"
+          <div style={{ marginTop:12, padding:"9px 14px", background:"#fff8f0", borderRadius:10, fontSize:12, color:"#5c2c08", fontWeight:600, border:"1px solid rgba(141,77,17,0.12)", display:"flex", alignItems:"center", gap:7 }}>
+            <FaDesktop /> บนเดสก์ท็อป: ใช้ปุ่ม "ทดสอบ"
           </div>
         )}
       </div>
