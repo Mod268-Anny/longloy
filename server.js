@@ -4942,6 +4942,9 @@ app.put('/admin/shops/:shop_id/status', verifyAdmin, (req, res) => {
 });
 
 // DELETE /admin/shops/:shop_id — remove shop (nullify FK refs first, then delete)
+// Also removes the owning tbl_entrepreneurs row — otherwise the startup migration
+// that backfills missing tbl_shops rows for every tbl_entrepreneurs row would
+// silently recreate this shop the next time the server restarts/redeploys.
 app.delete('/admin/shops/:shop_id', verifyAdmin, (req, res) => {
   const shop_id = req.params.shop_id;
   db.getConnection((connErr, conn) => {
@@ -4951,26 +4954,41 @@ app.delete('/admin/shops/:shop_id', verifyAdmin, (req, res) => {
 
       const rollback = (e) => conn.rollback(() => { conn.release(); res.status(500).json({ error: e.message }); });
 
-      // 1. รักษาประวัติออเดอร์ไว้ แค่ตัด FK ออก
-      conn.query('UPDATE tbl_orders SET shop_id = NULL WHERE shop_id = ?', [shop_id], (e1) => {
-        if (e1) return rollback(e1);
+      conn.query('SELECT entrepreneur_id FROM tbl_shops WHERE shop_id = ?', [shop_id], (e0, shopRows) => {
+        if (e0) return rollback(e0);
+        const entrepreneur_id = shopRows[0]?.entrepreneur_id || null;
 
-        // 2. รักษาสินค้าไว้ (ยังมีใน order_items) แค่ตัด FK ออก
-        conn.query('UPDATE tbl_products SET shop_id = NULL WHERE shop_id = ?', [shop_id], (e2) => {
-          if (e2) return rollback(e2);
+        // 1. รักษาประวัติออเดอร์ไว้ แค่ตัด FK ออก
+        conn.query('UPDATE tbl_orders SET shop_id = NULL WHERE shop_id = ?', [shop_id], (e1) => {
+          if (e1) return rollback(e1);
 
-          // 3. ลบ reviews ของร้านนี้
-          conn.query('DELETE FROM tbl_shop_reviews WHERE shop_id = ?', [shop_id], (e3) => {
-            if (e3) return rollback(e3);
+          // 2. รักษาสินค้าไว้ (ยังมีใน order_items) แค่ตัด FK ออก
+          conn.query('UPDATE tbl_products SET shop_id = NULL WHERE shop_id = ?', [shop_id], (e2) => {
+            if (e2) return rollback(e2);
 
-            // 4. ลบร้านค้า
-            conn.query('DELETE FROM tbl_shops WHERE shop_id = ?', [shop_id], (e4) => {
-              if (e4) return rollback(e4);
+            // 3. ลบ reviews ของร้านนี้
+            conn.query('DELETE FROM tbl_shop_reviews WHERE shop_id = ?', [shop_id], (e3) => {
+              if (e3) return rollback(e3);
 
-              conn.commit(commitErr => {
-                conn.release();
-                if (commitErr) return res.status(500).json({ error: commitErr.message });
-                res.json({ success: true });
+              // 4. ลบร้านค้า
+              conn.query('DELETE FROM tbl_shops WHERE shop_id = ?', [shop_id], (e4) => {
+                if (e4) return rollback(e4);
+
+                // 5. ลบผู้ประกอบการเจ้าของร้านนี้ (กันไม่ให้ migration ตอนบูตสร้างร้านนี้กลับมาใหม่)
+                const finish = (e5) => {
+                  if (e5) return rollback(e5);
+                  conn.commit(commitErr => {
+                    conn.release();
+                    if (commitErr) return res.status(500).json({ error: commitErr.message });
+                    res.json({ success: true });
+                  });
+                };
+
+                if (entrepreneur_id) {
+                  conn.query('DELETE FROM tbl_entrepreneurs WHERE entrepreneurs_id = ?', [entrepreneur_id], finish);
+                } else {
+                  finish(null);
+                }
               });
             });
           });
