@@ -24,6 +24,7 @@ import { FaUserCircle } from 'react-icons/fa';
 import { MdHome, MdStorefront, MdOutlineSportsEsports, MdHelpOutline } from 'react-icons/md';
 import API_URL, { secureLocalFetch, resolveImg } from './config';
 import useCartCount from './useCartCount';
+import { isShopOpenNow } from './shopHours';
 
 const NAV = [
   { label: "หน้าแรก",  icon: <MdHome size={18}/>,                path: "/homepage" },
@@ -148,8 +149,8 @@ export default function ShopPage() {
     let result = searchTerm.trim()
       ? shops.filter(s => (s.shop_name || s.description || s.name || '').toLowerCase().includes(searchTerm.toLowerCase()))
       : [...shops];
-    if (sortBy === 'open_first')   result.sort((a, b) => (a.status === 'Open' ? 0 : 1) - (b.status === 'Open' ? 0 : 1));
-    if (sortBy === 'closed_first') result.sort((a, b) => (a.status === 'Closed' ? 0 : 1) - (b.status === 'Closed' ? 0 : 1));
+    if (sortBy === 'open_first')   result.sort((a, b) => (isShopOpenNow(a) ? 0 : 1) - (isShopOpenNow(b) ? 0 : 1));
+    if (sortBy === 'closed_first') result.sort((a, b) => (isShopOpenNow(a) ? 1 : 0) - (isShopOpenNow(b) ? 1 : 0));
     if (sortBy === 'rating')       result.sort((a, b) => (shopRatings[b.shop_id]?.avg || 0) - (shopRatings[a.shop_id]?.avg || 0));
     if (sortBy === 'name_az')      result.sort((a, b) => (a.shop_name || '').localeCompare(b.shop_name || ''));
     setFilteredShops(result);
@@ -307,7 +308,7 @@ function ShopCard({ shop, ratingObj, onProfile, onProducts, locked }) {
   const [hov, setHov] = useState(false);
   const name     = shop.shop_name || shop.description || shop.name || 'ร้านค้า';
   const initial  = name.trim().slice(0, 1).toUpperCase();
-  const isClosed = shop.status !== 'Open';
+  const isClosed = !isShopOpenNow(shop);
   const disabled = locked || isClosed;
   return (
     <div

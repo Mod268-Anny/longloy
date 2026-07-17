@@ -1168,7 +1168,7 @@ app.get('/products/by-shop/:shop_id', async (req, res) => {
 app.get('/shops/:shop_id', (req, res) => {
   const { shop_id } = req.params;
   console.log('🏪 GET /shops/:shop_id - shop_id:', shop_id);
-  const sql = `SELECT s.*, COALESCE(s.shop_name, e.shop_name) AS shop_name, e.phone_number, e.description, e.location, fm.name as market_name
+  const sql = `SELECT s.*, COALESCE(s.shop_name, e.shop_name) AS shop_name, e.phone_number, e.description, e.location, e.open_time, e.close_time, fm.name as market_name
                FROM tbl_shops s
                LEFT JOIN tbl_entrepreneurs e ON s.entrepreneur_id = e.entrepreneurs_id
                LEFT JOIN tbl_floating_markets fm ON s.market_id = fm.market_id
@@ -1564,7 +1564,7 @@ app.get('/shop-orders/:shop_id', verifyToken, (req, res) => {
 // Get shop info by shop_id (for ShopProfile)
 app.get('/entrepreneur-by-shop/:shop_id', (req, res) => {
   const { shop_id } = req.params;
-  const sql = `SELECT s.*, COALESCE(s.shop_name, e.shop_name) AS shop_name, e.phone_number, e.description, e.location, fm.name as market_name
+  const sql = `SELECT s.*, COALESCE(s.shop_name, e.shop_name) AS shop_name, e.phone_number, e.description, e.location, e.open_time, e.close_time, fm.name as market_name
                FROM tbl_shops s
                LEFT JOIN tbl_entrepreneurs e ON s.entrepreneur_id = e.entrepreneurs_id
                LEFT JOIN tbl_floating_markets fm ON s.market_id = fm.market_id

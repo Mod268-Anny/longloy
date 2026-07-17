@@ -40,7 +40,10 @@
       "Bash(npx eslint *)",
       "Bash(curl -s \"http://localhost:8894/shops/by-market/101\")",
       "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\);process.stdin.on\\('end',\\(\\)=>{const rows=JSON.parse\\(d\\);console.log\\('total:',rows.length,'contains test shop:',rows.some\\(r=>r.shop_name==='__test_unapproved_shop'\\)\\)}\\)\")",
-      "Bash(curl -s \"http://localhost:8894/shops/by-market/101?all=1\")"
+      "Bash(curl -s \"http://localhost:8894/shops/by-market/101?all=1\")",
+      "Bash(curl -s http://localhost:8895/shops/125)",
+      "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\);process.stdin.on\\('end',\\(\\)=>{const s=JSON.parse\\(d\\);console.log\\({shop_id:s.shop_id, status:s.status, open_time:s.open_time, close_time:s.close_time}\\)}\\)\")",
+      "Bash(node --input-type=module -e ' *)"
     ],
     "additionalDirectories": [
       "/tmp",

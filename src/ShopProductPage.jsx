@@ -21,6 +21,7 @@ import {
 import Footer from "./Footer";
 import FloatingCart from './FloatingCart';
 import CloudinaryImage from './CloudinaryImage';
+import { isShopOpenNow } from './shopHours';
 import { FaUserCircle } from "react-icons/fa";
 import { MdHome, MdStorefront, MdOutlineSportsEsports, MdHelpOutline } from "react-icons/md";
 import { syncCartToBackend } from "./api/syncCartToBackend";
@@ -324,7 +325,7 @@ export default function ShopProductPage() {
               {/* Badges */}
               <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 9, flexWrap: "wrap" }}>
                 <span style={{ background: "linear-gradient(135deg,#8d4d11,#6b3a0d)", color: "#fff", fontSize: 10, fontWeight: 800, padding: "3px 11px", borderRadius: 999, letterSpacing: "0.1em", textTransform: "uppercase" }}>ร้านค้า</span>
-                {shop?.status === 'Open'
+                {isShopOpenNow(shop)
                   ? <span style={{ background: "rgba(34,197,94,0.18)", color: "#4ade80", fontSize: 10, fontWeight: 700, padding: "3px 11px", borderRadius: 999, border: "1px solid rgba(34,197,94,0.38)" }}>● เปิดให้บริการ</span>
                   : <span style={{ background: "rgba(239,68,68,0.18)", color: "#f87171", fontSize: 10, fontWeight: 700, padding: "3px 11px", borderRadius: 999, border: "1px solid rgba(239,68,68,0.35)" }}>● ปิดชั่วคราว</span>
                 }
@@ -354,7 +355,7 @@ export default function ShopProductPage() {
       <main className="rsp-main" style={{ maxWidth: 1280, margin: "0 auto", padding: "24px 24px 80px" }}>
 
         {/* Shop closed banner */}
-        {shop && shop.status !== 'Open' && (
+        {shop && !isShopOpenNow(shop) && (
           <div style={{
             display: "flex", alignItems: "center", gap: 14,
             background: "linear-gradient(135deg,#fff1f2,#ffe4e6)",
@@ -440,7 +441,7 @@ export default function ShopProductPage() {
         </div>
 
         {/* Closed shop banner */}
-        {!shopLoading && shop?.status !== 'Open' && (
+        {!shopLoading && !isShopOpenNow(shop) && (
           <div style={{ marginBottom: 20, padding: "16px 20px", borderRadius: 14, background: "#fef2f2", border: "1.5px solid rgba(239,68,68,0.3)", display: "flex", alignItems: "center", gap: 12 }}>
             <span style={{ fontSize: 28, display: 'flex' }}><FaLock /></span>
             <div>
@@ -511,7 +512,7 @@ export default function ShopProductPage() {
                   avg={avg}
                   reviewCount={reviews.length}
                   isAdded={isAdded}
-                  shopClosed={shop?.status !== 'Open'}
+                  shopClosed={!isShopOpenNow(shop)}
                   productClosed={!product.is_available}
                   onAdd={() => addToCart(product)}
                   onView={() => navigate(`/product/${product.product_id}`)}

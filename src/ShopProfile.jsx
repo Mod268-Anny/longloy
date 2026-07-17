@@ -21,6 +21,7 @@ import { MdHome, MdStorefront, MdOutlineSportsEsports, MdHelpOutline } from 'rea
 import { syncCartToBackend } from './api/syncCartToBackend';
 import API_URL, { secureLocalFetch, resolveImg } from './config';
 import useCartCount from './useCartCount';
+import { isShopOpenNow } from './shopHours';
 
 const NAV = [
   { label: "หน้าแรก",   icon: <MdHome size={18}/>,                path: "/homepage" },
@@ -216,7 +217,7 @@ export default function ShopProfile() {
             <div style={{ flex: 1, minWidth: 0, paddingBottom: 2 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 7, flexWrap: "wrap" }}>
                 <span style={{ background: "linear-gradient(135deg,#8d4d11,#6b3a0d)", color: "#fff", fontSize: 10, fontWeight: 800, padding: "3px 11px", borderRadius: 999, letterSpacing: "0.1em", textTransform: "uppercase" }}>ร้านค้า</span>
-                {shop?.status === 'Open'
+                {isShopOpenNow(shop)
                   ? <span style={{ background: "rgba(34,197,94,0.18)", color: "#4ade80", fontSize: 10, fontWeight: 700, padding: "3px 11px", borderRadius: 999, border: "1px solid rgba(34,197,94,0.38)" }}>● เปิดให้บริการ</span>
                   : <span style={{ background: "rgba(239,68,68,0.18)", color: "#f87171", fontSize: 10, fontWeight: 700, padding: "3px 11px", borderRadius: 999, border: "1px solid rgba(239,68,68,0.35)" }}>● ปิดชั่วคราว</span>
                 }
