@@ -194,6 +194,7 @@ export default function EditShop() {
 
   const handleSubmit = async e => {
     e.preventDefault();
+    if (shopImgUploading) { alert('กรุณารอให้อัปโหลดรูปเสร็จก่อนบันทึก'); return; }
     const res = await secureLocalFetch(`${API_URL}/edit-shop`, {
       method: 'POST',
       headers: authH(),
@@ -466,8 +467,9 @@ export default function EditShop() {
 
             <button
               type="submit"
+              disabled={shopImgUploading}
               style={{
-                background: 'linear-gradient(135deg,#4b8ff4,#4b8ff4)',
+                background: shopImgUploading ? '#94a3b8' : 'linear-gradient(135deg,#4b8ff4,#4b8ff4)',
                 color: '#fff',
                 borderRadius: 12,
                 padding: 14,
@@ -475,11 +477,11 @@ export default function EditShop() {
                 fontSize: 15,
                 width: '100%',
                 border: 'none',
-                cursor: 'pointer',
+                cursor: shopImgUploading ? 'not-allowed' : 'pointer',
                 fontFamily: 'inherit',
               }}
             >
-              บันทึกข้อมูล
+              {shopImgUploading ? '⏳ กำลังอัปโหลดรูป รอสักครู่...' : 'บันทึกข้อมูล'}
             </button>
           </form>
         </div>

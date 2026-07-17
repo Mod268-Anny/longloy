@@ -95,6 +95,7 @@ export default function EntrepreneurDashboard() {
   const [form,         setForm]         = useState(emptyForm);
   const [imageMode,    setImageMode]    = useState('url');
   const [imgPreview,   setImgPreview]   = useState('');
+  const [imgUploading, setImgUploading] = useState(false);
   const [saving,       setSaving]       = useState(false);
   const [formErr,      setFormErr]      = useState('');
 
@@ -192,6 +193,8 @@ export default function EntrepreneurDashboard() {
 
   /* ── compress + upload image ─────────────────────────────────── */
   const handleFile = async (file) => {
+    setImgUploading(true);
+    try {
     const compressed = await new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onerror = reject;
@@ -222,10 +225,12 @@ export default function EntrepreneurDashboard() {
     setForm(f => ({ ...f, image_url: data.url }));
     setImgPreview(data.url);
     return data.url;
+    } finally { setImgUploading(false); }
   };
 
   /* ── save product ────────────────────────────────────────────── */
   const saveProduct = async () => {
+    if (imgUploading) { setFormErr('กรุณารอให้อัปโหลดรูปเสร็จก่อนบันทึก'); return; }
     if (!form.name.trim()) { setFormErr('กรุณากรอกชื่อสินค้า'); return; }
     if (!form.price || isNaN(form.price)) { setFormErr('กรุณากรอกราคา'); return; }
     const validSizes = (form.sizes || []).filter(s => s.size_name?.trim());
@@ -914,11 +919,11 @@ export default function EntrepreneurDashboard() {
                 {formErr && <p style={{ color:'#6b3a0d', fontSize:13, margin:'0 0 12px', padding:'8px 12px', background:'#fff0e8', borderRadius:8 }}>{formErr}</p>}
 
                 <div style={{ display:'flex', gap:10 }}>
-                  <button onClick={saveProduct} disabled={saving} style={{
-                    padding:'10px 24px', borderRadius:10, border:'none', cursor: saving?'not-allowed':'pointer', fontSize:14, fontWeight:700,
-                    background: saving?'#94a3b8':'linear-gradient(135deg,#4b8ff4,#4b8ff4)', color:'#fff',
+                  <button onClick={saveProduct} disabled={saving || imgUploading} style={{
+                    padding:'10px 24px', borderRadius:10, border:'none', cursor: (saving||imgUploading)?'not-allowed':'pointer', fontSize:14, fontWeight:700,
+                    background: (saving||imgUploading)?'#94a3b8':'linear-gradient(135deg,#4b8ff4,#4b8ff4)', color:'#fff',
                   }}>
-                    {saving ? 'กำลังบันทึก...' : (editId ? 'บันทึกการแก้ไข' : 'เพิ่มสินค้า')}
+                    {saving ? 'กำลังบันทึก...' : imgUploading ? '⏳ กำลังอัปโหลดรูป...' : (editId ? 'บันทึกการแก้ไข' : 'เพิ่มสินค้า')}
                   </button>
                   <button onClick={() => { setShowForm(false); setEditId(null); setForm(emptyForm); setImgPreview(''); }}
                     style={{ padding:'10px 20px', borderRadius:10, border:'1px solid #e2e8f0', background:'#fff', cursor:'pointer', fontSize:14, fontWeight:600, color:'#475569' }}>

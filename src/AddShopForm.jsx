@@ -218,6 +218,7 @@ function Addmarket() {
       return;
     }
     setValidated(true);
+    if (imgUploading) { alert('กรุณารอให้อัปโหลดรูปเสร็จก่อนบันทึก'); return; }
     try {
       const res = await secureLocalFetch(`${API_URL}/add-entrepreneur`, {
         method: 'POST',
@@ -600,8 +601,9 @@ function Addmarket() {
             {/* Submit */}
             <button
               type="submit"
+              disabled={imgUploading}
               style={{
-                background: 'linear-gradient(135deg,#4b8ff4,#4b8ff4)',
+                background: imgUploading ? '#94a3b8' : 'linear-gradient(135deg,#4b8ff4,#4b8ff4)',
                 color: '#fff',
                 borderRadius: 12,
                 padding: 14,
@@ -609,12 +611,12 @@ function Addmarket() {
                 fontSize: 15,
                 width: '100%',
                 border: 'none',
-                cursor: 'pointer',
+                cursor: imgUploading ? 'not-allowed' : 'pointer',
                 fontFamily: 'inherit',
                 letterSpacing: 0.3,
               }}
             >
-              บันทึกข้อมูลร้านค้า
+              {imgUploading ? '⏳ กำลังอัปโหลดรูป รอสักครู่...' : 'บันทึกข้อมูลร้านค้า'}
             </button>
           </form>
         </div>

@@ -17,11 +17,21 @@
       "Bash(railway deployment *)",
       "Bash(echo \"tracked?=$?\")",
       "Bash(npx eslint *)",
-      "Bash(curl -s -u \"632429747444132:vhrNDi1OKDRJB2oxIhz2m1IfARA\" \"https://api.cloudinary.com/v1_1/ycpbeldj/resources/image?max_results=3&prefix=longloy\")",
       "Bash(python3 -m json.tool)",
-      "Bash(curl -s -u \"632429747444132:vhrNDi1OKDRJB2oxIhz2m1IfARA\" \"https://api.cloudinary.com/v1_1/ycpbeldj/resources/image/upload?max_results=3\")",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" \"https://res.cloudinary.com/ycpbeldj/image/upload/v1784287190/longloy/product_1784287189731.jpg\")",
-      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" \"https://res.cloudinary.com/ycpbeldj/image/upload/c_fill,g_auto,h_500,w_500/f_auto/q_auto/longloy/product_1784287189731\")"
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" \"https://res.cloudinary.com/ycpbeldj/image/upload/c_fill,g_auto,h_500,w_500/f_auto/q_auto/longloy/product_1784287189731\")",
+      "Bash(curl -s \"https://longloy-production.up.railway.app/floating-markets/all\")",
+      "Read(//tmp/**)",
+      "Bash(cat)",
+      "Bash(python3 /tmp/collect_urls.py)",
+      "Read(//private/tmp/**)",
+      "Bash(python3 /tmp/check_status.py)",
+      "Bash(python3 -c ' *)",
+      "Bash(railway logs *)",
+      "Bash(railway logs -n 3000 --service longloy --environment production 2>&1 > /tmp/deploy_logs.txt *)"
+    ],
+    "additionalDirectories": [
+      "/tmp"
     ]
   }
 }
