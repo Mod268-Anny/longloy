@@ -104,8 +104,10 @@ function LoginPage() {
   const emailRef = React.useRef(null);
   const passwordRef = React.useRef(null);
 
-  const emailErr    = touched.email    && !email.trim()    ? 'กรุณากรอก Email / เบอร์โทร' : '';
-  const passwordErr = touched.password && !password.trim() ? 'กรุณากรอกรหัสผ่าน' : '';
+  const emailErr    = touched.email    && !email.trim()    ? 'กรุณากรอก Email / เบอร์โทร'
+                     : touched.email    && email.length > 50    ? 'อีเมลต้องไม่เกิน 50 ตัวอักษร' : '';
+  const passwordErr = touched.password && !password.trim() ? 'กรุณากรอกรหัสผ่าน'
+                     : touched.password && password.length > 20 ? 'รหัสผ่านต้องไม่เกิน 20 ตัวอักษร' : '';
 
   const handleLogin = async () => {
     setTouched({ email: true, password: true });
@@ -161,7 +163,7 @@ function LoginPage() {
         <form onSubmit={e => { e.preventDefault(); handleLogin(); }}>
           <div style={{ marginBottom: 16 }}>
             <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, color: '#334155', fontSize: 13 }}>Email / เบอร์โทร</label>
-            <input ref={emailRef} type="text" placeholder="กรอก email หรือเบอร์โทร" value={email}
+            <input ref={emailRef} type="text" placeholder="กรอก email หรือเบอร์โทร" maxLength={50} value={email}
               onChange={e => setEmail(e.target.value)}
               onBlur={() => setTouched(t => ({ ...t, email: true }))}
               onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), passwordRef.current?.focus())}
@@ -172,7 +174,7 @@ function LoginPage() {
           <div style={{ marginBottom: 10 }}>
             <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, color: '#334155', fontSize: 13 }}>Password</label>
             <div style={{ position: 'relative' }}>
-              <input ref={passwordRef} type={showPassword ? 'text' : 'password'} placeholder="กรอกรหัสผ่าน" value={password}
+              <input ref={passwordRef} type={showPassword ? 'text' : 'password'} placeholder="กรอกรหัสผ่าน" maxLength={20} value={password}
                 onChange={e => setPassword(e.target.value)}
                 onBlur={() => setTouched(t => ({ ...t, password: true }))}
                 onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), handleLogin())}
