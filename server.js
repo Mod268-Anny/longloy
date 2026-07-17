@@ -30,12 +30,45 @@ const https = require('https');
 const http  = require('http');
 const fs   = require('fs');
 const path = require('path');
+const cloudinary = require('cloudinary').v2;
 const { Server } = require('socket.io');
 
 // Ensure uploads directory exists
 const UPLOADS_DIR = path.join(__dirname, 'uploads');
 const DIST_DIR = path.join(__dirname, 'dist');
 if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || '',
+  api_key: process.env.CLOUDINARY_API_KEY || '',
+  api_secret: process.env.CLOUDINARY_API_SECRET || '',
+});
+
+const hasCloudinaryConfig = () => !!process.env.CLOUDINARY_CLOUD_NAME && !!process.env.CLOUDINARY_API_KEY && !!process.env.CLOUDINARY_API_SECRET;
+
+async function uploadImageToStorage(image, prefix = 'img') {
+  if (hasCloudinaryConfig()) {
+    try {
+      const result = await cloudinary.uploader.upload(image, {
+        folder: 'longloy',
+        public_id: `${prefix}_${Date.now()}`,
+        resource_type: 'image',
+      });
+      return result.secure_url;
+    } catch (err) {
+      console.error('Cloudinary upload failed:', err.message || err);
+    }
+  }
+
+  const matches = image.match(/^data:image\/(\w+);base64,(.+)$/);
+  if (!matches) throw new Error('Invalid image format');
+
+  const ext = matches[1] === 'jpeg' ? 'jpg' : matches[1];
+  const fname = `${prefix}_${Date.now()}.${ext}`;
+  const fpath = path.join(UPLOADS_DIR, fname);
+  fs.writeFileSync(fpath, Buffer.from(matches[2], 'base64'));
+  return `/uploads/${fname}`;
+}
 
 const parseDatabaseUrl = (value) => {
   if (!value) return null;
@@ -2690,19 +2723,18 @@ app.post('/products/create', verifyToken, express.json(), (req, res) => {
 });
 
 // ✅ DELETE /products/:product_id - ลบสินค้า
-// ── Upload image via base64 (no multer needed) ────────────────
-app.post('/upload-image', verifyToken, (req, res) => {
+// ── Upload image via base64 to Cloudinary or local uploads ─────
+app.post('/upload-image', verifyToken, async (req, res) => {
   const { image, prefix = 'img' } = req.body;
   if (!image) return res.status(400).json({ error: 'No image data' });
-  const matches = image.match(/^data:image\/(\w+);base64,(.+)$/);
-  if (!matches) return res.status(400).json({ error: 'Invalid image format' });
-  const ext = matches[1] === 'jpeg' ? 'jpg' : matches[1];
-  const fname = `${prefix}_${Date.now()}.${ext}`;
-  const fpath = path.join(UPLOADS_DIR, fname);
-  fs.writeFile(fpath, Buffer.from(matches[2], 'base64'), err => {
-    if (err) { console.error('Upload error:', err); return res.status(500).json({ error: 'Save failed' }); }
-    res.json({ url: `/uploads/${fname}` });
-  });
+
+  try {
+    const url = await uploadImageToStorage(image, prefix);
+    res.json({ url });
+  } catch (err) {
+    console.error('Upload error:', err);
+    res.status(500).json({ error: 'Save failed' });
+  }
 });
 
 // ── Add product ─────────────────────────────────────────────────

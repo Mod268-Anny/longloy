@@ -326,50 +326,56 @@ function MarketCard({ market, idx, ratingObj = { avg: 0, count: 0 }, onClick }) 
 /* ── ProductCard ─────────────────────────────────────────────────── */
 function ProductCard({ product, onAdd, onView }) {
   const [hov, setHov] = useState(false);
+  const badge = product.market_name || product.shop_name || "สินค้า";
   return (
-    <div onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)}
+    <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
       style={{
-        background:"#fff", borderRadius:20, overflow:"hidden",
-        boxShadow:hov?"0 20px 48px rgba(0,0,0,0.13)":"0 2px 12px rgba(0,0,0,0.07)",
-        transform:hov?"translateY(-6px)":"none",
-        transition:"all 0.28s cubic-bezier(0.4,0,0.2,1)",
-        display:"flex", flexDirection:"column",
-        border:"1px solid rgba(226,232,240,0.6)",
+        background: "#fff", borderRadius: 20, overflow: "hidden",
+        boxShadow: hov ? "0 20px 48px rgba(0,0,0,0.13)" : "0 2px 12px rgba(0,0,0,0.07)",
+        transform: hov ? "translateY(-6px)" : "none",
+        transition: "all 0.28s cubic-bezier(0.4,0,0.2,1)",
+        display: "flex", flexDirection: "column",
+        border: "1px solid rgba(226,232,240,0.6)",
       }}>
-      {/* Image */}
-      <div onClick={onView} className="product-img" style={{ cursor:"pointer", flexShrink:0, background:"#f1f5f9" }}>
-        <img src={imgSrc(product.image_url,"https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400&q=80")} alt={product.name}
-          onError={e=>{e.target.onerror=null;e.target.src="https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400&q=80";}}
-          style={{ width:"100%", height:"100%", objectFit:"cover", transition:"transform 0.5s ease", transform:hov?"scale(1.06)":"scale(1.0)" }}/>
+      <div onClick={onView} className="product-img" style={{ cursor: "pointer", flexShrink: 0, background: "#f1f5f9", position: "relative", width: '100%', height: 220, overflow: 'hidden' }}>
+        <img src={imgSrc(product.image_url, "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400&q=80")} alt={product.name}
+          onError={e => { e.target.onerror = null; e.target.src = "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400&q=80"; }}
+          style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.5s ease", transform: hov ? "scale(1.06)" : "scale(1.0)" }} />
+        <span style={{
+          position: "absolute", top: 12, left: 12, background: "rgba(255,255,255,0.95)",
+          backdropFilter: "blur(4px)", padding: "4px 12px", borderRadius: 999,
+          fontSize: 11, fontWeight: 600, color: "#334155",
+          boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
+        }}>
+          {badge}
+        </span>
+        <button onClick={e => { e.stopPropagation(); onAdd(); }} aria-label="เพิ่มลงตะกร้า" style={{
+          position: "absolute", bottom: 14, right: 14, width: 40, height: 40, borderRadius: "50%",
+          border: "none", cursor: "pointer", background: "linear-gradient(135deg,#8d4d11,#6b3a0d)",
+          color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: hov ? "0 8px 20px rgba(141,77,17,0.28)" : "0 2px 8px rgba(141,77,17,0.2)",
+        }}>
+          <FaCartPlus style={{ fontSize: 14 }} />
+        </button>
       </div>
-      {/* Info */}
-      <div style={{ padding:"14px 16px 16px", display:"flex", flexDirection:"column", flex:1 }}>
+      <div style={{ padding: "14px 16px 16px", display: "flex", flexDirection: "column", flex: 1 }}>
         <p onClick={onView} style={{
-          fontWeight:700, fontSize:15, color:"#0f172a", margin:"0 0 4px",
-          cursor:"pointer", overflow:"hidden", display:"-webkit-box",
-          WebkitLineClamp:1, WebkitBoxOrient:"vertical", transition:"color 0.15s",
+          fontWeight: 700, fontSize: 15, color: "#0f172a", margin: "0 0 4px",
+          cursor: "pointer", overflow: "hidden", display: "-webkit-box",
+          WebkitLineClamp: 1, WebkitBoxOrient: "vertical", transition: "color 0.15s",
         }}
-          onMouseEnter={e=>e.currentTarget.style.color="#6b3a0d"}
-          onMouseLeave={e=>e.currentTarget.style.color="#0f172a"}
+          onMouseEnter={e => e.currentTarget.style.color = "#6b3a0d"}
+          onMouseLeave={e => e.currentTarget.style.color = "#0f172a"}
         >
-          {product.name||"สินค้า"}
+          {product.name || "สินค้า"}
         </p>
-        <p className="rsp-hide-mobile" style={{ fontSize:12.5, color:"#94a3b8", lineHeight:1.5, flex:1, margin:"0 0 12px", display:"-webkit-box", WebkitLineClamp:1, WebkitBoxOrient:"vertical", overflow:"hidden" }}>
-          {product.description||"สินค้าคุณภาพดีจากชุมชน"}
+        <p style={{ fontSize: 12.5, color: "#94a3b8", lineHeight: 1.5, flex: 1, margin: "0 0 12px", display: "-webkit-box", WebkitLineClamp: 1, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+          {product.description || "สินค้าคุณภาพดีจากชุมชน"}
         </p>
-        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:10 }}>
-          <p style={{ margin:0, fontWeight:800, fontSize:17, color:"#0f172a" }}>
-            ฿{Number(product.price??0).toLocaleString()}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+          <p style={{ margin: 0, fontWeight: 800, fontSize: 17, color: "#0f172a" }}>
+            ฿{Number(product.price ?? 0).toLocaleString()}
           </p>
-          <button onClick={onAdd} aria-label="เพิ่มลงตะกร้า" style={{
-            width:34, height:34, flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center",
-            borderRadius:"50%", border:"none", cursor:"pointer",
-            background:"linear-gradient(135deg,#8d4d11,#6b3a0d)",
-            color:"#fff", transition:"all 0.2s",
-            boxShadow:hov?"0 6px 16px rgba(141,77,17,0.4)":"0 2px 8px rgba(141,77,17,0.3)",
-          }}>
-            <FaCartPlus style={{ fontSize:14 }}/>
-          </button>
+          <div style={{ minWidth: 34, minHeight: 34 }} />
         </div>
       </div>
     </div>

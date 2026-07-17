@@ -66,6 +66,22 @@ export default function ShopPage() {
   const [error,        setError]        = useState(null);
   const [cartShopId,   setCartShopId]   = useState(getCartShopId);
 
+  const isMyShops = location.pathname.startsWith('/my-shops');
+  const pageTitle = isMyShops ? 'ร้านค้าของฉัน' : (marketName || 'ตลาดน้ำ');
+
+  const authHeaders = () => {
+    const token = localStorage.getItem('token');
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  };
+
+  const normalizeArray = (payload) => {
+    if (Array.isArray(payload)) return payload;
+    if (Array.isArray(payload?.data)) return payload.data;
+    if (Array.isArray(payload?.shops)) return payload.shops;
+    if (Array.isArray(payload?.products)) return payload.products;
+    return [];
+  };
+
   useEffect(() => {
     const update = () => setCartShopId(getCartShopId());
     window.addEventListener('storage', update);
@@ -74,41 +90,59 @@ export default function ShopPage() {
   }, []);
 
   useEffect(() => {
-    if (!market_id) return;
+    if (!market_id && !isMyShops) return;
     setLoading(true);
 
-    // fetch market name
-    secureLocalFetch(`${API_URL}/floating-markets/all`)
-      .then(r => r.json())
-      .then(markets => {
+    const fetchMarketName = async () => {
+      try {
+        const r = await secureLocalFetch(`${API_URL}/floating-markets/all`);
+        const markets = await r.json();
         if (!Array.isArray(markets)) return;
         const found = markets.find(m => String(m.market_id) === String(market_id));
         setMarketName(found?.name || '');
-      })
-      .catch(() => {});
+      } catch {
+        // ignore market name failure
+      }
+    };
 
-    // fetch shops
-    secureLocalFetch(`${API_URL}/shops/by-market/${market_id}`)
-      .then(r => r.json())
-      .then(async data => {
-        if (!Array.isArray(data)) { setShops([]); setFilteredShops([]); setLoading(false); return; }
-        setShops(data); setFilteredShops(data);
+    const fetchShops = async () => {
+      try {
+        let data;
+        if (isMyShops) {
+          const res = await secureLocalFetch(`${API_URL}/entrepreneur/my-shops`, { headers: authHeaders() });
+          data = res.ok ? await res.json() : [];
+        } else {
+          const res = await secureLocalFetch(`${API_URL}/shops/by-market/${market_id}`);
+          data = res.ok ? await res.json() : [];
+        }
+        const shopList = normalizeArray(data);
+        setShops(shopList); setFilteredShops(shopList);
+
         const ratingsObj = {};
-        await Promise.all(data.map(async shop => {
+        await Promise.all(shopList.map(async shop => {
           try {
             const r = await secureLocalFetch(`${API_URL}/shop-reviews/${shop.shop_id}`);
             if (!r.ok) { ratingsObj[shop.shop_id] = { avg: 0, count: 0 }; return; }
             const reviews = await r.json();
-            if (!Array.isArray(reviews)) { ratingsObj[shop.shop_id] = { avg: 0, count: 0 }; return; }
-            const ratings = reviews.map(rv => rv.rating || 0).filter(rv => rv > 0);
-            ratingsObj[shop.shop_id] = { avg: ratings.length ? ratings.reduce((a,b) => a+b,0)/ratings.length : 0, count: ratings.length };
+            const ratingArray = Array.isArray(reviews) ? reviews.map(rv => Number(rv.rating) || 0).filter(rv => rv > 0) : [];
+            ratingsObj[shop.shop_id] = { avg: ratingArray.length ? ratingArray.reduce((a,b) => a+b,0)/ratingArray.length : 0, count: ratingArray.length };
           } catch { ratingsObj[shop.shop_id] = { avg: 0, count: 0 }; }
         }));
         setShopRatings(ratingsObj);
         setLoading(false);
-      })
-      .catch(e => { setError(e.message); setLoading(false); });
-  }, [market_id]);
+      } catch (e) {
+        setError(e.message || 'ไม่สามารถดึงข้อมูลร้านค้าได้');
+        setShops([]);
+        setFilteredShops([]);
+        setLoading(false);
+      }
+    };
+
+    if (!isMyShops) {
+      fetchMarketName();
+    }
+    fetchShops();
+  }, [market_id, isMyShops]);
 
   useEffect(() => {
     let result = searchTerm.trim()
@@ -180,7 +214,7 @@ export default function ShopPage() {
           {/* Title */}
           <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 11, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", margin: "0 0 10px" }}>ร้านค้าในตลาด</p>
           <h1 className="shop-hero-title" style={{ fontSize: "clamp(2rem,5vw,3.2rem)", fontWeight: 800, margin: "0 0 24px", lineHeight: 1.1, letterSpacing: "-0.02em", textShadow: "0 2px 20px rgba(0,0,0,0.4)" }}>
-            {marketName || "ตลาดน้ำ"}
+            {pageTitle}
           </h1>
 
           {/* Search bar — ตรงกลาง */}

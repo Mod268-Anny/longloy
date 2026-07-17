@@ -20,6 +20,7 @@ import {
 } from "react-icons/fa6";
 import Footer from "./Footer";
 import FloatingCart from './FloatingCart';
+import CloudinaryImage from './CloudinaryImage';
 import { FaUserCircle } from "react-icons/fa";
 import { MdHome, MdStorefront, MdOutlineSportsEsports, MdHelpOutline } from "react-icons/md";
 import { syncCartToBackend } from "./api/syncCartToBackend";
@@ -39,6 +40,21 @@ const imgSrc = (url) => resolveImg(url, PFALLBACK);
 /* ─── helpers ───────────────────────────────────────────────────── */
 const avgOf = (reviews) =>
   reviews?.length ? reviews.reduce((s, r) => s + (r.rating || 0), 0) / reviews.length : 0;
+
+const normalizeArray = (payload) => {
+  if (Array.isArray(payload)) return payload;
+  if (Array.isArray(payload?.data)) return payload.data;
+  if (Array.isArray(payload?.products)) return payload.products;
+  return [];
+};
+
+const normalizeEntity = (payload) => {
+  if (!payload) return null;
+  if (Array.isArray(payload)) return payload[0] || null;
+  if (payload.shop_id || payload.product_id) return payload;
+  if (payload?.data && Array.isArray(payload.data)) return payload.data[0] || null;
+  return payload;
+};
 
 /* ═══════════════════════════════════════════════════════════════ */
 export default function ShopProductPage() {
@@ -75,7 +91,16 @@ export default function ShopProductPage() {
     setShopLoading(true);
     secureLocalFetch(`${API_URL}/shops/${shop_id}`)
       .then(r => r.ok ? r.json() : null)
-      .then(d => { setShop(d); setShopLoading(false); })
+      .then(async d => {
+        let shopData = normalizeEntity(d);
+        if (!shopData) {
+          const fallback = await secureLocalFetch(`${API_URL}/entrepreneur-by-shop/${shop_id}`);
+          const fallbackData = await (fallback.ok ? fallback.json() : null);
+          shopData = normalizeEntity(fallbackData);
+        }
+        setShop(shopData);
+        setShopLoading(false);
+      })
       .catch(() => setShopLoading(false));
 
     /* products + reviews */
@@ -83,9 +108,10 @@ export default function ShopProductPage() {
     secureLocalFetch(`${API_URL}/products/by-shop/${shop_id}`)
       .then(r => { if (!r.ok) throw new Error("Failed to fetch products"); return r.json(); })
       .then(async data => {
-        setProducts(data);
+        const normalized = normalizeArray(data);
+        setProducts(normalized);
         const reviewsObj = {};
-        await Promise.all(data.map(async p => {
+        await Promise.all(normalized.map(async p => {
           try {
             const r = await secureLocalFetch(`${API_URL}/product-reviews/${p.product_id}`);
             reviewsObj[p.product_id] = r.ok ? await r.json() : [];
@@ -236,7 +262,14 @@ export default function ShopProductPage() {
         <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
           {shop?.image_url ? (
             <>
-              <img src={resolveImg(shop.image_url)} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 40%" }} onError={e => { e.target.style.display = "none"; }} />
+              <CloudinaryImage
+                src={shop.image_url}
+                alt=""
+                width={1600}
+                height={900}
+                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 40%" }}
+                onError={e => { e.target.style.display = "none"; }}
+              />
               <div style={{ position: "absolute", inset: 0, background: "linear-gradient(160deg, rgba(12,5,1,0.38) 0%, rgba(6,2,0,0.86) 100%)" }} />
             </>
           ) : (
@@ -274,7 +307,13 @@ export default function ShopProductPage() {
               {shopLoading ? (
                 <div style={{ width: "100%", height: "100%", background: "rgba(255,255,255,0.12)", animation: "pulse 1.5s infinite" }} />
               ) : shop?.image_url ? (
-                <img src={resolveImg(shop.image_url)} alt={shopName} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                <CloudinaryImage
+                  src={shop.image_url}
+                  alt={shopName}
+                  width={240}
+                  height={240}
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
               ) : (
                 <span style={{ fontSize: 38, fontWeight: 900, color: "#fff", textShadow: "0 2px 8px rgba(0,0,0,0.4)" }}>{initial}</span>
               )}
@@ -493,13 +532,8 @@ export default function ShopProductPage() {
 /* ─── Product Card ───────────────────────────────────────────────── */
 function ProductCard({ product, avg, reviewCount, isAdded, shopClosed, productClosed, onAdd, onView }) {
   const [hov, setHov] = useState(false);
-  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 640 : false);
-  useEffect(() => {
-    const onResize = () => setIsMobile(window.innerWidth <= 640);
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
-  }, []);
   const isClosed = shopClosed || productClosed;
+  const badge = product.market_name || product.shop_name || "ร้านค้า";
   return (
     <div
       onMouseEnter={() => setHov(true)}
@@ -509,96 +543,61 @@ function ProductCard({ product, avg, reviewCount, isAdded, shopClosed, productCl
         boxShadow: hov && !isClosed ? "0 20px 48px rgba(0,0,0,0.13)" : "0 2px 12px rgba(0,0,0,0.06)",
         transform: hov && !isClosed ? "translateY(-6px)" : "none",
         transition: "all 0.28s cubic-bezier(0.4,0,0.2,1)",
-        display: "flex", flexDirection: isMobile ? "column" : "row",
-        alignItems: "center",
-        border: isClosed ? "1.5px solid #fecaca" : "1px solid #f1f5f9",
+        display: "flex", flexDirection: "column",
+        border: isClosed ? "1.5px solid #fecaca" : "1px solid rgba(226,232,240,0.6)",
         opacity: isClosed ? 0.78 : 1,
       }}
     >
-      {/* Image */}
-      <div onClick={onView} className="product-img" style={{ cursor: "pointer", flexShrink: 0, background: "#f1f5f9", position: "relative", width: isMobile ? '100%' : 160, height: isMobile ? 180 : 140, borderRadius: isMobile ? '12px 12px 0 0' : 12, overflow: 'hidden', marginLeft: isMobile ? 0 : 16 }}>
-        <img
-          src={imgSrc(product.image_url)} alt={product.name}
+      <div onClick={onView} className="product-img" style={{ cursor: "pointer", flexShrink: 0, background: "#f1f5f9", position: "relative", width: '100%', height: 220, overflow: 'hidden' }}>
+        <CloudinaryImage
+          src={product.image_url}
+          alt={product.name}
+          width={480}
+          height={480}
           onError={e => { e.target.onerror = null; e.target.src = PFALLBACK; }}
           style={{ width: '100%', height: '100%', objectFit: 'cover', transition: "transform 0.5s ease", transform: hov && !isClosed ? "scale(1.06)" : "scale(1.0)", filter: isClosed ? "grayscale(40%)" : "none" }}
         />
-        {/* Unavailable overlay badge */}
-        {productClosed && (
-          <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.32)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <span style={{ background: "#ef4444", color: "#fff", fontSize: 12, fontWeight: 800, padding: "6px 16px", borderRadius: 999, letterSpacing: "0.05em", boxShadow: "0 2px 8px rgba(0,0,0,0.3)" }}>
+        <span style={{
+          position: "absolute", top: 12, left: 12, background: "rgba(255,255,255,0.95)",
+          backdropFilter: "blur(4px)", padding: "4px 12px", borderRadius: 999,
+          fontSize: 11, fontWeight: 600, color: "#334155",
+          boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
+        }}>
+          {badge}
+        </span>
+        {productClosed ? (
+          <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.35)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <span style={{ background: "#ef4444", color: "#fff", fontSize: 12, fontWeight: 800, padding: "6px 16px", borderRadius: 999 }}>
               ปิดการขาย
             </span>
           </div>
-        )}
-        {/* Rating badge top-left */}
-        {avg > 0 && !productClosed && (
-          <div style={{ position: "absolute", top: 10, left: 10, background: "rgba(0,0,0,0.55)", backdropFilter: "blur(6px)", borderRadius: 999, padding: "4px 10px", display: "flex", alignItems: "center", gap: 4 }}>
-            <FaStar style={{ color: "#8d4d11", fontSize: 11 }} />
-            <span style={{ color: "#fff", fontSize: 12, fontWeight: 700 }}>{avg.toFixed(1)}</span>
-            <span style={{ color: "rgba(255,255,255,0.55)", fontSize: 11 }}>({reviewCount})</span>
-          </div>
-        )}
-        {/* Price tag bottom-left */}
-        {!productClosed && (
-          <div style={{ position: "absolute", bottom: 10, left: 12, display: "flex", alignItems: "baseline", gap: 4 }}>
-            <span style={{ background: "linear-gradient(135deg,#6b3a0d,#8d4d11)", color: "#fff", fontWeight: 800, fontSize: 15, padding: "5px 14px", borderRadius: 999, boxShadow: "0 3px 10px rgba(0,0,0,0.25)" }}>
-              ฿{Number(product.price || 0).toLocaleString()}
-            </span>
-            {product.unit && (
-              <span style={{ background: "rgba(0,0,0,0.45)", backdropFilter: "blur(4px)", color: "rgba(255,255,255,0.9)", fontSize: 11, fontWeight: 600, padding: "4px 8px", borderRadius: 999 }}>
-                / {product.unit}
-              </span>
-            )}
-          </div>
+        ) : (
+          <button onClick={e => { e.stopPropagation(); if (!isClosed) onAdd(); }} aria-label="เพิ่มลงตะกร้า" style={{
+            position: "absolute", bottom: 14, right: 14, width: 40, height: 40, borderRadius: "50%",
+            border: "none", cursor: isClosed ? 'not-allowed' : 'pointer', background: "linear-gradient(135deg,#8d4d11,#6b3a0d)",
+            color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: hov ? "0 8px 20px rgba(141,77,17,0.28)" : "0 2px 8px rgba(141,77,17,0.2)",
+          }}>
+            <FaCartPlus style={{ fontSize: 14 }} />
+          </button>
         )}
       </div>
 
-      {/* Info */}
-      <div style={{ padding: isMobile ? '16px' : '20px 18px 20px 18px', display: 'flex', flexDirection: 'column', flex: 1, textAlign: isMobile ? 'center' : 'left' }}>
-        <p
-          onClick={onView}
-          style={{ fontWeight: 800, fontSize: 16, color: "#0f172a", margin: "0 0 6px", cursor: "pointer", overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 1, WebkitBoxOrient: "vertical", transition: "color 0.15s" }}
-          onMouseEnter={e => e.currentTarget.style.color = "#6b3a0d"}
-          onMouseLeave={e => e.currentTarget.style.color = "#0f172a"}
-        >
+      <div style={{ padding: "16px 18px 18px", display: "flex", flexDirection: "column", gap: 10 }}>
+        <p onClick={onView} style={{
+          fontWeight: 700, fontSize: 15, color: "#0f172a", margin: 0,
+          cursor: "pointer", overflow: "hidden", display: "-webkit-box",
+          WebkitLineClamp: 1, WebkitBoxOrient: "vertical", transition: "color 0.15s",
+        }} onMouseEnter={e => e.currentTarget.style.color = "#6b3a0d"} onMouseLeave={e => e.currentTarget.style.color = "#0f172a"}>
           {product.name || "สินค้า"}
         </p>
-        {/* Price + Unit (text row below name) */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, marginTop: 2 }}>
-          <div style={{ background: 'linear-gradient(135deg,#6b3a0d,#8d4d11)', color: '#fff', fontWeight: 800, fontSize: 15, padding: '6px 12px', borderRadius: 12, boxShadow: '0 6px 18px rgba(141,77,17,0.18)' }}>
-            ฿{Number(product.price || 0).toLocaleString()}
-          </div>
-          {product.unit && (
-            <span style={{ fontSize: 13, color: '#94a3b8', fontWeight: 600 }}>/ {product.unit}</span>
-          )}
-        </div>
-
-        <p style={{ fontSize: 13, color: '#94a3b8', lineHeight: 1.55, flex: 1, margin: '0 0 12px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-          {product.description || ''}
+        <p style={{ fontSize: 12.5, color: "#94a3b8", lineHeight: 1.5, margin: 0, display: "-webkit-box", WebkitLineClamp: 1, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+          {product.description || "สินค้าคุณภาพดีจากชุมชน"}
         </p>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <button
-            onClick={isClosed ? undefined : onAdd}
-            disabled={isClosed}
-            style={{
-              padding: '10px 18px', borderRadius: 999, border: 'none', fontSize: 14, fontWeight: 800,
-              cursor: isClosed ? 'not-allowed' : 'pointer',
-              background: isClosed ? '#e2e8f0' : isAdded ? 'linear-gradient(135deg,#4b8ff4,#2d6fd4)' : 'linear-gradient(135deg,#ff7a66,#ffb199)',
-              color: isClosed ? '#94a3b8' : '#fff',
-              transition: 'transform 0.18s, box-shadow 0.18s',
-              boxShadow: isClosed ? 'none' : isAdded ? '0 8px 26px rgba(75,143,244,0.2)' : '0 10px 30px rgba(255,122,102,0.18)',
-              display: 'inline-flex', alignItems: 'center', gap: 8,
-            }}
-          >
-            <FaCartPlus style={{ fontSize: 14 }} />
-            {isClosed ? 'ไม่พร้อมจำหน่าย' : isAdded ? 'เพิ่มลงตะกร้าแล้ว' : 'เพิ่มลงตะกร้า'}
-          </button>
-
-          {/* Optional small view button */}
-          <button onClick={onView} style={{ padding: '8px 12px', borderRadius: 10, border: '1px solid #eef2ff', background: '#fff', color: '#6b7280', fontWeight: 700, cursor: 'pointer' }}>
-            ดูรายละเอียด
-          </button>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+          <p style={{ margin: 0, fontWeight: 800, fontSize: 17, color: "#0f172a" }}>
+            ฿{Number(product.price || 0).toLocaleString()}
+          </p>
+          <div style={{ minWidth: 34, minHeight: 34 }} />
         </div>
       </div>
     </div>
